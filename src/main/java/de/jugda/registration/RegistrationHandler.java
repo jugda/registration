@@ -4,6 +4,7 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import de.jugda.registration.model.RequestParam;
 import de.jugda.registration.service.DynamoDBService;
 import de.jugda.registration.service.HandlebarsService;
 import lombok.SneakyThrows;
@@ -11,7 +12,6 @@ import lombok.SneakyThrows;
 import java.net.URLDecoder;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,7 +24,7 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
     @SneakyThrows
     public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
         String body = request.getBody();
-        String decoded = URLDecoder.decode(body, "ISO-8859-1");
+        String decoded = URLDecoder.decode(body, RequestParam.ENCODING);
 
         Map<String, String> model = Arrays.stream(decoded.split("&")).map(this::splitQueryParameter)
             .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue));
@@ -35,7 +35,7 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
         HandlebarsService handlebarsService = new HandlebarsService();
         String response = handlebarsService.getThanksPage(model);
 
-        return new AwsProxyResponse(200, Collections.singletonMap("Content-Type", "text/html"), response);
+        return new AwsProxyResponse(200, RequestParam.HEADER, response);
     }
 
     private AbstractMap.SimpleImmutableEntry<String, String> splitQueryParameter(String it) {
