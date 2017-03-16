@@ -1,4 +1,4 @@
-package de.jugda.registration;
+package de.jugda.registration.service;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -23,15 +23,21 @@ public class HandlebarsService {
         handlebars = new Handlebars(loader);
     }
 
-    @SneakyThrows
-    public String getRegistrationForm(Map<String, Object> model) {
-        Template template = handlebars.compile("registration");
-        return template.apply(model);
+    public String getRegistrationForm(Map<String, String> model) {
+        return renderTemplate("registration", model);
+    }
+
+    public String getThanksPage(Map<String, String> model) {
+        return renderTemplate("thanks", model);
+    }
+
+    public String getRegistrationsPage(Map<String, Object> model) {
+        return renderTemplate("list", model);
     }
 
     @SneakyThrows
-    public String getThanksPage(Map<String, Object> model) {
-        Template template = handlebars.compile("thanks");
+    private String renderTemplate(String templateName, Map<String, ?> model) {
+        Template template = handlebars.compile(templateName);
         return template.apply(model);
     }
 

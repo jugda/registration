@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+{{> head }}
+<body>
+    <h2>Anmeldungen für EventID {{ eventId }}</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Datum</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each registrations}}
+            <tr>
+                <td>{{ id }}</td>
+                <td>{{ name }}</td>
+                <td>{{ email }}</td>
+                <td>{{ created }}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</body>
+</html>

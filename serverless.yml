@@ -38,6 +38,12 @@ functions:
       - http:
           path: registration
           method: post
+  list:
+    handler: de.jugda.registration.RegistrationViewHandler
+    events:
+      - http:
+          path: list
+          method: get
 
 resources:
   Resources:

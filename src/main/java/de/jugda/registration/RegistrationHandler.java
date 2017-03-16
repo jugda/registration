@@ -4,8 +4,9 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import de.jugda.registration.service.DynamoDBService;
+import de.jugda.registration.service.HandlebarsService;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
 
 import java.net.URLDecoder;
 import java.util.AbstractMap;
@@ -25,8 +26,11 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
         String body = request.getBody();
         String decoded = URLDecoder.decode(body, "ISO-8859-1");
 
-        Map<String, Object> model = Arrays.stream(decoded.split("&")).map(this::splitQueryParameter)
+        Map<String, String> model = Arrays.stream(decoded.split("&")).map(this::splitQueryParameter)
             .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue));
+
+        DynamoDBService dynamoDBService = new DynamoDBService();
+        dynamoDBService.saveRegistration(model);
 
         HandlebarsService handlebarsService = new HandlebarsService();
         String response = handlebarsService.getThanksPage(model);

@@ -4,7 +4,7 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import lombok.extern.log4j.Log4j;
+import de.jugda.registration.service.HandlebarsService;
 
 import java.util.Collections;
 import java.util.Map;
