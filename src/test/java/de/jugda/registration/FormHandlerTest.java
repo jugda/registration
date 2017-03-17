@@ -52,7 +52,7 @@ public class FormHandlerTest {
         AwsProxyResponse response = formHandler.handleRequest(request, context);
         log.info(response.getBody());
 
-        assertTrue(response.getBody().contains("<form method=\"post\">"));
+        assertTrue(response.getBody().contains("<form method=\"post\""));
     }
 
     @Test
