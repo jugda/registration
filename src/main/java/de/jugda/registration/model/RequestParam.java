@@ -21,4 +21,5 @@ public class RequestParam {
     public static final String EMAIL = "email";
 
     public static final String REGISTRATIONS = "registrations";
+    public static final String TYPE = "type";
 }
