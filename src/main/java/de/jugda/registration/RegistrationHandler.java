@@ -29,11 +29,17 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
         Map<String, String> model = Arrays.stream(decoded.split("&")).map(this::splitQueryParameter)
             .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue));
 
-        DynamoDBService dynamoDBService = new DynamoDBService();
-        dynamoDBService.saveRegistration(model);
-
         HandlebarsService handlebarsService = new HandlebarsService();
-        String response = handlebarsService.getThanksPage(model);
+        String response;
+
+        if (isValid(model)) {
+            DynamoDBService dynamoDBService = new DynamoDBService();
+            dynamoDBService.saveRegistration(model);
+
+            response = handlebarsService.getThanksPage(model);
+        } else {
+            response = handlebarsService.getRegistrationForm(model);
+        }
 
         return new AwsProxyResponse(200, RequestParam.HEADER, response);
     }
@@ -43,6 +49,22 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
         final String key = parts[0];
         final String value = parts.length > 1 ? parts[1] : "";
         return new AbstractMap.SimpleImmutableEntry<>(key, value);
+    }
+
+    private boolean isValid(Map<String, String> model) {
+        boolean valid = true;
+        String name = model.getOrDefault(RequestParam.NAME, "");
+        if ("".equals(name.trim())) {
+            model.put("nameError", "true");
+            valid = false;
+        }
+        String email = model.getOrDefault(RequestParam.EMAIL, "");
+        if ("".equals(email.trim())) {
+            model.put("emailError", "true");
+            valid = false;
+        }
+
+        return valid;
     }
 
 }

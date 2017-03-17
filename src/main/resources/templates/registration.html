@@ -4,14 +4,15 @@
 <body>
     <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
         <h2>Anmeldung</h2>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" placeholder="Name"/>
+        <div class="form-group{{#if nameError}}has-error{{/if}}">
+            <label for="name" class="control-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ name }}"/>
         </div>
-        <div class="form-group">
-            <label for="email">E-Mail</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail"/>
+        <div class="form-group{{#if emailError}}has-error{{/if}}">
+            <label for="email" class="control-label">E-Mail</label>
+            <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail" value="{{ email }}"/>
         </div>
+        <div class="help-block">Alle Felder sind Pflichtfelder!</div>
         <button type="submit" id="submit" class="btn btn-default">Anmelden</button>
         <input type="hidden" name="eventId" value="{{ eventId }}"/>
     </form>
