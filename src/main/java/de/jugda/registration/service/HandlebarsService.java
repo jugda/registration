@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import lombok.SneakyThrows;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -29,6 +30,14 @@ public class HandlebarsService {
 
     public String getThanksPage(Map<String, String> model) {
         return renderTemplate("thanks", model);
+    }
+
+    public String getRegistrationFull() {
+        return renderTemplate("full", Collections.emptyMap());
+    }
+
+    public String getRegistrationClosed() {
+        return renderTemplate("closed", Collections.emptyMap());
     }
 
     public String getRegistrationsPage(Map<String, Object> model) {

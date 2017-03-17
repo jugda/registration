@@ -33,4 +33,9 @@ public class DynamoDBService {
         return registrations.stream().filter(r -> eventId.equals(r.getEventId())).collect(Collectors.toList());
     }
 
+    public int getRegistrationCount(String eventId) {
+        // TODO implement me!
+        return 0;
+    }
+
 }

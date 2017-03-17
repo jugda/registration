@@ -4,10 +4,12 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import de.jugda.registration.model.RegParam;
 import de.jugda.registration.model.RequestParam;
+import de.jugda.registration.service.DynamoDBService;
 import de.jugda.registration.service.HandlebarsService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 
@@ -19,12 +21,32 @@ public class FormHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
     @Override
     public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
         Map<String, String> queryParams = request.getQueryStringParameters();
-        String eventId = queryParams.getOrDefault(RegParam.EVENT_ID, "dummy");
+        String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
+        String limit = queryParams.getOrDefault(RequestParam.LIMIT, "80");
+        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, "");
 
         HandlebarsService handlebarsService = new HandlebarsService();
-        String body = handlebarsService.getRegistrationForm(Collections.singletonMap(RegParam.EVENT_ID, eventId));
+        String response;
 
-        return new AwsProxyResponse(200, RequestParam.HEADER, body);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime deadlineTime = LocalDateTime.parse(deadline, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        if (now.isAfter(deadlineTime)) {
+            // sorry, no registration for you
+            response = handlebarsService.getRegistrationClosed();
+        } else {
+            // you are welcome to register
+            DynamoDBService dynamoDBService = new DynamoDBService();
+
+            int maxCount = Integer.parseInt(limit);
+            int actualCount = dynamoDBService.getRegistrationCount(eventId);
+            if (actualCount >= maxCount) {
+                response = handlebarsService.getRegistrationFull();
+            } else {
+                response = handlebarsService.getRegistrationForm(Collections.singletonMap(RequestParam.EVENT_ID, eventId));
+            }
+        }
+
+        return new AwsProxyResponse(200, RequestParam.HEADER, response);
     }
 
 }
