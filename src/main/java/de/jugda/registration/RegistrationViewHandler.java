@@ -5,9 +5,10 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RequestParam;
-import de.jugda.registration.service.DynamoDBService;
+import de.jugda.registration.dao.DynamoDBDao;
 import de.jugda.registration.service.HandlebarsService;
 import lombok.SneakyThrows;
 
@@ -27,8 +28,8 @@ public class RegistrationViewHandler implements RequestHandler<AwsProxyRequest, 
         String eventId = request.getQueryStringParameters().getOrDefault(RequestParam.EVENT_ID, "dummy");
         String type = request.getQueryStringParameters().getOrDefault(RequestParam.TYPE, "");
 
-        DynamoDBService dynamoDBService = new DynamoDBService();
-        List<Registration> registrations = dynamoDBService.getRegistrations(eventId);
+        RegistrationDao registrationDao = DynamoDBDao.instance();
+        List<Registration> registrations = registrationDao.getRegistrations(eventId);
 
         Map<String, Object> model = new HashMap<>();
         model.put(RequestParam.EVENT_ID, eventId);

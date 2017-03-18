@@ -5,7 +5,8 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.internal.testutils.AwsProxyRequestBuilder;
 import com.amazonaws.serverless.proxy.internal.testutils.MockLambdaContext;
 import com.amazonaws.services.lambda.runtime.Context;
-import de.jugda.registration.service.DynamoDBService;
+import de.jugda.registration.dao.DynamoDBDao;
+import de.jugda.registration.dao.RegistrationDao;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -25,20 +26,21 @@ import static org.mockito.Mockito.when;
  */
 @Slf4j
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FormHandler.class)
+@PrepareForTest(DynamoDBDao.class)
 public class FormHandlerTest {
 
     private FormHandler formHandler = new FormHandler();
     private Context context = new MockLambdaContext();
-    private DynamoDBService dynamoDBService;
+    private RegistrationDao registrationDao;
 
     @Before
     @SneakyThrows
     public void before() {
-        dynamoDBService = mock(DynamoDBService.class);
-        when(dynamoDBService.getRegistrationCount(anyString())).thenReturn(0);
+        registrationDao = mock(RegistrationDao.class);
+        when(registrationDao.getRegistrationCount(anyString())).thenReturn(0);
 
-        PowerMockito.whenNew(DynamoDBService.class).withNoArguments().thenReturn(dynamoDBService);
+        PowerMockito.mockStatic(DynamoDBDao.class);
+        when(DynamoDBDao.instance()).thenReturn(registrationDao);
     }
 
     @Test
@@ -57,7 +59,7 @@ public class FormHandlerTest {
 
     @Test
     public void testFormRequest_limitSucceeded() {
-        when(dynamoDBService.getRegistrationCount(anyString())).thenReturn(80);
+        when(registrationDao.getRegistrationCount(anyString())).thenReturn(80);
 
         AwsProxyRequest request = new AwsProxyRequestBuilder()
             .queryString("eventId", "2017-03-16")

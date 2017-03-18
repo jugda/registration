@@ -5,8 +5,9 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import de.jugda.registration.model.RequestParam;
-import de.jugda.registration.service.DynamoDBService;
+import de.jugda.registration.dao.DynamoDBDao;
 import de.jugda.registration.service.HandlebarsService;
+import de.jugda.registration.dao.RegistrationDao;
 import lombok.SneakyThrows;
 
 import java.net.URLDecoder;
@@ -33,8 +34,8 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
         String response;
 
         if (isValid(model)) {
-            DynamoDBService dynamoDBService = new DynamoDBService();
-            dynamoDBService.saveRegistration(model);
+            RegistrationDao registrationDao = DynamoDBDao.instance();
+            registrationDao.saveRegistration(model);
 
             response = handlebarsService.getThanksPage(model);
         } else {

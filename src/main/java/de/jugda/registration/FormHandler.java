@@ -4,8 +4,9 @@ import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.RequestParam;
-import de.jugda.registration.service.DynamoDBService;
+import de.jugda.registration.dao.DynamoDBDao;
 import de.jugda.registration.service.HandlebarsService;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class FormHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
         Map<String, String> queryParams = request.getQueryStringParameters();
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
         String limit = queryParams.getOrDefault(RequestParam.LIMIT, "80");
-        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, "");
+        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, "2099-12-31T23:59:59");
 
         HandlebarsService handlebarsService = new HandlebarsService();
         String response;
@@ -35,10 +36,10 @@ public class FormHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
             response = handlebarsService.getRegistrationClosed();
         } else {
             // you are welcome to register
-            DynamoDBService dynamoDBService = new DynamoDBService();
+            RegistrationDao registrationDao = DynamoDBDao.instance();
 
             int maxCount = Integer.parseInt(limit);
-            int actualCount = dynamoDBService.getRegistrationCount(eventId);
+            int actualCount = registrationDao.getRegistrationCount(eventId);
             if (actualCount >= maxCount) {
                 response = handlebarsService.getRegistrationFull();
             } else {
