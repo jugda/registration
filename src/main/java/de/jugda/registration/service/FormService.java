@@ -6,7 +6,7 @@ import de.jugda.registration.model.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,7 +36,11 @@ public class FormService {
             if (actualCount >= maxCount) {
                 response = handlebarsService.getRegistrationFull();
             } else {
-                response = handlebarsService.getRegistrationForm(Collections.singletonMap(RequestParam.EVENT_ID, eventId));
+                int freeSeats = maxCount - actualCount;
+                Map<String, String> model = new HashMap<>();
+                model.put(RequestParam.EVENT_ID, eventId);
+                model.put("freeSeats", Integer.toString(freeSeats));
+                response = handlebarsService.getRegistrationForm(model);
             }
         }
 

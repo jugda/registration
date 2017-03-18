@@ -2,6 +2,10 @@ package de.jugda.registration.dao;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import de.jugda.registration.model.Registration;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -37,15 +41,21 @@ public class DynamoDBDao implements RegistrationDao {
 
     @Override
     public List<Registration> getRegistrations(String eventId) {
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-        List<Registration> registrations = mapper.scan(Registration.class, scanExpression);
-        return registrations.stream().filter(r -> eventId.equals(r.getEventId())).collect(Collectors.toList());
+        Condition condition = new Condition()
+            .withComparisonOperator(ComparisonOperator.EQ)
+            .withAttributeValueList(new AttributeValue(eventId));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+            .withFilterConditionEntry("eventId", condition);
+
+        PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
+
+        return scan.stream().collect(Collectors.toList());
     }
 
     @Override
     public int getRegistrationCount(String eventId) {
-        // TODO implement me!
-        return 0;
+        return getRegistrations(eventId).size();
     }
 
 }
