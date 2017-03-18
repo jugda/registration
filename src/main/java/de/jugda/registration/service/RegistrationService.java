@@ -1,13 +1,8 @@
-package de.jugda.registration;
+package de.jugda.registration.service;
 
-import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
-import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
-import de.jugda.registration.model.RequestParam;
-import de.jugda.registration.dao.DynamoDBDao;
-import de.jugda.registration.service.HandlebarsService;
+import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
+import de.jugda.registration.model.RequestParam;
 import lombok.SneakyThrows;
 
 import java.net.URLDecoder;
@@ -19,22 +14,20 @@ import java.util.stream.Collectors;
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
-public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+public class RegistrationService {
 
-    @Override
     @SneakyThrows
-    public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
-        String body = request.getBody();
+    public String handleRequest(String body) {
         String decoded = URLDecoder.decode(body, RequestParam.ENCODING);
 
         Map<String, String> model = Arrays.stream(decoded.split("&")).map(this::splitQueryParameter)
             .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue));
 
-        HandlebarsService handlebarsService = new HandlebarsService();
+        HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
 
         if (isValid(model)) {
-            RegistrationDao registrationDao = DynamoDBDao.instance();
+            RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
             registrationDao.saveRegistration(model);
 
             response = handlebarsService.getThanksPage(model);
@@ -42,7 +35,7 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
             response = handlebarsService.getRegistrationForm(model);
         }
 
-        return new AwsProxyResponse(200, RequestParam.HEADER, response);
+        return response;
     }
 
     private AbstractMap.SimpleImmutableEntry<String, String> splitQueryParameter(String it) {

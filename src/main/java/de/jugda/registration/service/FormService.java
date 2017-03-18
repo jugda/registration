@@ -1,13 +1,8 @@
-package de.jugda.registration;
+package de.jugda.registration.service;
 
-import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
-import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
+import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.RequestParam;
-import de.jugda.registration.dao.DynamoDBDao;
-import de.jugda.registration.service.HandlebarsService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,16 +12,14 @@ import java.util.Map;
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
-public class FormHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+public class FormService {
 
-    @Override
-    public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
-        Map<String, String> queryParams = request.getQueryStringParameters();
+    public String handleRequest(Map<String, String> queryParams) {
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
         String limit = queryParams.getOrDefault(RequestParam.LIMIT, "80");
         String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, "2099-12-31T23:59:59");
 
-        HandlebarsService handlebarsService = new HandlebarsService();
+        HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
 
         LocalDateTime now = LocalDateTime.now();
@@ -36,7 +29,7 @@ public class FormHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
             response = handlebarsService.getRegistrationClosed();
         } else {
             // you are welcome to register
-            RegistrationDao registrationDao = DynamoDBDao.instance();
+            RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
 
             int maxCount = Integer.parseInt(limit);
             int actualCount = registrationDao.getRegistrationCount(eventId);
@@ -47,7 +40,7 @@ public class FormHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
             }
         }
 
-        return new AwsProxyResponse(200, RequestParam.HEADER, response);
+        return response;
     }
 
 }

@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import de.jugda.registration.model.Registration;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Synchronized;
 
 import java.util.List;
 import java.util.Map;
@@ -16,17 +17,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DynamoDBDao implements RegistrationDao {
 
-    private final DynamoDBMapper mapper = DynamoDBManager.mapper();
+    private static final DynamoDBMapper mapper = DynamoDBManager.mapper();
 
     private static volatile DynamoDBDao instance;
 
+    @Synchronized
     public static RegistrationDao instance() {
         if (instance == null) {
-            synchronized (DynamoDBDao.class) {
-                if (instance == null) {
-                    instance = new DynamoDBDao();
-                }
-            }
+            instance = new DynamoDBDao();
         }
         return instance;
     }

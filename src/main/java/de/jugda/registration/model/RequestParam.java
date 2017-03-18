@@ -10,7 +10,11 @@ import java.util.Map;
  */
 @UtilityClass
 public class RequestParam {
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+
     public static final Map<String, String> HEADER = Collections.singletonMap("Content-Type", "text/html");
+    public static final Map<String, String> HEADER_JSON = Collections.singletonMap("Content-Type", "application/json");
     public static final String ENCODING = "ISO-8859-1";
 
     public static final String EVENT_ID = "eventId";

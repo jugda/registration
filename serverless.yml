@@ -27,20 +27,14 @@ package:
 
 functions:
   form:
-    handler: de.jugda.registration.FormHandler
+    handler: de.jugda.registration.RequestHandler
     events:
       - http:
           path: registration
           method: get
-  register:
-    handler: de.jugda.registration.RegistrationHandler
-    events:
       - http:
           path: registration
           method: post
-  list:
-    handler: de.jugda.registration.RegistrationViewHandler
-    events:
       - http:
           path: list
           method: get

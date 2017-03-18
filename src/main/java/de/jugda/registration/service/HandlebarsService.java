@@ -40,7 +40,7 @@ public class HandlebarsService {
         return renderTemplate("closed", Collections.emptyMap());
     }
 
-    public String getRegistrationsPage(Map<String, Object> model) {
+    public String getRegistrationsList(Map<String, Object> model) {
         return renderTemplate("list", model);
     }
 
