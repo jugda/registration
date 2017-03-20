@@ -41,7 +41,7 @@ public class RegistrationService {
     private AbstractMap.SimpleImmutableEntry<String, String> splitQueryParameter(String it) {
         String[] parts = it.split("=");
         final String key = parts[0];
-        final String value = parts.length > 1 ? parts[1] : "";
+        final String value = parts.length > 1 ? parts[1].trim() : "";
         return new AbstractMap.SimpleImmutableEntry<>(key, value);
     }
 

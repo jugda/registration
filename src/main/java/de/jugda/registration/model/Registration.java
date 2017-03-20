@@ -33,8 +33,8 @@ public class Registration {
     public static Registration of(Map<String, String> model) {
         Registration registration = new Registration();
         registration.setEventId(model.get(RequestParam.EVENT_ID));
-        registration.setName(model.get(RequestParam.NAME));
-        registration.setEmail(model.get(RequestParam.EMAIL));
+        registration.setName(model.get(RequestParam.NAME).trim());
+        registration.setEmail(model.get(RequestParam.EMAIL).trim());
         return registration;
     }
 }
