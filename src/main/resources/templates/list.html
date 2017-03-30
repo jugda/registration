@@ -3,13 +3,14 @@
 {{> head }}
 <body>
     <div class="container">
-    <h2>Anmeldungen für EventID {{ eventId }}</h2>
+    <h2>JUG DA Anmeldungen für EventId {{ eventId }}</h2>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>E-Mail</th>
+            <th>Twitter</th>
             <th>Datum</th>
         </tr>
         </thead>
@@ -18,7 +19,8 @@
             <tr>
                 <td>{{ id }}</td>
                 <td>{{ name }}</td>
-                <td>{{ email }}</td>
+                <td><a href="mailto:{{ email }}">{{ email }}</a></td>
+                <td><a href="https://twitter.com/{{ twitter}}" target="_blank">{{ twitter }}</a></td>
                 <td>{{ created }}</td>
             </tr>
         {{/each}}
