@@ -11,9 +11,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Synchronized;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
@@ -34,28 +33,46 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
-    public void saveRegistration(Map<String, String> model) {
-        Registration registration = Registration.of(model);
+    public Registration findRegistration(Registration registration) {
+        Condition eventCondition = createCondition(registration.getEventId());
+        Condition emailCondition = createCondition(registration.getEmail());
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+            .withFilterConditionEntry("eventId", eventCondition)
+            .withFilterConditionEntry("email", emailCondition);
+
+        PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
+
+        return scan.isEmpty() ? null : scan.get(0);
+    }
+
+    @Override
+    public void saveRegistration(Registration registration) {
         mapper.save(registration);
     }
 
     @Override
     public List<Registration> getRegistrations(String eventId) {
-        Condition condition = new Condition()
-            .withComparisonOperator(ComparisonOperator.EQ)
-            .withAttributeValueList(new AttributeValue(eventId));
-
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-            .withFilterConditionEntry("eventId", condition);
-
+        DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
         PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
-
-        return scan.stream().collect(Collectors.toList());
+        return new ArrayList<>(scan);
     }
 
     @Override
     public int getRegistrationCount(String eventId) {
-        return getRegistrations(eventId).size();
+        return mapper.count(Registration.class, getEventScanExpression(eventId));
+    }
+
+    private DynamoDBScanExpression getEventScanExpression(String eventId) {
+        Condition condition = createCondition(eventId);
+        return new DynamoDBScanExpression()
+            .withFilterConditionEntry("eventId", condition);
+    }
+
+    private Condition createCondition(String value) {
+        return new Condition()
+                .withComparisonOperator(ComparisonOperator.EQ)
+                .withAttributeValueList(new AttributeValue(value));
     }
 
 }

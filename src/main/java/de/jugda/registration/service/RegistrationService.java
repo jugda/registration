@@ -2,6 +2,7 @@ package de.jugda.registration.service;
 
 import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
+import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RequestParam;
 import lombok.SneakyThrows;
 
@@ -27,8 +28,15 @@ public class RegistrationService {
         String response;
 
         if (isValid(model)) {
+            Registration registration = Registration.of(model);
             RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
-            registrationDao.saveRegistration(model);
+
+            Registration existingRegistration = registrationDao.findRegistration(registration);
+            if (null != existingRegistration) {
+                registration.setId(existingRegistration.getId());
+            }
+
+            registrationDao.saveRegistration(registration);
 
             response = handlebarsService.getThanksPage(model);
         } else {
