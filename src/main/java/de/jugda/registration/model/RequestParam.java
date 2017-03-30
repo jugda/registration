@@ -15,7 +15,7 @@ public class RequestParam {
 
     public static final Map<String, String> HEADER = Collections.singletonMap("Content-Type", "text/html");
     public static final Map<String, String> HEADER_JSON = Collections.singletonMap("Content-Type", "application/json");
-    public static final String ENCODING = "ISO-8859-1";
+    public static final String ENCODING = "UTF-8";
 
     public static final String EVENT_ID = "eventId";
     public static final String LIMIT = "limit";
