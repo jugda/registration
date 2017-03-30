@@ -17,7 +17,7 @@ public class FormService {
     public String handleRequest(Map<String, String> queryParams) {
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
         String limit = queryParams.getOrDefault(RequestParam.LIMIT, "80");
-        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, "2099-12-31T23:59:59");
+        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, eventId + "T18:00:00");
 
         HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
