@@ -3,10 +3,11 @@
 {{> head }}
 <body>
     <div class="container">
-    <h2>JUG DA Anmeldungen für EventId {{ eventId }}</h2>
+    <h2>JUG DA Anmeldungen für EventId {{ eventId }}: {{ total }}</h2>
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>Lfd.Nr.</th>
             <th>ID</th>
             <th>Name</th>
             <th>E-Mail</th>
@@ -17,6 +18,7 @@
         <tbody>
         {{#each registrations}}
             <tr>
+                <td>{{ @index }}</td>
                 <td>{{ id }}</td>
                 <td>{{ name }}</td>
                 <td><a href="mailto:{{ email }}">{{ email }}</a></td>

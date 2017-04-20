@@ -24,6 +24,7 @@ public class ListService {
         Map<String, Object> model = new HashMap<>();
         model.put(RequestParam.EVENT_ID, eventId);
         model.put(RequestParam.REGISTRATIONS, registrations);
+        model.put("total", registrations.size());
 
         if ("json".equalsIgnoreCase(type)) {
             ObjectMapper mapper = new ObjectMapper();

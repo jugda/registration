@@ -11,8 +11,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Synchronized;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
@@ -55,7 +56,9 @@ public class DynamoDBDao implements RegistrationDao {
     public List<Registration> getRegistrations(String eventId) {
         DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
         PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
-        return new ArrayList<>(scan);
+        return scan.stream()
+            .sorted(Comparator.comparing(Registration::getCreated))
+            .collect(Collectors.toList());
     }
 
     @Override
