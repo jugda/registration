@@ -1,6 +1,7 @@
 package de.jugda.registration.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
@@ -16,6 +17,13 @@ import java.util.Map;
  */
 public class ListService {
 
+    private final ObjectMapper mapper;
+
+    public ListService() {
+        this.mapper = new ObjectMapper();
+        this.mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
+
     @SneakyThrows
     public String handleRequest(String eventId, String type) {
         RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
@@ -27,7 +35,6 @@ public class ListService {
         model.put("total", registrations.size());
 
         if ("json".equalsIgnoreCase(type)) {
-            ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(model);
         } else {
             HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();

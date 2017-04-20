@@ -8,7 +8,6 @@
         <thead>
         <tr>
             <th>Lfd.Nr.</th>
-            <th>ID</th>
             <th>Name</th>
             <th>E-Mail</th>
             <th>Twitter</th>
@@ -19,11 +18,10 @@
         {{#each registrations}}
             <tr>
                 <td>{{ @index }}</td>
-                <td>{{ id }}</td>
                 <td>{{ name }}</td>
                 <td><a href="mailto:{{ email }}">{{ email }}</a></td>
                 <td><a href="https://twitter.com/{{ twitter}}" target="_blank">{{ twitter }}</a></td>
-                <td>{{ created }}</td>
+                <td>{{ datetime created }}</td>
             </tr>
         {{/each}}
         </tbody>

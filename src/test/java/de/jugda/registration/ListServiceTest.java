@@ -52,11 +52,19 @@ public class ListServiceTest {
     }
 
     @Test
-    public void testFormRequest() {
+    public void testListRequest_html() {
         String response = listService.handleRequest("4711", "");
         log.info(response);
 
         assertTrue(response.contains("<h2>JUG DA Anmeldungen für EventId 4711: 1</h2>"));
+    }
+
+    @Test
+    public void testListRequest_json() {
+        String response = listService.handleRequest("4711", "json");
+        log.info(response);
+
+        assertTrue(response.contains("\"eventId\":\"4711\""));
     }
 
 }
