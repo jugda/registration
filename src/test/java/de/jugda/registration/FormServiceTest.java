@@ -3,7 +3,6 @@ package de.jugda.registration;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.service.FormService;
 import de.jugda.registration.service.HandlebarsService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +52,19 @@ public class FormServiceTest {
         log.info(response);
 
         assertTrue(response.contains("<form method=\"post\""));
+    }
+
+    @Test
+    public void testFormRequest_defaultDeadline() {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("eventId", "2099-12-31");
+        queryParams.put("limit", "80");
+
+        String response = formService.handleRequest(queryParams);
+        log.info(response);
+
+        assertTrue(response.contains("<form method=\"post\""));
+
     }
 
     @Test

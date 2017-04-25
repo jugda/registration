@@ -17,13 +17,13 @@ public class FormService {
     public String handleRequest(Map<String, String> queryParams) {
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
         String limit = queryParams.getOrDefault(RequestParam.LIMIT, "60");
-        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, eventId + "T18:00:00");
+        String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, eventId + "T18:00:00+02:00");
 
         HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadlineTime = LocalDateTime.parse(deadline, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        LocalDateTime deadlineTime = LocalDateTime.parse(deadline, DateTimeFormatter.ISO_DATE_TIME);
         if (now.isAfter(deadlineTime)) {
             // sorry, no registration for you
             response = handlebarsService.getRegistrationClosed();
