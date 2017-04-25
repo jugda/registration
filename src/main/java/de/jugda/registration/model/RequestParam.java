@@ -13,7 +13,7 @@ public class RequestParam {
     public static final String GET = "GET";
     public static final String POST = "POST";
 
-    public static final Map<String, String> HEADER = Collections.singletonMap("Content-Type", "text/html");
+    public static final Map<String, String> HEADER = Collections.singletonMap("Content-Type", "text/html; charset-utf-8");
     public static final Map<String, String> HEADER_JSON = Collections.singletonMap("Content-Type", "application/json");
     public static final String ENCODING = "UTF-8";
 
