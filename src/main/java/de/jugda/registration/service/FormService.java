@@ -40,6 +40,7 @@ public class FormService {
                 Map<String, String> model = new HashMap<>();
                 model.put(RequestParam.EVENT_ID, eventId);
                 model.put("freeSeats", Integer.toString(freeSeats));
+                model.put("actualCount", Integer.toString(actualCount));
                 response = handlebarsService.getRegistrationForm(model);
             }
         }
