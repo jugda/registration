@@ -4,7 +4,7 @@
 <body>
     <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
         <h2>Anmeldung</h2>
-        <div class="text-success">Noch {{ freeSeats }} freie Plätze. Es haben sich {{ actualCount }} angemeldet.</div>
+        <div class="text-success">Noch {{ freeSeats }} freie Plätze ({{ actualCount }} bereits angemeldet).</div>
         <div class="form-group {{#if nameError}}has-error{{/if}}">
             <label for="name" class="control-label">Name*</label>
             <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ name }}"/>
@@ -21,6 +21,7 @@
         <button type="submit" id="submit" class="btn btn-default">Anmelden</button>
         <input type="hidden" name="eventId" value="{{ eventId }}"/>
         <input type="hidden" name="freeSeats" value="{{ freeSeats }}"/>
+        <input type="hidden" name="actualCount" value="{{ actualCount }}"/>
     </form>
 </body>
 </html>
