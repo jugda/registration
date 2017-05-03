@@ -4,6 +4,7 @@ import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RequestParam;
+import de.jugda.registration.slack.SlackWebClient;
 import lombok.SneakyThrows;
 
 import java.net.URLDecoder;
@@ -37,6 +38,14 @@ public class RegistrationService {
             }
 
             registrationDao.saveRegistration(registration);
+
+            int registrationCount = registrationDao.getRegistrationCount(registration.getEventId());
+            if (registrationCount / Integer.parseInt(model.get("limit")) >= 0.95) {
+                SlackWebClient slack = new SlackWebClient(System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
+                String message = String.format(":bangbang: Event %1$s hat mehr als 95%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",
+                    registration.getEventId(), registrationCount);
+                slack.postMessage(message, System.getenv("SLACK_CHANNEL_GENERAL"));
+            }
 
             response = handlebarsService.getThanksPage(model);
         } else {

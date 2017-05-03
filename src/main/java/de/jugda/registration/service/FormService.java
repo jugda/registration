@@ -41,6 +41,7 @@ public class FormService {
                 model.put(RequestParam.EVENT_ID, eventId);
                 model.put("freeSeats", Integer.toString(freeSeats));
                 model.put("actualCount", Integer.toString(actualCount));
+                model.put("limit", limit);
                 response = handlebarsService.getRegistrationForm(model);
             }
         }
