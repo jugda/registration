@@ -12,6 +12,7 @@ provider:
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   environment:
     DYNAMODB_TABLE: ${self:service}
+    REGISTRATION_SECRET: ${file(sls-props.yml):registration.secret}
     SLACK_OAUTH_ACCESS_TOKEN: ${file(sls-props.yml):slack.oauth_access_token}
     SLACK_CHANNEL_GENERAL: ${file(sls-props.yml):slack.channel_general}
   iamRoleStatements:
