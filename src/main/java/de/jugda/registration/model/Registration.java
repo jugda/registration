@@ -36,8 +36,8 @@ public class Registration {
         Registration registration = new Registration();
         registration.setEventId(model.get(RequestParam.EVENT_ID));
         registration.setName(model.get(RequestParam.NAME).trim());
-        registration.setEmail(model.get(RequestParam.EMAIL).trim());
-        registration.setTwitter(model.getOrDefault(RequestParam.TWITTER, "").trim());
+        registration.setEmail(model.get(RequestParam.EMAIL).trim().toLowerCase());
+        registration.setTwitter(model.getOrDefault(RequestParam.TWITTER, "").trim().toLowerCase());
         return registration;
     }
 }
