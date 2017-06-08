@@ -1,0 +1,22 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+env:
+  - NODE_VERSION="6"
+
+before_install:
+  - nvm install $NODE_VERSION
+  - node --version
+  - npm --version
+install:
+  - npm install -g serverless
+script:
+  - mvn clean install -B
+after_script:
+  - sls deploy
