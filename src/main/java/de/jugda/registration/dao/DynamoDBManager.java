@@ -3,6 +3,7 @@ package de.jugda.registration.dao;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import lombok.Synchronized;
 
 /**
@@ -16,7 +17,10 @@ class DynamoDBManager {
 
     private DynamoDBManager() {
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.defaultClient();
-        mapper = new DynamoDBMapper(client);
+        DynamoDBMapperConfig config = DynamoDBMapperConfig.builder()
+            .withPaginationLoadingStrategy(DynamoDBMapperConfig.PaginationLoadingStrategy.EAGER_LOADING)
+            .build();
+        mapper = new DynamoDBMapper(client, config);
     }
 
     @Synchronized
