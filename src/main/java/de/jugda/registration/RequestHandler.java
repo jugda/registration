@@ -33,12 +33,16 @@ public class RequestHandler implements com.amazonaws.services.lambda.runtime.Req
                 response = BeanFactory.getRegistrationService().handleRequest(body);
             }
         } else if ("/list".equals(path)) {
-            if (RequestParam.GET.equals(method) && isSecretValid(request)) {
-                String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
-                String type = queryParams.getOrDefault(RequestParam.TYPE, "");
-                response = BeanFactory.getListHandler().handleRequest(eventId, type);
-                if ("json".equalsIgnoreCase(type)) {
-                    header = RequestParam.HEADER_JSON;
+            if (RequestParam.GET.equals(method) && isSecretValid(queryParams)) {
+                if (queryParams.containsKey(RequestParam.EVENT_ID)) {
+                    String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
+                    String type = queryParams.getOrDefault(RequestParam.TYPE, "");
+                    response = BeanFactory.getListHandler().singleEvent(eventId, type);
+                    if ("json".equalsIgnoreCase(type)) {
+                        header = RequestParam.HEADER_JSON;
+                    }
+                } else {
+                    response = BeanFactory.getListHandler().allEvents();
                 }
             }
         }
@@ -46,8 +50,8 @@ public class RequestHandler implements com.amazonaws.services.lambda.runtime.Req
         return new AwsProxyResponse(200, header, response);
     }
 
-    private boolean isSecretValid(AwsProxyRequest request) {
-        String secret = request.getQueryStringParameters().getOrDefault("secret", "");
+    private boolean isSecretValid(Map<String, String> queryParams) {
+        String secret = queryParams.getOrDefault(RequestParam.SECRET, "");
         return System.getenv("REGISTRATION_SECRET").equals(secret);
     }
 

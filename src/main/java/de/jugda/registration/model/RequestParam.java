@@ -20,6 +20,7 @@ public class RequestParam {
     public static final String EVENT_ID = "eventId";
     public static final String LIMIT = "limit";
     public static final String DEADLINE = "deadline";
+    public static final String SECRET = "secret";
 
     public static final String NAME = "name";
     public static final String EMAIL = "email";

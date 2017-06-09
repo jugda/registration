@@ -13,6 +13,8 @@ public interface RegistrationDao {
 
     void saveRegistration(Registration registration);
 
+    List<Registration> findAll();
+
     List<Registration> getRegistrations(String eventId);
 
     int getRegistrationCount(String eventId);

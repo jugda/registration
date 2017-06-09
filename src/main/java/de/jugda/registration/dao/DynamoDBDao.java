@@ -53,6 +53,14 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
+    public List<Registration> findAll() {
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        return mapper.scan(Registration.class, scanExpression).stream()
+            .sorted(Comparator.comparing(Registration::getEventId))
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Registration> getRegistrations(String eventId) {
         DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
         PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);

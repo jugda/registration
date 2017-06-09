@@ -48,6 +48,10 @@ public class HandlebarsService {
         return renderTemplate("list", model);
     }
 
+    public String getRegistrationsOverview(Map<String, Object> model) {
+        return renderTemplate("overview", model);
+    }
+
     @SneakyThrows
     private String renderTemplate(String templateName, Map<String, ?> model) {
         Template template = handlebars.compile(templateName);

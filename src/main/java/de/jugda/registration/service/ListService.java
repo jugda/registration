@@ -9,6 +9,7 @@ import de.jugda.registration.model.RequestParam;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class ListService {
     }
 
     @SneakyThrows
-    public String handleRequest(String eventId, String type) {
+    public String singleEvent(String eventId, String type) {
         RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
         List<Registration> registrations = registrationDao.getRegistrations(eventId);
 
@@ -40,6 +41,18 @@ public class ListService {
             HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
             return handlebarsService.getRegistrationsList(model);
         }
+    }
+
+    public String allEvents() {
+        List<Registration> registrations = BeanFactory.getRegistrationDao().findAll();
+
+        Map<String, Integer> events = new LinkedHashMap<>();
+        registrations.forEach(reg -> events.put(reg.getEventId(), events.getOrDefault(reg.getEventId(), 0) + 1));
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("events", events);
+        model.put("secret", System.getenv("REGISTRATION_SECRET"));
+        return BeanFactory.getHandlebarsService().getRegistrationsOverview(model);
     }
 
 }

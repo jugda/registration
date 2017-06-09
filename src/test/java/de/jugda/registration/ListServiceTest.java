@@ -45,6 +45,7 @@ public class ListServiceTest {
 
         registrationDao = mock(RegistrationDao.class);
         when(registrationDao.getRegistrations(anyString())).thenReturn(Collections.singletonList(reg));
+        when(registrationDao.findAll()).thenReturn(Collections.singletonList(reg));
 
         PowerMockito.mockStatic(BeanFactory.class);
         when(BeanFactory.getRegistrationDao()).thenReturn(registrationDao);
@@ -53,7 +54,7 @@ public class ListServiceTest {
 
     @Test
     public void testListRequest_html() {
-        String response = listService.handleRequest("4711", "");
+        String response = listService.singleEvent("4711", "");
         log.info(response);
 
         assertTrue(response.contains("<h2>JUG DA Anmeldungen für EventId 4711: 1</h2>"));
@@ -61,10 +62,18 @@ public class ListServiceTest {
 
     @Test
     public void testListRequest_json() {
-        String response = listService.handleRequest("4711", "json");
+        String response = listService.singleEvent("4711", "json");
         log.info(response);
 
         assertTrue(response.contains("\"eventId\":\"4711\""));
+    }
+
+    @Test
+    public void testOverview() {
+        String response = listService.allEvents();
+        log.info(response);
+
+        assertTrue(response.contains("eventId=4711"));
     }
 
 }
