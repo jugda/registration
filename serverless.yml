@@ -31,7 +31,7 @@ package:
 
 functions:
   form:
-    handler: de.jugda.registration.RequestHandler
+    handler: de.jugda.registration.RegistrationHandler
     events:
       - http:
           path: registration
@@ -39,6 +39,9 @@ functions:
       - http:
           path: registration
           method: post
+  list:
+    handler: de.jugda.registration.ListHandler
+    events:
       - http:
           path: list
           method: get
@@ -58,6 +61,6 @@ resources:
             AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
+          ReadCapacityUnits: 2
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}

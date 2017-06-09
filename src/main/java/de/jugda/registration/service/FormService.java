@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class FormService {
 
-    public String handleRequest(Map<String, String> queryParams) {
+    public String registrationForm(Map<String, String> queryParams) {
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
         String limit = queryParams.getOrDefault(RequestParam.LIMIT, "60");
         String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, eventId + "T18:00:00+02:00");
@@ -32,7 +32,7 @@ public class FormService {
             RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
 
             int maxCount = Integer.parseInt(limit);
-            int actualCount = registrationDao.getRegistrationCount(eventId);
+            int actualCount = registrationDao.getCount(eventId);
             if (actualCount >= maxCount) {
                 response = handlebarsService.getRegistrationFull();
             } else {

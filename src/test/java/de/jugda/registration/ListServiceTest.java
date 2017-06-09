@@ -44,7 +44,7 @@ public class ListServiceTest {
         reg.setCreated(new Date());
 
         registrationDao = mock(RegistrationDao.class);
-        when(registrationDao.getRegistrations(anyString())).thenReturn(Collections.singletonList(reg));
+        when(registrationDao.findByEventId(anyString())).thenReturn(Collections.singletonList(reg));
         when(registrationDao.findAll()).thenReturn(Collections.singletonList(reg));
 
         PowerMockito.mockStatic(BeanFactory.class);

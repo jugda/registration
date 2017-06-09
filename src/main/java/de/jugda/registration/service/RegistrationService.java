@@ -32,14 +32,14 @@ public class RegistrationService {
             Registration registration = Registration.of(model);
             RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
 
-            Registration existingRegistration = registrationDao.findRegistration(registration);
+            Registration existingRegistration = registrationDao.find(registration);
             if (null != existingRegistration) {
                 registration.setId(existingRegistration.getId());
             }
 
-            registrationDao.saveRegistration(registration);
+            registrationDao.save(registration);
 
-            int registrationCount = registrationDao.getRegistrationCount(registration.getEventId());
+            int registrationCount = registrationDao.getCount(registration.getEventId());
             if (registrationCount / Integer.parseInt(model.get("limit")) >= 0.95) {
                 SlackWebClient slack = new SlackWebClient(System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
                 String message = String.format(":bangbang: Event %1$s hat mehr als 95%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",

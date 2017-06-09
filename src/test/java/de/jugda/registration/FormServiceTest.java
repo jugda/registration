@@ -34,7 +34,7 @@ public class FormServiceTest {
     @Before
     public void before() {
         registrationDao = mock(RegistrationDao.class);
-        when(registrationDao.getRegistrationCount(anyString())).thenReturn(0);
+        when(registrationDao.getCount(anyString())).thenReturn(0);
 
         PowerMockito.mockStatic(BeanFactory.class);
         when(BeanFactory.getRegistrationDao()).thenReturn(registrationDao);
@@ -48,7 +48,7 @@ public class FormServiceTest {
         queryParams.put("limit", "80");
         queryParams.put("deadline", "2099-12-31T23:59:59");
 
-        String response = formService.handleRequest(queryParams);
+        String response = formService.registrationForm(queryParams);
         log.info(response);
 
         assertTrue(response.contains("<form method=\"post\""));
@@ -60,7 +60,7 @@ public class FormServiceTest {
         queryParams.put("eventId", "2099-12-31");
         queryParams.put("limit", "80");
 
-        String response = formService.handleRequest(queryParams);
+        String response = formService.registrationForm(queryParams);
         log.info(response);
 
         assertTrue(response.contains("<form method=\"post\""));
@@ -69,14 +69,14 @@ public class FormServiceTest {
 
     @Test
     public void testFormRequest_limitSucceeded() {
-        when(registrationDao.getRegistrationCount(anyString())).thenReturn(80);
+        when(registrationDao.getCount(anyString())).thenReturn(80);
 
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("eventId", "2017-03-16");
         queryParams.put("limit", "80");
         queryParams.put("deadline", "2099-12-31T23:59:59");
 
-        String response = formService.handleRequest(queryParams);
+        String response = formService.registrationForm(queryParams);
         log.info(response);
 
         assertTrue(response.contains("Für diese Veranstaltung sind alle verfügbaren Plätze bereits belegt."));
@@ -90,7 +90,7 @@ public class FormServiceTest {
         queryParams.put("limit", "80");
         queryParams.put("deadline", "2016-12-31T23:59:59");
 
-        String response = formService.handleRequest(queryParams);
+        String response = formService.registrationForm(queryParams);
         log.info(response);
 
         assertTrue(response.contains("Für diese Veranstaltung ist die Anmeldefrist leider schon abgelaufen."));

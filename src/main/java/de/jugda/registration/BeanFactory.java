@@ -4,9 +4,8 @@ import de.jugda.registration.dao.DynamoDBDao;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.service.FormService;
 import de.jugda.registration.service.HandlebarsService;
-import de.jugda.registration.service.RegistrationService;
 import de.jugda.registration.service.ListService;
-import lombok.Synchronized;
+import de.jugda.registration.service.RegistrationService;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -17,11 +16,10 @@ public class BeanFactory {
 
     private static FormService formService;
     private static RegistrationService registrationService;
-    private static ListService listHandler;
+    private static ListService listService;
     private static RegistrationDao registrationDao;
     private static HandlebarsService handlebarsService;
 
-    @Synchronized
     public static FormService getFormService() {
         if (formService == null) {
             formService = new FormService();
@@ -29,7 +27,6 @@ public class BeanFactory {
         return formService;
     }
 
-    @Synchronized
     public static RegistrationService getRegistrationService() {
         if (registrationService == null) {
             registrationService = new RegistrationService();
@@ -37,15 +34,13 @@ public class BeanFactory {
         return registrationService;
     }
 
-    @Synchronized
-    public static ListService getListHandler() {
-        if (listHandler == null) {
-            listHandler = new ListService();
+    public static ListService getListService() {
+        if (listService == null) {
+            listService = new ListService();
         }
-        return listHandler;
+        return listService;
     }
 
-    @Synchronized
     public static RegistrationDao getRegistrationDao() {
         if (registrationDao == null) {
             registrationDao = DynamoDBDao.instance();
@@ -53,7 +48,6 @@ public class BeanFactory {
         return registrationDao;
     }
 
-    @Synchronized
     public static HandlebarsService getHandlebarsService() {
         if (handlebarsService == null) {
             handlebarsService = new HandlebarsService();

@@ -34,7 +34,7 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
-    public Registration findRegistration(Registration registration) {
+    public Registration find(Registration registration) {
         Condition eventCondition = createCondition(registration.getEventId());
         Condition emailCondition = createCondition(registration.getEmail());
 
@@ -48,7 +48,7 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
-    public void saveRegistration(Registration registration) {
+    public void save(Registration registration) {
         mapper.save(registration);
     }
 
@@ -61,7 +61,7 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
-    public List<Registration> getRegistrations(String eventId) {
+    public List<Registration> findByEventId(String eventId) {
         DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
         PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
         return scan.stream()
@@ -70,7 +70,15 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
-    public int getRegistrationCount(String eventId) {
+    public Registration findByEventIdAndEmail(String eventId, String email) {
+        DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
+        scanExpression.addFilterCondition("email", createCondition(email));
+        PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
+        return scan.get(0);
+    }
+
+    @Override
+    public int getCount(String eventId) {
         return mapper.count(Registration.class, getEventScanExpression(eventId));
     }
 

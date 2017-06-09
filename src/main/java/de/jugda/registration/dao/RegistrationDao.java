@@ -9,13 +9,15 @@ import java.util.List;
  */
 public interface RegistrationDao {
 
-    Registration findRegistration(Registration registration);
+    Registration find(Registration registration);
 
-    void saveRegistration(Registration registration);
+    void save(Registration registration);
 
     List<Registration> findAll();
 
-    List<Registration> getRegistrations(String eventId);
+    List<Registration> findByEventId(String eventId);
 
-    int getRegistrationCount(String eventId);
+    Registration findByEventIdAndEmail(String eventId, String email);
+
+    int getCount(String eventId);
 }

@@ -28,7 +28,7 @@ public class ListService {
     @SneakyThrows
     public String singleEvent(String eventId, String type) {
         RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
-        List<Registration> registrations = registrationDao.getRegistrations(eventId);
+        List<Registration> registrations = registrationDao.findByEventId(eventId);
 
         Map<String, Object> model = new HashMap<>();
         model.put(RequestParam.EVENT_ID, eventId);
