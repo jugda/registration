@@ -82,6 +82,12 @@ public class DynamoDBDao implements RegistrationDao {
         return mapper.count(Registration.class, getEventScanExpression(eventId));
     }
 
+    @Override
+    public void delete(String id) {
+        Registration reg = mapper.load(Registration.class, id);
+        mapper.delete(reg);
+    }
+
     private DynamoDBScanExpression getEventScanExpression(String eventId) {
         Condition condition = createCondition(eventId);
         return new DynamoDBScanExpression()

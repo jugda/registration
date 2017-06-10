@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+{{> head }}
+<body>
+    <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
+        <h2>Abmeldung</h2>
+        <div class="form-group {{#if emailError}}has-error{{/if}}">
+            <label for="email" class="control-label">E-Mail*</label>
+            <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail" value="{{ email }}"/>
+        </div>
+        <div class="help-block">* = Pflichtfeld</div>
+        <button type="submit" id="submit" class="btn btn-default">Abmelden</button>
+        <input type="hidden" name="eventId" value="{{ eventId }}"/>
+    </form>
+</body>
+</html>

@@ -5,25 +5,16 @@ import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RequestParam;
 import de.jugda.registration.slack.SlackWebClient;
-import lombok.SneakyThrows;
 
-import java.net.URLDecoder;
-import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
 public class RegistrationService {
 
-    @SneakyThrows
     public String handleRequest(String body) {
-        String decoded = URLDecoder.decode(body, RequestParam.ENCODING);
-
-        Map<String, String> model = Arrays.stream(decoded.split("&")).map(this::splitQueryParameter)
-            .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue));
+        Map<String, String> model = RequestParam.parseBody(body);
 
         HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
@@ -53,13 +44,6 @@ public class RegistrationService {
         }
 
         return response;
-    }
-
-    private AbstractMap.SimpleImmutableEntry<String, String> splitQueryParameter(String it) {
-        String[] parts = it.split("=");
-        final String key = parts[0];
-        final String value = parts.length > 1 ? parts[1].trim() : "";
-        return new AbstractMap.SimpleImmutableEntry<>(key, value);
     }
 
     private boolean isValid(Map<String, String> model) {

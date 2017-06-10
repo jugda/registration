@@ -6,6 +6,7 @@ import de.jugda.registration.model.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +48,12 @@ public class FormService {
         }
 
         return response;
+    }
+
+    public String deregistrationForm(Map<String, String> queryParams) {
+        String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
+        Map<String, String> model = Collections.singletonMap(RequestParam.EVENT_ID, eventId);
+        return BeanFactory.getHandlebarsService().getDeregistration(model);
     }
 
 }

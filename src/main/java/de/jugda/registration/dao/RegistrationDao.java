@@ -20,4 +20,6 @@ public interface RegistrationDao {
     Registration findByEventIdAndEmail(String eventId, String email);
 
     int getCount(String eventId);
+
+    void delete(String id);
 }

@@ -45,6 +45,18 @@ functions:
       - http:
           path: list
           method: get
+  delete:
+    handler: de.jugda.registration.DeleteHandler
+    events:
+      - http:
+          path: delete
+          method: get
+      - http:
+          path: delete
+          method: post
+      - http:
+          path: delete
+          method: delete
 
 resources:
   Resources:

@@ -12,20 +12,34 @@
             <th>E-Mail</th>
             <th>Twitter</th>
             <th>Datum</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         {{#each registrations}}
-            <tr>
+            <tr id="{{ id }}">
                 <td>{{ @index }}</td>
                 <td>{{ name }}</td>
                 <td><a href="mailto:{{ email }}">{{ email }}</a></td>
                 <td><a href="https://twitter.com/{{ twitter}}" target="_blank">{{ twitter }}</a></td>
                 <td>{{ datetime created }}</td>
+                <td><span class="glyphicon glyphicon-trash text-danger" onclick="delReg('{{ id }}')" style="cursor: pointer"></span></td>
             </tr>
         {{/each}}
         </tbody>
     </table>
     </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script>
+        var delReg = function(id) {
+            console.log('deleting registration', id);
+            $.ajax({
+                url: '/delete?id=' + id,
+                type: 'DELETE'
+            }).done(function () {
+                $('#' + id).remove();
+            });
+        }
+    </script>
 </body>
 </html>

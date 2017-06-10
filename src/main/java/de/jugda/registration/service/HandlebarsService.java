@@ -52,6 +52,14 @@ public class HandlebarsService {
         return renderTemplate("overview", model);
     }
 
+    public String getDeregistration(Map<String, String> model) {
+        return renderTemplate("delete", model);
+    }
+
+    public String getDeregistrationThanks(Map<String, String> model) {
+        return renderTemplate("delete_thanks", model);
+    }
+
     @SneakyThrows
     private String renderTemplate(String templateName, Map<String, ?> model) {
         Template template = handlebars.compile(templateName);
