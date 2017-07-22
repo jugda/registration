@@ -4,6 +4,7 @@
 <body>
     <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
         <h2>Abmeldung</h2>
+        <div class="text-muted"></div>
         <div class="form-group {{#if emailError}}has-error{{/if}}">
             <label for="email" class="control-label">E-Mail*</label>
             <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail" value="{{ email }}"/>

@@ -23,7 +23,7 @@
                 <td><a href="mailto:{{ email }}">{{ email }}</a></td>
                 <td><a href="https://twitter.com/{{ twitter}}" target="_blank">{{ twitter }}</a></td>
                 <td>{{ datetime created }}</td>
-                <td><span class="glyphicon glyphicon-trash text-danger" onclick="delReg('{{ id }}')" style="cursor: pointer"></span></td>
+                <td><span class="glyphicon glyphicon-trash text-danger" onclick="delReg('{{ id }}', '{{ name }}')" style="cursor: pointer"></span></td>
             </tr>
         {{/each}}
         </tbody>
@@ -31,14 +31,16 @@
     </div>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script>
-        var delReg = function(id) {
-            console.log('deleting registration', id);
-            $.ajax({
-                url: '/delete?id=' + id,
-                type: 'DELETE'
-            }).done(function () {
-                $('#' + id).remove();
-            });
+        var delReg = function(id, name) {
+            if (confirm('Delete registration of ' + name + '?')) {
+                console.log('deleting registration', id);
+                $.ajax({
+                    url: '/delete?id=' + id,
+                    type: 'DELETE'
+                }).done(function () {
+                    $('#' + id).remove();
+                });
+            }
         }
     </script>
 </body>

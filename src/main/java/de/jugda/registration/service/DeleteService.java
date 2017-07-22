@@ -21,10 +21,16 @@ public class DeleteService {
 
             RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
 
-            Registration registration = registrationDao.findByEventIdAndEmail(eventId, email);
-            registrationDao.delete(registration.getId());
+            String name;
+            try {
+                Registration registration = registrationDao.findByEventIdAndEmail(eventId, email);
+                registrationDao.delete(registration.getId());
+                name = registration.getName();
+            } catch (Exception e) {
+                name = "";
+            }
 
-            return BeanFactory.getHandlebarsService().getDeregistrationThanks(Collections.singletonMap("name", registration.getName()));
+            return BeanFactory.getHandlebarsService().getDeregistrationThanks(Collections.singletonMap("name", name));
         } else {
             return BeanFactory.getHandlebarsService().getDeregistration(model);
         }
