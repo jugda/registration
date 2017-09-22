@@ -25,6 +25,15 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: "${file(sls-props.yml):dlq}"
+    - Effect: Allow
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: "*"
 
 package:
   artifact: target/jugda-registration.jar
@@ -39,12 +48,14 @@ functions:
       - http:
           path: registration
           method: post
+    onError: "${file(sls-props.yml):dlq}"
   list:
     handler: de.jugda.registration.ListHandler
     events:
       - http:
           path: list
           method: get
+    onError: "${file(sls-props.yml):dlq}"
   delete:
     handler: de.jugda.registration.DeleteHandler
     events:
@@ -57,6 +68,7 @@ functions:
       - http:
           path: delete
           method: delete
+    onError: "${file(sls-props.yml):dlq}"
 
 resources:
   Resources:
