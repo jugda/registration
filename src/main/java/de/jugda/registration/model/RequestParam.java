@@ -20,6 +20,7 @@ public class RequestParam {
     public static final String DELETE = "DELETE";
 
     public static final Map<String, String> HEADER = Collections.singletonMap("Content-Type", "text/html; charset=utf-8");
+    public static final Map<String, String> HEADER_TEXT = Collections.singletonMap("Content-Type", "text/plain; charset=utf-8");
     public static final Map<String, String> HEADER_JSON = Collections.singletonMap("Content-Type", "application/json; charset=utf-8");
     public static final String ENCODING = "UTF-8";
 

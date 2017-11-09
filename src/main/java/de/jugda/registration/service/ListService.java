@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
@@ -37,6 +38,8 @@ public class ListService {
 
         if ("json".equalsIgnoreCase(type)) {
             return mapper.writeValueAsString(model);
+        } else if ("namesOnly".equalsIgnoreCase(type)) {
+            return registrations.stream().map(r -> r.getName()).collect(Collectors.joining("\n"));
         } else {
             HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
             return handlebarsService.getRegistrationsList(model);

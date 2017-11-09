@@ -32,6 +32,9 @@ public class ListHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
             if ("json".equalsIgnoreCase(type)) {
                 header = RequestParam.HEADER_JSON;
             }
+            if ("namesOnly".equalsIgnoreCase(type)) {
+                header = RequestParam.HEADER_TEXT;
+            }
         } else {
             response = BeanFactory.getListService().allEvents();
         }

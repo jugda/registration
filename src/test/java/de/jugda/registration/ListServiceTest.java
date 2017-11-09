@@ -12,10 +12,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -35,21 +37,27 @@ public class ListServiceTest {
 
     @Before
     public void before() {
-        Registration reg = new Registration();
-        reg.setId(UUID.randomUUID().toString());
-        reg.setName("John Doe");
-        reg.setEmail("john@doe.com");
-        reg.setTwitter("@johndoe");
-        reg.setEventId("4711");
-        reg.setCreated(new Date());
+        Registration reg1 = getRegistration("John Doe", "john@doe.com", "@johndoe", "4711");
+        Registration reg2 = getRegistration("Dieter Develop", "dieter@develop.com", "@ddevelop", "4711");
 
         registrationDao = mock(RegistrationDao.class);
-        when(registrationDao.findByEventId(anyString())).thenReturn(Collections.singletonList(reg));
-        when(registrationDao.findAll()).thenReturn(Collections.singletonList(reg));
+        when(registrationDao.findByEventId(anyString())).thenReturn(Arrays.asList(reg1, reg2));
+        when(registrationDao.findAll()).thenReturn(Arrays.asList(reg1, reg2));
 
         PowerMockito.mockStatic(BeanFactory.class);
         when(BeanFactory.getRegistrationDao()).thenReturn(registrationDao);
         when(BeanFactory.getHandlebarsService()).thenReturn(handlebarsService);
+    }
+
+    private Registration getRegistration(String name, String email, String twitter, String eventId) {
+        Registration reg = new Registration();
+        reg.setId(UUID.randomUUID().toString());
+        reg.setName(name);
+        reg.setEmail(email);
+        reg.setTwitter(twitter);
+        reg.setEventId(eventId);
+        reg.setCreated(new Date());
+        return reg;
     }
 
     @Test
@@ -57,7 +65,7 @@ public class ListServiceTest {
         String response = listService.singleEvent("4711", "");
         log.info(response);
 
-        assertTrue(response.contains("<h2>JUG DA Anmeldungen für EventId 4711: 1</h2>"));
+        assertTrue(response.contains("<h2>JUG DA Anmeldungen für EventId 4711: 2</h2>"));
     }
 
     @Test
@@ -66,6 +74,14 @@ public class ListServiceTest {
         log.info(response);
 
         assertTrue(response.contains("\"eventId\":\"4711\""));
+    }
+
+    @Test
+    public void testListRequest_namesOnly() {
+        final String response = listService.singleEvent("4711", "namesOnly");
+        log.info(response);
+
+        assertEquals("John Doe\nDieter Develop", response);
     }
 
     @Test
