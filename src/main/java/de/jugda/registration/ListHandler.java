@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import de.jugda.registration.model.RequestParam;
 import lombok.extern.log4j.Log4j;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,10 +31,10 @@ public class ListHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
             String type = queryParams.getOrDefault(RequestParam.TYPE, "");
             response = BeanFactory.getListService().singleEvent(eventId, type);
             if ("json".equalsIgnoreCase(type)) {
-                header = RequestParam.HEADER_JSON;
+                header = buildCorsHeader("application/json");
             }
             if ("namesOnly".equalsIgnoreCase(type)) {
-                header = RequestParam.HEADER_TEXT;
+                header = buildCorsHeader("text/plain");
             }
         } else {
             response = BeanFactory.getListService().allEvents();
@@ -45,6 +46,13 @@ public class ListHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
     private boolean isSecretValid(Map<String, String> queryParams) {
         String secret = queryParams.getOrDefault(RequestParam.SECRET, "");
         return System.getenv("REGISTRATION_SECRET").equals(secret);
+    }
+
+    private Map<String, String> buildCorsHeader(String contentType) {
+        Map<String, String> header = new HashMap<>();
+        header.put("Content-Type", contentType + "; charset=utf-8");
+        header.put("Access-Control-Allow-Origin", "*");
+        return header;
     }
 
 }
