@@ -8,6 +8,9 @@ import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RequestParam;
 import lombok.SneakyThrows;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,11 +49,16 @@ public class ListService {
         }
     }
 
-    public String allEvents() {
+    public String allEvents(boolean showAll) {
         List<Registration> registrations = BeanFactory.getRegistrationDao().findAll();
 
         Map<String, Integer> events = new LinkedHashMap<>();
-        registrations.forEach(reg -> events.put(reg.getEventId(), events.getOrDefault(reg.getEventId(), 0) + 1));
+        registrations.forEach(reg ->{
+            LocalDate date = LocalDate.parse(reg.getEventId(), DateTimeFormatter.ISO_DATE);
+            if (showAll || LocalDate.now().isBefore(date.plus(1, ChronoUnit.MONTHS))) {
+                events.put(reg.getEventId(), events.getOrDefault(reg.getEventId(), 0) + 1);
+            }
+        });
 
         Map<String, Object> model = new HashMap<>();
         model.put("events", events);
