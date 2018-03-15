@@ -27,16 +27,18 @@ public class RequestParam {
     public static final String LIMIT = "limit";
     public static final String DEADLINE = "deadline";
     public static final String SECRET = "secret";
+    public static final String SHOW_PUB = "showPub";
 
     public static final String NAME = "name";
     public static final String EMAIL = "email";
     public static final String TWITTER = "twitter";
+    public static final String PUB = "pub";
 
     public static final String REGISTRATIONS = "registrations";
     public static final String TYPE = "type";
 
     @SneakyThrows
-    public static Map<String, String> parseBody(String body) {
+    public static Map<String, Object> parseBody(String body) {
         String decoded = URLDecoder.decode(body, RequestParam.ENCODING);
 
         return Arrays.stream(decoded.split("&"))
@@ -44,7 +46,7 @@ public class RequestParam {
             .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue));
     }
 
-    private static AbstractMap.SimpleImmutableEntry<String, String> splitQueryParameter(String it) {
+    private static AbstractMap.SimpleImmutableEntry<String, Object> splitQueryParameter(String it) {
         String[] parts = it.split("=");
         final String key = parts[0];
         final String value = parts.length > 1 ? parts[1].trim() : "";

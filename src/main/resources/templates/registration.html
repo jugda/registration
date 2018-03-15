@@ -17,6 +17,13 @@
             <label for="twitter" class="control-label">Twitter</label>
             <input type="text" name="twitter" id="twitter" class="form-control" placeholder="@Twittername" value="{{ twitter }}"/>
         </div>
+        {{#if showPub}}
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="pub"> Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)
+            </label>
+        </div>
+        {{/if}}
         <div class="help-block">* = Pflichtfeld</div>
         <button type="submit" id="submit" class="btn btn-default">Anmelden</button>
         <input type="hidden" name="eventId" value="{{ eventId }}"/>

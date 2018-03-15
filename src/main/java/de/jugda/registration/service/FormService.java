@@ -19,6 +19,7 @@ public class FormService {
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
         String limit = queryParams.getOrDefault(RequestParam.LIMIT, "60");
         String deadline = queryParams.getOrDefault(RequestParam.DEADLINE, eventId + "T18:00:00+02:00");
+        boolean showPub = Boolean.parseBoolean(queryParams.getOrDefault(RequestParam.SHOW_PUB, "true"));
 
         HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
@@ -38,11 +39,12 @@ public class FormService {
                 response = handlebarsService.getRegistrationFull();
             } else {
                 int freeSeats = maxCount - actualCount;
-                Map<String, String> model = new HashMap<>();
+                Map<String, Object> model = new HashMap<>();
                 model.put(RequestParam.EVENT_ID, eventId);
                 model.put("freeSeats", Integer.toString(freeSeats));
                 model.put("actualCount", Integer.toString(actualCount));
                 model.put("limit", limit);
+                model.put("showPub", showPub);
                 response = handlebarsService.getRegistrationForm(model);
             }
         }
@@ -52,7 +54,7 @@ public class FormService {
 
     public String deregistrationForm(Map<String, String> queryParams) {
         String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
-        Map<String, String> model = Collections.singletonMap(RequestParam.EVENT_ID, eventId);
+        Map<String, Object> model = Collections.singletonMap(RequestParam.EVENT_ID, eventId);
         return BeanFactory.getHandlebarsService().getDeregistration(model);
     }
 

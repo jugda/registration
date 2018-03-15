@@ -14,7 +14,7 @@ import java.util.Map;
 public class RegistrationService {
 
     public String handleRequest(String body) {
-        Map<String, String> model = RequestParam.parseBody(body);
+        Map<String, Object> model = RequestParam.parseBody(body);
 
         HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
         String response;
@@ -31,7 +31,7 @@ public class RegistrationService {
             registrationDao.save(registration);
 
             int registrationCount = registrationDao.getCount(registration.getEventId());
-            if (registrationCount / Integer.parseInt(model.get("limit")) >= 0.95) {
+            if (registrationCount / Integer.parseInt(model.get("limit").toString()) >= 0.95) {
                 SlackWebClient slack = new SlackWebClient(System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
                 String message = String.format(":bangbang: Event %1$s hat mehr als 95%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",
                     registration.getEventId(), registrationCount);
@@ -46,14 +46,14 @@ public class RegistrationService {
         return response;
     }
 
-    private boolean isValid(Map<String, String> model) {
+    private boolean isValid(Map<String, Object> model) {
         boolean valid = true;
-        String name = model.getOrDefault(RequestParam.NAME, "");
+        String name = model.getOrDefault(RequestParam.NAME, "").toString();
         if ("".equals(name.trim())) {
             model.put("nameError", "true");
             valid = false;
         }
-        String email = model.getOrDefault(RequestParam.EMAIL, "");
+        String email = model.getOrDefault(RequestParam.EMAIL, "").toString();
         if ("".equals(email.trim())) {
             model.put("emailError", "true");
             valid = false;

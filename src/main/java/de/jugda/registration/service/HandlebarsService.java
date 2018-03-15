@@ -28,11 +28,11 @@ public class HandlebarsService {
         registerHandlers();
     }
 
-    public String getRegistrationForm(Map<String, String> model) {
+    public String getRegistrationForm(Map<String, Object> model) {
         return renderTemplate("registration", model);
     }
 
-    public String getThanksPage(Map<String, String> model) {
+    public String getThanksPage(Map<String, Object> model) {
         return renderTemplate("thanks", model);
     }
 
@@ -52,11 +52,11 @@ public class HandlebarsService {
         return renderTemplate("overview", model);
     }
 
-    public String getDeregistration(Map<String, String> model) {
+    public String getDeregistration(Map<String, Object> model) {
         return renderTemplate("delete", model);
     }
 
-    public String getDeregistrationThanks(Map<String, String> model) {
+    public String getDeregistrationThanks(Map<String, Object> model) {
         return renderTemplate("delete_thanks", model);
     }
 

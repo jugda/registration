@@ -39,7 +39,7 @@ public class ListService {
         if ("json".equalsIgnoreCase(type)) {
             return mapper.writeValueAsString(model);
         } else if ("namesOnly".equalsIgnoreCase(type)) {
-            return registrations.stream().map(r -> r.getName()).collect(Collectors.joining("\n"));
+            return registrations.stream().map(Registration::getName).collect(Collectors.joining("\n"));
         } else {
             HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
             return handlebarsService.getRegistrationsList(model);

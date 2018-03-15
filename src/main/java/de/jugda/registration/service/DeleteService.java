@@ -14,10 +14,10 @@ import java.util.Map;
 public class DeleteService {
 
     public String deleteFromUi(String body) {
-        Map<String, String> model = RequestParam.parseBody(body);
+        Map<String, Object> model = RequestParam.parseBody(body);
         if (isValid(model)) {
-            String eventId = model.get(RequestParam.EVENT_ID);
-            String email = model.get(RequestParam.EMAIL).toLowerCase();
+            String eventId = model.get(RequestParam.EVENT_ID).toString();
+            String email = model.get(RequestParam.EMAIL).toString().toLowerCase();
 
             RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
 
@@ -40,9 +40,9 @@ public class DeleteService {
         BeanFactory.getRegistrationDao().delete(id);
     }
 
-    private boolean isValid(Map<String, String> model) {
+    private boolean isValid(Map<String, Object> model) {
         boolean valid = true;
-        String email = model.getOrDefault(RequestParam.EMAIL, "");
+        String email = model.getOrDefault(RequestParam.EMAIL, "").toString();
         if ("".equals(email.trim())) {
             model.put("emailError", "true");
             valid = false;
