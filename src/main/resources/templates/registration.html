@@ -8,14 +8,29 @@
         <div class="form-group {{#if nameError}}has-error{{/if}}">
             <label for="name" class="control-label">Name*</label>
             <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ name }}"/>
+            <small class="text-muted">
+                Ohne Deinen Namen wissen wir nicht, wer Du bist.
+                Wenn Du Dich anmeldest und wir eine Verlosung durchführen, nimmst Du automatisch an dieser teil.
+                Wirst Du als Gewinner gezogen, wird Dein Name während der Veranstaltung bekanntgegeben.
+            </small>
         </div>
         <div class="form-group {{#if emailError}}has-error{{/if}}">
             <label for="email" class="control-label">E-Mail*</label>
             <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail" value="{{ email }}"/>
+            <small class="text-muted">
+                Deine E-Mail Adresse nutzen wir, um die Eindeutigkeit Deiner Anmeldung zu bestimmen.
+                Außerdem kannst Du Dich mithilfe Deiner E-Mail Adresse wieder abmelden bzw. Deine Daten löschen (Link s.u.).
+                Eine Weitergabe oder Veröffentlichung Deiner E-Mail Adresse erfolgt nicht.
+            </small>
         </div>
         <div class="form-group">
             <label for="twitter" class="control-label">Twitter</label>
             <input type="text" name="twitter" id="twitter" class="form-control" placeholder="@Twittername" value="{{ twitter }}"/>
+            <small class="text-muted">
+                Die Angabe Deines Twitternamens ist freiwillig.
+                Wenn Du diesen angibst, kann es sein, dass wir Dich in Tweets, die auf diese Veranstaltung hinweisen,
+                erwähnen und Du damit öffentlich mit dieser Veranstaltung in Zusammenhang gebracht werden kannst.
+            </small>
         </div>
         {{#if showPub}}
         <div class="checkbox">
@@ -24,18 +39,35 @@
             </label>
         </div>
         {{/if}}
+        <p class="text-muted">
+            <small>
+                Mit Deiner Anmeldung bestätigst Du, dass Du die Hinweise an den Eingabefeldern gelesen und verstanden hast und Du damit einverstanden bist.
+                Wir löschen Deine persönlichen Daten aus dieser Anmeldung ca. 1 Monat nach der Veranstaltung.
+            </small>
+        </p>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="privacy" id="privacy" onclick="checkPrivacy(this)">
+                Ja, ich habe die o.g. Hinweise gelesen, verstanden und erkläre mich damit einverstanden.*
+            </label>
+        </div>
         <div class="help-block">* = Pflichtfeld</div>
-        <button type="submit" id="submit" class="btn btn-default">Anmelden</button>
+        <button type="submit" id="submit" class="btn btn-primary" disabled="disabled">Anmelden</button>
         <input type="hidden" name="eventId" value="{{ eventId }}"/>
         <input type="hidden" name="freeSeats" value="{{ freeSeats }}"/>
         <input type="hidden" name="actualCount" value="{{ actualCount }}"/>
         <input type="hidden" name="limit" value="{{ limit }}"/>
     </form>
-    <div class="text-muted">
+    <p class="text-muted">
         <small>
-            Du bist bereits angemeldet und willst Dich abmelden?
-            <a href="/delete?eventId={{ eventId }}">Dann klicke hier!</a>
+            Du bist bereits angemeldet und willst Dich abmelden oder Deine Daten löschen?
+            <a href="/delete?eventId={{ eventId }}">Dann klicke hier.</a>
         </small>
-    </div>
+    </p>
+<script>
+function checkPrivacy(elem) {
+    document.forms[0].submit.disabled = !elem.checked;
+}
+</script>
 </body>
 </html>
