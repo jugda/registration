@@ -37,7 +37,7 @@ public class ListHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
                 header = buildCorsHeader("text/plain");
             }
         } else {
-            response = BeanFactory.getListService().allEvents(queryParams.containsKey("showAll"));
+            response = BeanFactory.getListService().allEvents();
         }
 
         return new AwsProxyResponse(200, header, response);

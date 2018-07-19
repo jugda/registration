@@ -86,7 +86,7 @@ public class ListServiceTest {
 
     @Test
     public void testOverview() {
-        String response = listService.allEvents(false);
+        String response = listService.allEvents();
         log.info(response);
 
         assertTrue(response.contains("eventId=" + EVENT_ID));
