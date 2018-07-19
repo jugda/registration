@@ -30,6 +30,6 @@ public class RegistrationTest {
         assertEquals("john@doe.com", reg.getEmail());
         assertEquals("@johndoe", reg.getTwitter());
         assertTrue(reg.isPub());
-        assertEquals(1548892800L, reg.getTtl().longValue());
+        assertEquals(1547424000L, reg.getTtl().longValue());
     }
 }

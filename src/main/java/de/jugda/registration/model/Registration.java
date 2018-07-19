@@ -49,7 +49,7 @@ public class Registration {
         registration.setTwitter(model.getOrDefault(RequestParam.TWITTER, "").toString().trim().toLowerCase());
         registration.setPub(model.getOrDefault(RequestParam.PUB, "off").toString().equalsIgnoreCase("on"));
         registration.setPrivacy(model.getOrDefault(RequestParam.PRIVACY, "off").toString().equalsIgnoreCase("on"));
-        registration.setTtl(LocalDate.parse(eventId).plusMonths(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC));
+        registration.setTtl(LocalDate.parse(eventId).plusDays(14).atStartOfDay().toEpochSecond(ZoneOffset.UTC));
         return registration;
     }
 }
