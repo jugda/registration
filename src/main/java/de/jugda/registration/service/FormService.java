@@ -36,11 +36,10 @@ public class FormService {
             int maxCount = Integer.parseInt(limit);
             int actualCount = registrationDao.getCount(eventId);
             if (actualCount >= maxCount) {
-                response = handlebarsService.getRegistrationFull();
+                response = handlebarsService.getRegistrationFull(createModelMap(eventId));
             } else {
                 int freeSeats = maxCount - actualCount;
-                Map<String, Object> model = new HashMap<>();
-                model.put(RequestParam.EVENT_ID, eventId);
+                Map<String, Object> model = createModelMap(eventId);
                 model.put("freeSeats", Integer.toString(freeSeats));
                 model.put("actualCount", Integer.toString(actualCount));
                 model.put("limit", limit);
@@ -50,6 +49,12 @@ public class FormService {
         }
 
         return response;
+    }
+
+    private Map<String, Object> createModelMap(String eventId) {
+        Map<String, Object> model = new HashMap<>();
+        model.put(RequestParam.EVENT_ID, eventId);
+        return model;
     }
 
     public String deregistrationForm(Map<String, String> queryParams) {

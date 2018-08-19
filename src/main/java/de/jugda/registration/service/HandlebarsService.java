@@ -36,8 +36,8 @@ public class HandlebarsService {
         return renderTemplate("thanks", model);
     }
 
-    public String getRegistrationFull() {
-        return renderTemplate("full", Collections.emptyMap());
+    public String getRegistrationFull(Map<String, Object> model) {
+        return renderTemplate("full", model);
     }
 
     public String getRegistrationClosed() {
