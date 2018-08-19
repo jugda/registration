@@ -40,6 +40,10 @@ public class HandlebarsService {
         return renderTemplate("full", model);
     }
 
+    public String getRegistrationNotYetOpen(Map<String, Object> model) {
+        return renderTemplate("not_yet_open", model);
+    }
+
     public String getRegistrationClosed() {
         return renderTemplate("closed", Collections.emptyMap());
     }

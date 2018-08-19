@@ -11,6 +11,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,8 +58,9 @@ public class FormServiceTest {
 
     @Test
     public void testFormRequest_defaultDeadline() {
+        String eventId = LocalDate.now().plusMonths(1).minusDays(1).format(DateTimeFormatter.ISO_DATE);
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("eventId", "2099-12-31");
+        queryParams.put("eventId", eventId);
         queryParams.put("limit", "80");
 
         String response = formService.registrationForm(queryParams);
@@ -65,6 +68,20 @@ public class FormServiceTest {
 
         assertTrue(response.contains("<form method=\"post\""));
 
+    }
+
+    @Test
+    public void testFormRequest_notOpenYet() {
+        String eventId = LocalDate.now().plusMonths(1).plusDays(1).format(DateTimeFormatter.ISO_DATE);
+        LocalDate startDate = LocalDate.parse(eventId).minusMonths(1);
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("eventId", eventId);
+        queryParams.put("limit", "80");
+
+        String response = formService.registrationForm(queryParams);
+        log.info(response);
+
+        assertTrue(response.contains(String.format("Für diese Veranstaltung startet die Anmeldung erst am %s.", startDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))));
     }
 
     @Test
@@ -80,7 +97,9 @@ public class FormServiceTest {
         log.info(response);
 
         assertTrue(response.contains("Für diese Veranstaltung sind alle verfügbaren Plätze bereits belegt."));
-
+        assertTrue(response.contains("Bitte meldet Euch bei uns per <a href=\"mailto:orga@jug-da.de\">E-Mail</a>"));
+        assertTrue(response.contains("Du bist bereits angemeldet und willst Dich abmelden oder Deine Daten löschen?"));
+        assertTrue(response.contains("<a href=\"/delete?eventId=2017-03-16\">Dann klicke hier.</a>"));
     }
 
     @Test
