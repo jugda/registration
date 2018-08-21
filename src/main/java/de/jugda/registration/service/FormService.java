@@ -4,6 +4,7 @@ import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.RequestParam;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -26,6 +27,8 @@ public class FormService {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineTime = LocalDateTime.parse(deadline, DateTimeFormatter.ISO_DATE_TIME);
+        LocalDate startDate = LocalDate.parse(eventId).minusMonths(1);
+
         if (now.isAfter(deadlineTime)) {
             // sorry, no registration for you
             response = handlebarsService.getRegistrationClosed();
@@ -36,11 +39,14 @@ public class FormService {
             int maxCount = Integer.parseInt(limit);
             int actualCount = registrationDao.getCount(eventId);
             if (actualCount >= maxCount) {
-                response = handlebarsService.getRegistrationFull();
+                response = handlebarsService.getRegistrationFull(createModelMap(eventId));
+            } else if (now.toLocalDate().isBefore(startDate)) {
+                Map<String, Object> model = createModelMap(eventId);
+                model.put("startDate", startDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                response = handlebarsService.getRegistrationNotYetOpen(model);
             } else {
                 int freeSeats = maxCount - actualCount;
-                Map<String, Object> model = new HashMap<>();
-                model.put(RequestParam.EVENT_ID, eventId);
+                Map<String, Object> model = createModelMap(eventId);
                 model.put("freeSeats", Integer.toString(freeSeats));
                 model.put("actualCount", Integer.toString(actualCount));
                 model.put("limit", limit);
@@ -50,6 +56,12 @@ public class FormService {
         }
 
         return response;
+    }
+
+    private Map<String, Object> createModelMap(String eventId) {
+        Map<String, Object> model = new HashMap<>();
+        model.put(RequestParam.EVENT_ID, eventId);
+        return model;
     }
 
     public String deregistrationForm(Map<String, String> queryParams) {
