@@ -21,5 +21,5 @@ public interface RegistrationDao {
 
     int getCount(String eventId);
 
-    void delete(String id);
+    Registration delete(String id);
 }

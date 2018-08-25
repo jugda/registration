@@ -3,6 +3,7 @@ package de.jugda.registration;
 import de.jugda.registration.dao.DynamoDBDao;
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.service.DeleteService;
+import de.jugda.registration.service.EmailService;
 import de.jugda.registration.service.FormService;
 import de.jugda.registration.service.HandlebarsService;
 import de.jugda.registration.service.ListService;
@@ -21,6 +22,7 @@ public class BeanFactory {
     private static DeleteService deleteService;
     private static RegistrationDao registrationDao;
     private static HandlebarsService handlebarsService;
+    private static EmailService emailService;
 
     public static FormService getFormService() {
         if (formService == null) {
@@ -62,6 +64,13 @@ public class BeanFactory {
             handlebarsService = new HandlebarsService();
         }
         return handlebarsService;
+    }
+
+    public static EmailService getEmailService() {
+        if (emailService == null) {
+            emailService = new EmailService();
+        }
+        return emailService;
     }
 
 }

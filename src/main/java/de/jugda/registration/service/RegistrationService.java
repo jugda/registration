@@ -29,14 +29,12 @@ public class RegistrationService {
             }
 
             registrationDao.save(registration);
+            registration = registrationDao.find(registration);
+            model.put("id", registration.getId());
 
-            int registrationCount = registrationDao.getCount(registration.getEventId());
-            if (registrationCount / Integer.parseInt(model.get("limit").toString()) >= 0.95) {
-                SlackWebClient slack = new SlackWebClient(System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
-                String message = String.format(":bangbang: Event %1$s hat mehr als 95%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",
-                    registration.getEventId(), registrationCount);
-                slack.postMessage(message, System.getenv("SLACK_CHANNEL_GENERAL"));
-            }
+            BeanFactory.getEmailService().sendRegistrationConfirmation(registration);
+
+            notifySlack(model, registration, registrationDao);
 
             response = handlebarsService.getThanksPage(model);
         } else {
@@ -44,6 +42,16 @@ public class RegistrationService {
         }
 
         return response;
+    }
+
+    private void notifySlack(Map<String, Object> model, Registration registration, RegistrationDao registrationDao) {
+        int registrationCount = registrationDao.getCount(registration.getEventId());
+        if ((registrationCount / Integer.parseInt(model.get("limit").toString())) >= 0.9) {
+            SlackWebClient slack = new SlackWebClient(System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
+            String message = String.format(":bangbang: Event %1$s hat mehr als 90%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",
+                registration.getEventId(), registrationCount);
+            slack.postMessage(message, System.getenv("SLACK_CHANNEL_GENERAL"));
+        }
     }
 
     private boolean isValid(Map<String, Object> model) {

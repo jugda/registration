@@ -21,19 +21,32 @@ public class DeleteService {
 
             RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
 
-            String name;
+            String name = "";
             try {
                 Registration registration = registrationDao.findByEventIdAndEmail(eventId, email);
                 registrationDao.delete(registration.getId());
                 name = registration.getName();
             } catch (Exception e) {
-                name = "";
+                // intended
             }
 
             return BeanFactory.getHandlebarsService().getDeregistrationThanks(Collections.singletonMap("name", name));
         } else {
             return BeanFactory.getHandlebarsService().getDeregistration(model);
         }
+    }
+
+    public String deleteFromUri(String id) {
+            String name = "";
+            try {
+                RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
+                Registration registration = registrationDao.delete(id);
+                name = registration.getName();
+            } catch (Exception e) {
+                // intended
+            }
+
+            return BeanFactory.getHandlebarsService().getDeregistrationThanks(Collections.singletonMap("name", name));
     }
 
     public void deleteFromRequest(String id) {

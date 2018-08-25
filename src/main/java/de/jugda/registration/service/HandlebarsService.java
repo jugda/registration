@@ -64,6 +64,10 @@ public class HandlebarsService {
         return renderTemplate("delete_thanks", model);
     }
 
+    public String getRegistrationConfirmMail(Map<String, Object> model) {
+        return renderTemplate("mail_registration", model);
+    }
+
     @SneakyThrows
     private String renderTemplate(String templateName, Map<String, ?> model) {
         Template template = handlebars.compile(templateName);

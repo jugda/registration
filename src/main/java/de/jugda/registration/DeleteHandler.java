@@ -16,12 +16,17 @@ public class DeleteHandler implements RequestHandler<AwsProxyRequest, AwsProxyRe
     @Override
     public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
         String method = request.getHttpMethod();
+        String id = request.getQueryStringParameters().get(RequestParam.ID);
 
         String response = "";
 
         switch (method) {
             case RequestParam.GET:
-                response = BeanFactory.getFormService().deregistrationForm(request.getQueryStringParameters());
+                if (id != null) {
+                    response = BeanFactory.getDeleteService().deleteFromUri(id);
+                } else {
+                    response = BeanFactory.getFormService().deregistrationForm(request.getQueryStringParameters());
+                }
                 break;
 
             case RequestParam.POST:
@@ -29,7 +34,6 @@ public class DeleteHandler implements RequestHandler<AwsProxyRequest, AwsProxyRe
                 break;
 
             case RequestParam.DELETE:
-                String id = request.getQueryStringParameters().get(RequestParam.ID);
                 BeanFactory.getDeleteService().deleteFromRequest(id);
                 break;
         }
