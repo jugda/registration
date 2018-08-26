@@ -13,6 +13,7 @@ import de.jugda.registration.model.Registration;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
@@ -43,19 +44,29 @@ public class EmailService {
             .withDestination(new Destination()
                 .withToAddresses(registration.getEmail()))
             .withMessage(new Message()
+                .withSubject(utf8Content(subject))
                 .withBody(new Body()
-                    .withHtml(new Content()
-                        .withCharset(StandardCharsets.UTF_8.name())
-                        .withData(mailBody)))
-                .withSubject(new Content()
-                    .withCharset(StandardCharsets.UTF_8.name())
-                    .withData(subject)));
+                    .withHtml(utf8Content(mailBody))
+                    .withText(utf8Content(strip(mailBody)))
+                )
+            );
 
         ses.sendEmail(request);
+    }
+
+    private Content utf8Content(String data) {
+        return new Content()
+            .withCharset(StandardCharsets.UTF_8.name())
+            .withData(data);
     }
 
     private String isoToGermanDateFormat(String iso) {
         String[] parts = iso.split("-");
         return parts[2] + "." + parts[1] + "." + parts[0];
+    }
+
+    private static final Pattern TAGS = Pattern.compile("<.+?>");
+    private String strip(String html) {
+        return TAGS.matcher(html).replaceAll("").replaceAll(" {2}", "");
     }
 }
