@@ -26,7 +26,9 @@ public class DeleteService {
             try {
                 Registration registration = registrationDao.findByEventIdAndEmail(eventId, email);
                 registrationDao.delete(registration.getId());
-                processWaitlist(registration.getEventId());
+                if (!registration.isWaitlist()) {
+                    processWaitlist(registration.getEventId());
+                }
                 name = registration.getName();
             } catch (Exception e) {
                 // intended
@@ -43,7 +45,9 @@ public class DeleteService {
             try {
                 RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
                 Registration registration = registrationDao.delete(id);
-                processWaitlist(registration.getEventId());
+                if (!registration.isWaitlist()) {
+                    processWaitlist(registration.getEventId());
+                }
                 name = registration.getName();
             } catch (Exception e) {
                 // intended
