@@ -17,6 +17,8 @@ public interface RegistrationDao {
 
     List<Registration> findByEventId(String eventId);
 
+    List<Registration> findWaitlistByEventId(String eventId);
+
     Registration findByEventIdAndEmail(String eventId, String email);
 
     int getCount(String eventId);

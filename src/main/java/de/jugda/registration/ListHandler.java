@@ -1,9 +1,9 @@
 package de.jugda.registration;
 
-import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
-import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import de.jugda.registration.model.RequestParam;
 import lombok.extern.log4j.Log4j;
 
@@ -14,15 +14,15 @@ import java.util.Map;
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
 @Log4j
-public class ListHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+public class ListHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     @Override
-    public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
         Map<String, String> queryParams = request.getQueryStringParameters();
         Map<String, String> header = RequestParam.HEADER;
 
         if (!isSecretValid(queryParams)) {
-            return new AwsProxyResponse(403, header, "");
+            return new APIGatewayProxyResponseEvent().withStatusCode(403).withHeaders(header);
         }
 
         String response;
@@ -40,7 +40,7 @@ public class ListHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
             response = BeanFactory.getListService().allEvents();
         }
 
-        return new AwsProxyResponse(200, header, response);
+        return new APIGatewayProxyResponseEvent().withStatusCode(200).withHeaders(header).withBody(response);
     }
 
     private boolean isSecretValid(Map<String, String> queryParams) {

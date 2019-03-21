@@ -96,8 +96,8 @@ public class FormServiceTest {
         String response = formService.registrationForm(queryParams);
         log.info(response);
 
-        assertTrue(response.contains("Für diese Veranstaltung sind alle verfügbaren Plätze bereits belegt."));
-        assertTrue(response.contains("Bitte melde Dich bei uns per <a href=\"mailto:orga@jug-da.de\">E-Mail</a>, dann nehmen wir Dich in die Warteliste auf."));
+        assertTrue(response.contains("Warteliste"));
+        assertTrue(response.contains("Für diese Veranstaltung sind zur Zeit alle verfügbaren Plätze belegt."));
         assertTrue(response.contains("Du bist bereits angemeldet und willst Dich abmelden oder Deine Daten löschen?"));
         assertTrue(response.contains("<a href=\"/delete?eventId=2017-03-16\">Dann klicke hier.</a>"));
     }

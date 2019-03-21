@@ -5,8 +5,10 @@ import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.Map;
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
+@Log4j
 public class HandlebarsService {
 
     private final Handlebars handlebars;
@@ -34,10 +37,6 @@ public class HandlebarsService {
 
     public String getThanksPage(Map<String, Object> model) {
         return renderTemplate("thanks", model);
-    }
-
-    public String getRegistrationFull(Map<String, Object> model) {
-        return renderTemplate("full", model);
     }
 
     public String getRegistrationNotYetOpen(Map<String, Object> model) {
@@ -68,10 +67,18 @@ public class HandlebarsService {
         return renderTemplate("mail_registration", model);
     }
 
-    @SneakyThrows
+    public String getWaitlistToAttendeeMail(Map<String, Object> model) {
+        return renderTemplate("mail_waitlist2attendee", model);
+    }
+
     private String renderTemplate(String templateName, Map<String, ?> model) {
-        Template template = handlebars.compile(templateName);
-        return template.apply(model);
+        try {
+            Template template = handlebars.compile(templateName);
+            return template.apply(model);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new UncheckedIOException(e);
+        }
     }
 
     private void registerHandlers() {

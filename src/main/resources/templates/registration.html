@@ -3,8 +3,17 @@
 {{> head }}
 <body>
     <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
-        <h2>Anmeldung</h2>
-        <div class="text-success">Noch {{ freeSeats }} freie Plätze ({{ actualCount }} bereits angemeldet).</div>
+        {{#if waitlist}}
+            <h2>Warteliste</h2>
+            <p class="lead text-danger">
+                Für diese Veranstaltung sind zur Zeit alle verfügbaren Plätze belegt.
+                Du kannst Dich aber auf der Warteliste eintragen.
+                Wir informieren Dich dann, wenn wir Dich auf die Teilnehmerliste setzen können.
+            </p>
+        {{else}}
+            <h2>Anmeldung</h2>
+            <div class="text-success">Noch {{ freeSeats }} freie Plätze ({{ actualCount }} bereits angemeldet).</div>
+        {{/if}}
         <div class="form-group {{#if nameError}}has-error{{/if}}">
             <label for="name" class="control-label">Name*</label>
             <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ name }}"/>
@@ -59,6 +68,7 @@
         <input type="hidden" name="freeSeats" value="{{ freeSeats }}"/>
         <input type="hidden" name="actualCount" value="{{ actualCount }}"/>
         <input type="hidden" name="limit" value="{{ limit }}"/>
+        <input type="hidden" name="waitlist" value="{{ waitlist }}"/>
     </form>
     <p class="text-muted">
         <small>

@@ -1,9 +1,9 @@
 package de.jugda.registration;
 
-import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
-import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import de.jugda.registration.model.RequestParam;
 import lombok.extern.log4j.Log4j;
 
@@ -13,10 +13,10 @@ import java.util.Map;
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
 @Log4j
-public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+public class RegistrationHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     @Override
-    public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
         String method = request.getHttpMethod();
         String body = request.getBody();
         Map<String, String> queryParams = request.getQueryStringParameters();
@@ -31,7 +31,10 @@ public class RegistrationHandler implements RequestHandler<AwsProxyRequest, AwsP
             response = BeanFactory.getRegistrationService().handleRequest(body);
         }
 
-        return new AwsProxyResponse(200, RequestParam.HEADER, response);
+        return new APIGatewayProxyResponseEvent()
+            .withStatusCode(200)
+            .withHeaders(RequestParam.HEADER)
+            .withBody(response);
     }
 
 }

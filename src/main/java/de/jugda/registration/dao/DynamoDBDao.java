@@ -70,6 +70,18 @@ public class DynamoDBDao implements RegistrationDao {
     }
 
     @Override
+    public List<Registration> findWaitlistByEventId(String eventId) {
+        DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
+        scanExpression.addFilterCondition("waitlist",
+            new Condition().withComparisonOperator(ComparisonOperator.EQ)
+                .withAttributeValueList(new AttributeValue().withN("1")));
+        PaginatedScanList<Registration> scan = mapper.scan(Registration.class, scanExpression);
+        return scan.stream()
+            .sorted(Comparator.comparing(Registration::getCreated))
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public Registration findByEventIdAndEmail(String eventId, String email) {
         DynamoDBScanExpression scanExpression = getEventScanExpression(eventId);
         scanExpression.addFilterCondition("email", createCondition(email));

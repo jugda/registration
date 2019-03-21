@@ -38,9 +38,7 @@ public class FormService {
 
             int maxCount = Integer.parseInt(limit);
             int actualCount = registrationDao.getCount(eventId);
-            if (actualCount >= maxCount) {
-                response = handlebarsService.getRegistrationFull(createModelMap(eventId));
-            } else if (now.toLocalDate().isBefore(startDate)) {
+            if (now.toLocalDate().isBefore(startDate)) {
                 Map<String, Object> model = createModelMap(eventId);
                 model.put("startDate", startDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                 response = handlebarsService.getRegistrationNotYetOpen(model);
@@ -51,6 +49,7 @@ public class FormService {
                 model.put("actualCount", Integer.toString(actualCount));
                 model.put("limit", limit);
                 model.put("showPub", showPub);
+                model.put("waitlist", actualCount >= maxCount);
                 response = handlebarsService.getRegistrationForm(model);
             }
         }

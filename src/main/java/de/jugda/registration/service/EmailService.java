@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
  */
+@SuppressWarnings("Duplicates")
 public class EmailService {
 
     private final AmazonSimpleEmailService ses;
@@ -35,10 +36,28 @@ public class EmailService {
         model.put("name", registration.getName());
         model.put("id", registration.getId());
         model.put("date", eventDate);
+        model.put("waitlist", registration.isWaitlist());
 
-        HandlebarsService handlebarsService = BeanFactory.getHandlebarsService();
-        String mailBody = handlebarsService.getRegistrationConfirmMail(model);
+        String mailBody = BeanFactory.getHandlebarsService().getRegistrationConfirmMail(model);
 
+        sendEmail(registration, subject, mailBody);
+    }
+
+    void sendWaitlistToAttendeeConfirmation(Registration registration) {
+        String eventDate = isoToGermanDateFormat(registration.getEventId());
+        String subject = "[JUG DA] Dein Wartelisten-Eintrag für die Veranstaltung am " + eventDate;
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", registration.getName());
+        model.put("id", registration.getId());
+        model.put("date", eventDate);
+
+        String mailBody = BeanFactory.getHandlebarsService().getWaitlistToAttendeeMail(model);
+
+        sendEmail(registration, subject, mailBody);
+    }
+
+    private void sendEmail(Registration registration, String subject, String mailBody) {
         SendEmailRequest request = new SendEmailRequest()
             .withSource("JUG Darmstadt <info@jug-da.de>")
             .withDestination(new Destination()

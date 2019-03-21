@@ -1,13 +1,17 @@
 <h3>Hallo, {{ name }}!</h3>
+{{#if waitlist}}
+<p>
+    Vielen Dank für Deine Anmeldung für unsere Veranstaltung am {{ date }}.<br/>
+    Da wir derzeit komplett ausgebucht sind, haben wir Dich in der Warteliste aufgenommen.
+    Wir informieren Dich, sobald wir Dich auf die Teilnehmerliste übernehmen können.
+</p>
+{{else}}
 <p>
     Vielen Dank für Deine Anmeldung.<br/>
     Wir freuen uns, Dich am {{ date }} bei uns begrüßen zu dürfen.
 </p>
-<p>
-    Falls Du wider Erwarten doch nicht kommen kannst, melde Dich bitte unter folgendem Link ab:<br/>
-    <a href="https://registration.jug-da.de/delete?id={{ id }}">https://registration.jug-da.de/delete?id={{ id }}</a><br/>
-    Das hilft uns, besser planen zu können und ermöglicht ggf. anderen Personen, die auf der Warteliste stehen, die Teilnahme an der Veranstaltung.
-</p>
+{{/if}}
+{{> deregistration_link }}
 <p>
     Vielen Dank,<br/>
     <i>Dein JUG DA Orga-Team</i>

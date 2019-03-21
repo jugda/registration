@@ -6,6 +6,7 @@ import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RequestParam;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,7 @@ public class DeleteService {
             try {
                 Registration registration = registrationDao.findByEventIdAndEmail(eventId, email);
                 registrationDao.delete(registration.getId());
+                processWaitlist(registration.getEventId());
                 name = registration.getName();
             } catch (Exception e) {
                 // intended
@@ -41,6 +43,7 @@ public class DeleteService {
             try {
                 RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
                 Registration registration = registrationDao.delete(id);
+                processWaitlist(registration.getEventId());
                 name = registration.getName();
             } catch (Exception e) {
                 // intended
@@ -53,6 +56,7 @@ public class DeleteService {
         BeanFactory.getRegistrationDao().delete(id);
     }
 
+    @SuppressWarnings("Duplicates")
     private boolean isValid(Map<String, Object> model) {
         boolean valid = true;
         String email = model.getOrDefault(RequestParam.EMAIL, "").toString();
@@ -61,6 +65,16 @@ public class DeleteService {
             valid = false;
         }
         return valid;
+    }
+
+    private void processWaitlist(String eventId) {
+        List<Registration> waitlist = BeanFactory.getRegistrationDao().findWaitlistByEventId(eventId);
+        if (!waitlist.isEmpty()) {
+            Registration waiter = waitlist.get(0);
+            waiter.setWaitlist(false);
+            BeanFactory.getRegistrationDao().save(waiter);
+            BeanFactory.getEmailService().sendWaitlistToAttendeeConfirmation(waiter);
+        }
     }
 
 }

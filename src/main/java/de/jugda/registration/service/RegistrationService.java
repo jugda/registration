@@ -46,7 +46,7 @@ public class RegistrationService {
 
     private void notifySlack(Map<String, Object> model, Registration registration, RegistrationDao registrationDao) {
         int registrationCount = registrationDao.getCount(registration.getEventId());
-        if ((registrationCount / Integer.parseInt(model.get("limit").toString())) >= 0.9) {
+        if (((float) registrationCount / Float.parseFloat(model.get("limit").toString())) >= 0.9) {
             SlackWebClient slack = new SlackWebClient(System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
             String message = String.format(":bangbang: Event %1$s hat mehr als 90%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",
                 registration.getEventId(), registrationCount);

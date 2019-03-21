@@ -1,9 +1,9 @@
 package de.jugda.registration;
 
-import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
-import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import de.jugda.registration.model.RequestParam;
 import lombok.extern.log4j.Log4j;
 
@@ -11,10 +11,10 @@ import lombok.extern.log4j.Log4j;
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
 @Log4j
-public class DeleteHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+public class DeleteHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     @Override
-    public AwsProxyResponse handleRequest(AwsProxyRequest request, Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
         String method = request.getHttpMethod();
         String id = request.getQueryStringParameters().get(RequestParam.ID);
 
@@ -38,7 +38,10 @@ public class DeleteHandler implements RequestHandler<AwsProxyRequest, AwsProxyRe
                 break;
         }
 
-        return new AwsProxyResponse(200, RequestParam.HEADER, response);
+        return new APIGatewayProxyResponseEvent()
+            .withStatusCode(200)
+            .withHeaders(RequestParam.HEADER)
+            .withBody(response);
     }
 
 }
