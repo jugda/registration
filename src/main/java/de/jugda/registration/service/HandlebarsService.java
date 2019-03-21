@@ -3,6 +3,7 @@ package de.jugda.registration.service;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.helper.ConditionalHelpers;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import lombok.extern.log4j.Log4j;
@@ -84,6 +85,8 @@ public class HandlebarsService {
     private void registerHandlers() {
         handlebars.registerHelper("datetime", (Helper<Date>)
             (date, options) -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
+
+        handlebars.registerHelpers(ConditionalHelpers.class);
     }
 
 }

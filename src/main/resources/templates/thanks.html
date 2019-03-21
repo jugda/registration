@@ -3,12 +3,12 @@
 {{> head }}
 <body>
     <h2>Vielen Dank, {{ name }}</h2>
-    {{#if waitlist}}
+    {{#eq waitlist 'true'}}
         <p class="lead">Wir haben Deine Anmeldung erhalten und auf die Warteliste gesetzt.</p>
         <p class="lead">Wir informieren Dich per E-Mail, wenn wir Dich auf die Teilnehmerliste setzen können.</p>
     {{else}}
         <p class="lead">Wir haben Deine Anmeldung erhalten.</p>
-    {{/if}}
+    {{/eq}}
     <p>
         Falls Du wider Erwarten doch nicht kommen kannst, melde Dich bitte unter folgendem Link ab:<br/>
         <a href="https://registration.jug-da.de/delete?id={{ id }}">https://registration.jug-da.de/delete?id={{ id }}</a>

@@ -115,4 +115,30 @@ public class FormServiceTest {
         assertTrue(response.contains("Für diese Veranstaltung ist die Anmeldefrist leider schon abgelaufen."));
     }
 
+    @Test
+    public void testThanks() {
+        Map<String, Object> model = new HashMap<>();
+        model.put("id", "4711");
+        model.put("name", "John Doe");
+        model.put("waitlist", "");
+
+        String thanksPage = handlebarsService.getThanksPage(model);
+        log.info(thanksPage);
+
+        assertTrue(thanksPage.contains("Wir haben Deine Anmeldung erhalten."));
+    }
+
+    @Test
+    public void testThanks_waitlist() {
+        Map<String, Object> model = new HashMap<>();
+        model.put("id", "4711");
+        model.put("name", "John Doe");
+        model.put("waitlist", "true");
+
+        String thanksPage = handlebarsService.getThanksPage(model);
+        log.info(thanksPage);
+
+        assertTrue(thanksPage.contains("Warteliste"));
+    }
+
 }
