@@ -41,15 +41,12 @@
             Zeige E-Mails in Textfeld
         </button>
         <div class="collapse" id="collapseEmails">
-            <textarea class="form-control">
-                {{#each registrations}}
-                    {{email}},
-                {{/each}}
-            </textarea>
+            <textarea class="form-control" rows="5">{{#each registrations}}{{email}}, {{/each}}</textarea>
         </div>
     </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://www.jug-da.de/js/bootstrap.min.js"></script>
     <script>
         var delReg = function(id, name) {
             if (confirm('Delete registration of ' + name + '?')) {
