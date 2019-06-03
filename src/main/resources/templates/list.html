@@ -36,6 +36,18 @@
         {{/each}}
         </tbody>
     </table>
+    <div>
+        <button class="btn btn-default" data-toggle="collapse" data-target="#collapseEmails">
+            Zeige E-Mails in Textfeld
+        </button>
+        <div class="collapse" id="collapseEmails">
+            <textarea class="form-control">
+                {{#each registrations}}
+                    {{email}},
+                {{/each}}
+            </textarea>
+        </div>
+    </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script>
