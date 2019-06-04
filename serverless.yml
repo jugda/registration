@@ -10,11 +10,10 @@ provider:
   memorySize: 2048
   timeout: 10
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
+  logRetentionInDays: 30
   environment:
     DYNAMODB_TABLE: ${self:service}
     SES_REGION: eu-west-1
-    SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
-    SLACK_CHANNEL_GENERAL: ${s3:${self:provider.deploymentBucket}/jugda/slack_channel_general}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -41,6 +40,9 @@ package:
 functions:
   form:
     handler: de.jugda.registration.RegistrationHandler
+    environment:
+      SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
+      SLACK_CHANNEL_GENERAL: ${s3:${self:provider.deploymentBucket}/jugda/slack_channel_general}
     events:
       - http:
           path: registration
