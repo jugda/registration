@@ -1,10 +1,10 @@
-package de.jugda.registration;
+package de.jugda.registration.auth;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import de.jugda.registration.model.RequestParam;
 import lombok.extern.log4j.Log4j;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,28 +12,32 @@ import java.util.Map;
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
 @Log4j
-public class AuthHandler implements RequestHandler<Map<String, Object>, Map<String, Object>> {
+public class BasicAuthHandler implements RequestHandler<AuthEvent, Map<String, Object>> {
 
     @Override
-    public Map<String, Object> handleRequest(Map<String, Object> event, Context context) {
+    public Map<String, Object> handleRequest(AuthEvent event, Context context) {
 //        log.info("Received Event: " + event);
 
-        Map<String, Object> policy;
+        String authorizationToken = event.getAuthorizationToken();
+        if (null == authorizationToken) {
+            throw new RuntimeException("Unauthorized");
+        }
 
-        if (isSecretValid(event)) {
-            policy = generatePolicy("jugda-member", "Allow", event.get("methodArn").toString());
+        byte[] decoded = Base64.getDecoder().decode(authorizationToken.replace("Basic ", ""));
+        String[] credentials = new String(decoded).split(":");
+
+        Map<String, Object> policy;
+        if (isAuthorizationValid(credentials[0], credentials[1])) {
+            policy = generatePolicy(credentials[0], "Allow", event.getMethodArn());
         } else {
-            policy = generatePolicy("anonymous", "Deny", event.get("methodArn").toString());
+            policy = generatePolicy("anonymous", "Deny", event.getMethodArn());
         }
 
         return policy;
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean isSecretValid(Map<String, Object> event) {
-        Map<String, String> queryParams = (Map<String, String>) event.get("queryStringParameters");
-        String secret = queryParams.getOrDefault(RequestParam.SECRET, "");
-        return System.getenv("REGISTRATION_SECRET").equals(secret);
+    private boolean isAuthorizationValid(String username, String password) {
+        return "JUG DA".equalsIgnoreCase(username) && System.getenv("REGISTRATION_SECRET").equals(password);
     }
 
     private Map<String, Object> generatePolicy(String principalId, String effect, String resource) {

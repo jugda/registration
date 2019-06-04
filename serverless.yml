@@ -50,23 +50,18 @@ functions:
       - http:
           path: registration
           method: post
-  authorizr:
-    handler: de.jugda.registration.AuthHandler
-    environment:
-      REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
   list:
     handler: de.jugda.registration.ListHandler
-    environment:
-      REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
     events:
       - http:
           path: list
           method: get
           cors: true
           authorizer:
-            name: authorizr
-            type: request
-            identitySource: method.request.querystring.secret
+            name: basicAuthorizr
+            type: token
+            identitySource: method.request.header.Authorization
+            resultTtlInSeconds: 0
   delete:
     handler: de.jugda.registration.DeleteHandler
     events:
@@ -79,6 +74,10 @@ functions:
       - http:
           path: delete
           method: delete
+  basicAuthorizr:
+    handler: de.jugda.registration.auth.BasicAuthHandler
+    environment:
+      REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
 
 resources:
   Resources:
@@ -103,3 +102,12 @@ resources:
           Enabled: true
         SSESpecification:
           SSEEnabled: true
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.WWW-Authenticate: "'Basic'"
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StatusCode: 401

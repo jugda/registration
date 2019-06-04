@@ -37,13 +37,14 @@
         </tbody>
     </table>
     <div>
-        <button class="btn btn-default" data-toggle="collapse" data-target="#collapseEmails">
+        <button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#collapseEmails">
             Zeige Namen und E-Mails kopierbar
         </button>
         <div class="collapse" id="collapseEmails">
             <div class="form-group">
                 <label for="names">Namen</label>
-                <textarea id="names" class="form-control" rows="5">{{#each registrations}}{{name}}, {{/each}}</textarea>
+                <textarea id="names" class="form-control" rows="5">{{#each registrations}}{{name}}
+{{/each}}</textarea>
             </div>
             <div class="form-group">
                 <label for="emails">E-Mails</label>

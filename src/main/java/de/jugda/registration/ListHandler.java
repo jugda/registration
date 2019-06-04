@@ -22,7 +22,7 @@ public class ListHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         Map<String, String> header = RequestParam.HEADER;
 
         String response;
-        if (queryParams.containsKey(RequestParam.EVENT_ID)) {
+        if (null != queryParams && queryParams.containsKey(RequestParam.EVENT_ID)) {
             String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
             String type = queryParams.getOrDefault(RequestParam.TYPE, "");
             response = BeanFactory.getListService().singleEvent(eventId, type);

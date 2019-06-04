@@ -54,7 +54,6 @@ public class ListService {
 
         Map<String, Object> model = new HashMap<>();
         model.put("events", events);
-        model.put("secret", System.getenv("REGISTRATION_SECRET"));
         return BeanFactory.getHandlebarsService().getRegistrationsOverview(model);
     }
 
