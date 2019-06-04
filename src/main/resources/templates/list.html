@@ -38,10 +38,17 @@
     </table>
     <div>
         <button class="btn btn-default" data-toggle="collapse" data-target="#collapseEmails">
-            Zeige E-Mails in Textfeld
+            Zeige Namen und E-Mails kopierbar
         </button>
         <div class="collapse" id="collapseEmails">
-            <textarea class="form-control" rows="5">{{#each registrations}}{{email}}, {{/each}}</textarea>
+            <div class="form-group">
+                <label for="names">Namen</label>
+                <textarea id="names" class="form-control" rows="5">{{#each registrations}}{{name}}, {{/each}}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="emails">E-Mails</label>
+                <textarea id="emails" class="form-control" rows="5">{{#each registrations}}{{email}}, {{/each}}</textarea>
+            </div>
         </div>
     </div>
     </div>
