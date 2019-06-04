@@ -21,10 +21,6 @@ public class ListHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         Map<String, String> queryParams = request.getQueryStringParameters();
         Map<String, String> header = RequestParam.HEADER;
 
-        if (!isSecretValid(queryParams)) {
-            return new APIGatewayProxyResponseEvent().withStatusCode(403).withHeaders(header);
-        }
-
         String response;
         if (queryParams.containsKey(RequestParam.EVENT_ID)) {
             String eventId = queryParams.getOrDefault(RequestParam.EVENT_ID, "dummy");
@@ -41,11 +37,6 @@ public class ListHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         }
 
         return new APIGatewayProxyResponseEvent().withStatusCode(200).withHeaders(header).withBody(response);
-    }
-
-    private boolean isSecretValid(Map<String, String> queryParams) {
-        String secret = queryParams.getOrDefault(RequestParam.SECRET, "");
-        return System.getenv("REGISTRATION_SECRET").equals(secret);
     }
 
     private Map<String, String> buildCorsHeader(String contentType) {

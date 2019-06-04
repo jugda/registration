@@ -13,7 +13,6 @@ provider:
   environment:
     DYNAMODB_TABLE: ${self:service}
     SES_REGION: eu-west-1
-    REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
     SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
     SLACK_CHANNEL_GENERAL: ${s3:${self:provider.deploymentBucket}/jugda/slack_channel_general}
   iamRoleStatements:
@@ -49,13 +48,23 @@ functions:
       - http:
           path: registration
           method: post
+  authorizr:
+    handler: de.jugda.registration.AuthHandler
+    environment:
+      REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
   list:
     handler: de.jugda.registration.ListHandler
+    environment:
+      REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
     events:
       - http:
           path: list
           method: get
           cors: true
+          authorizer:
+            name: authorizr
+            type: request
+            identitySource: method.request.querystring.secret
   delete:
     handler: de.jugda.registration.DeleteHandler
     events:
