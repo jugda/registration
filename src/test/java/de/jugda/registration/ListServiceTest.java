@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -62,26 +61,10 @@ public class ListServiceTest {
 
     @Test
     public void testListRequest_html() {
-        String response = listService.singleEvent(EVENT_ID, "");
+        String response = listService.singleEvent(EVENT_ID);
         log.info(response);
 
         assertTrue(response.contains("<h2>JUG DA Anmeldungen für EventId 2099-12-31: 2</h2>"));
-    }
-
-    @Test
-    public void testListRequest_json() {
-        String response = listService.singleEvent(EVENT_ID, "json");
-        log.info(response);
-
-        assertTrue(response.contains("\"eventId\":\"2099-12-31\""));
-    }
-
-    @Test
-    public void testListRequest_namesOnly() {
-        final String response = listService.singleEvent(EVENT_ID, "namesOnly");
-        log.info(response);
-
-        assertEquals("John Doe\nDieter Develop", response);
     }
 
     @Test
