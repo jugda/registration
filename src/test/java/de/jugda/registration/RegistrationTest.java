@@ -20,7 +20,6 @@ public class RegistrationTest {
         model.put(RequestParam.EVENT_ID, "2018-12-31");
         model.put(RequestParam.NAME, "John Doe");
         model.put(RequestParam.EMAIL, "john@doe.com");
-        model.put(RequestParam.TWITTER, "@johndoe");
         model.put(RequestParam.PUB, "on");
 
         Registration reg = Registration.of(model);
@@ -28,7 +27,6 @@ public class RegistrationTest {
         assertEquals("2018-12-31", reg.getEventId());
         assertEquals("John Doe", reg.getName());
         assertEquals("john@doe.com", reg.getEmail());
-        assertEquals("@johndoe", reg.getTwitter());
         assertTrue(reg.isPub());
         assertEquals(1547424000L, reg.getTtl().longValue());
     }

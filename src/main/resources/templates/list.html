@@ -10,7 +10,6 @@
             <th>Lfd.Nr.</th>
             <th>Name</th>
             <th>E-Mail</th>
-            <th>Twitter</th>
             <th>Stammtisch</th>
             <th>Warteliste</th>
             <th>Datum</th>
@@ -23,7 +22,6 @@
                 <td>{{ @index }}</td>
                 <td>{{ name }}</td>
                 <td><a href="mailto:{{ email }}">{{ email }}</a></td>
-                <td><a href="https://twitter.com/{{ twitter}}" target="_blank">{{ twitter }}</a></td>
                 <td>
                     {{#if pub}}<span class="glyphicon glyphicon-ok"></span>{{/if}}
                 </td>

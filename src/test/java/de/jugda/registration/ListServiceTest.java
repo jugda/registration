@@ -36,8 +36,8 @@ public class ListServiceTest {
 
     @Before
     public void before() {
-        Registration reg1 = getRegistration("John Doe", "john@doe.com", "@johndoe", EVENT_ID);
-        Registration reg2 = getRegistration("Dieter Develop", "dieter@develop.com", "@ddevelop", EVENT_ID);
+        Registration reg1 = getRegistration("John Doe", "john@doe.com", EVENT_ID);
+        Registration reg2 = getRegistration("Dieter Develop", "dieter@develop.com", EVENT_ID);
 
         RegistrationDao registrationDao = mock(RegistrationDao.class);
         when(registrationDao.findByEventId(anyString())).thenReturn(Arrays.asList(reg1, reg2));
@@ -48,12 +48,11 @@ public class ListServiceTest {
         when(BeanFactory.getHandlebarsService()).thenReturn(handlebarsService);
     }
 
-    private Registration getRegistration(String name, String email, String twitter, String eventId) {
+    private Registration getRegistration(String name, String email, String eventId) {
         Registration reg = new Registration();
         reg.setId(UUID.randomUUID().toString());
         reg.setName(name);
         reg.setEmail(email);
-        reg.setTwitter(twitter);
         reg.setEventId(eventId);
         reg.setCreated(new Date());
         return reg;

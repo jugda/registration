@@ -30,7 +30,6 @@ public class RequestParam {
 
     public static final String NAME = "name";
     public static final String EMAIL = "email";
-    public static final String TWITTER = "twitter";
     public static final String PUB = "pub";
     public static final String WAITLIST = "waitlist";
     public static final String PRIVACY = "privacy";

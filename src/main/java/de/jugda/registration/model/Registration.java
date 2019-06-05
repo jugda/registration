@@ -29,8 +29,6 @@ public class Registration {
     @DynamoDBAttribute
     private String email;
     @DynamoDBAttribute
-    private String twitter;
-    @DynamoDBAttribute
     private boolean pub;
     @DynamoDBAttribute
     private boolean waitlist;
@@ -48,7 +46,6 @@ public class Registration {
         registration.setEventId(eventId);
         registration.setName(model.get(RequestParam.NAME).toString().trim());
         registration.setEmail(model.get(RequestParam.EMAIL).toString().trim().toLowerCase());
-        registration.setTwitter(model.getOrDefault(RequestParam.TWITTER, "").toString().trim().toLowerCase());
         registration.setPub(model.getOrDefault(RequestParam.PUB, "off").toString().equalsIgnoreCase("on"));
         registration.setWaitlist(model.getOrDefault(RequestParam.WAITLIST, "false").toString().equalsIgnoreCase("true"));
         registration.setPrivacy(model.getOrDefault(RequestParam.PRIVACY, "off").toString().equalsIgnoreCase("on"));
