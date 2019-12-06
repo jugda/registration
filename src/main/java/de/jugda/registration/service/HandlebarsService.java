@@ -6,8 +6,10 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.helper.ConditionalHelpers;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import de.jugda.registration.model.RegistrationForm;
 import lombok.extern.log4j.Log4j;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.text.SimpleDateFormat;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
 @Log4j
+@ApplicationScoped
 public class HandlebarsService {
 
     private final Handlebars handlebars;
@@ -32,12 +35,12 @@ public class HandlebarsService {
         registerHandlers();
     }
 
-    public String getRegistrationForm(Map<String, Object> model) {
-        return renderTemplate("registration", model);
+    public String getRegistrationForm(RegistrationForm registrationForm) {
+        return renderTemplate("registration", registrationForm);
     }
 
-    public String getThanksPage(Map<String, Object> model) {
-        return renderTemplate("thanks", model);
+    public String getThanksPage(RegistrationForm registrationForm) {
+        return renderTemplate("thanks", registrationForm);
     }
 
     public String getRegistrationNotYetOpen(Map<String, Object> model) {
@@ -72,7 +75,7 @@ public class HandlebarsService {
         return renderTemplate("mail_waitlist2attendee", model);
     }
 
-    private String renderTemplate(String templateName, Map<String, ?> model) {
+    private String renderTemplate(String templateName, Object model) {
         try {
             Template template = handlebars.compile(templateName);
             return template.apply(model);

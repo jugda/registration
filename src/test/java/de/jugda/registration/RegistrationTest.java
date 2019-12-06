@@ -1,11 +1,8 @@
 package de.jugda.registration;
 
 import de.jugda.registration.model.Registration;
-import de.jugda.registration.model.RequestParam;
+import de.jugda.registration.model.RegistrationForm;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,19 +12,19 @@ import static org.junit.Assert.assertTrue;
  */
 public class RegistrationTest {
     @Test
-    public void testStaticOfModel() {
-        Map<String, Object> model = new HashMap<>();
-        model.put(RequestParam.EVENT_ID, "2018-12-31");
-        model.put(RequestParam.NAME, "John Doe");
-        model.put(RequestParam.EMAIL, "john@doe.com");
-        model.put(RequestParam.PUB, "on");
+    public void testStaticOfForm() {
+        RegistrationForm form = new RegistrationForm();
+        form.setEventId("2018-12-31");
+        form.setName("John Doe");
+        form.setEmail("john@doe.com");
+        form.setPub("on");
 
-        Registration reg = Registration.of(model);
+        Registration reg = Registration.of(form);
 
         assertEquals("2018-12-31", reg.getEventId());
         assertEquals("John Doe", reg.getName());
         assertEquals("john@doe.com", reg.getEmail());
         assertTrue(reg.isPub());
-        assertEquals(1547424000L, reg.getTtl().longValue());
+        assertEquals(1546819200L, reg.getTtl().longValue());
     }
 }

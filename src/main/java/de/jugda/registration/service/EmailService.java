@@ -7,9 +7,10 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import de.jugda.registration.BeanFactory;
 import de.jugda.registration.model.Registration;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,11 @@ import java.util.regex.Pattern;
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
  */
-@SuppressWarnings("Duplicates")
+@ApplicationScoped
 public class EmailService {
+
+    @Inject
+    HandlebarsService handlebarsService;
 
     private final AmazonSimpleEmailService ses;
 
@@ -38,7 +42,7 @@ public class EmailService {
         model.put("date", eventDate);
         model.put("waitlist", registration.isWaitlist());
 
-        String mailBody = BeanFactory.getHandlebarsService().getRegistrationConfirmMail(model);
+        String mailBody = handlebarsService.getRegistrationConfirmMail(model);
 
         sendEmail(registration, subject, mailBody);
     }
@@ -52,7 +56,7 @@ public class EmailService {
         model.put("id", registration.getId());
         model.put("date", eventDate);
 
-        String mailBody = BeanFactory.getHandlebarsService().getWaitlistToAttendeeMail(model);
+        String mailBody = handlebarsService.getWaitlistToAttendeeMail(model);
 
         sendEmail(registration, subject, mailBody);
     }

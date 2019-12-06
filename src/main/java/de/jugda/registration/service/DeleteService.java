@@ -1,83 +1,54 @@
 package de.jugda.registration.service;
 
-import de.jugda.registration.BeanFactory;
 import de.jugda.registration.dao.RegistrationDao;
+import de.jugda.registration.model.DeregistrationForm;
 import de.jugda.registration.model.Registration;
-import de.jugda.registration.model.RequestParam;
 
-import java.util.Collections;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
+@ApplicationScoped
 public class DeleteService {
 
-    public String deleteFromUi(String body) {
-        Map<String, Object> model = RequestParam.parseBody(body);
-        if (isValid(model)) {
-            String eventId = model.get(RequestParam.EVENT_ID).toString();
-            String email = model.get(RequestParam.EMAIL).toString().toLowerCase();
+    @Inject
+    RegistrationDao registrationDao;
+    @Inject
+    EmailService emailService;
 
-            RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
-
-            String name = "";
-            try {
-                Registration registration = registrationDao.findByEventIdAndEmail(eventId, email);
-                registrationDao.delete(registration.getId());
-                if (!registration.isWaitlist()) {
-                    processWaitlist(registration.getEventId());
-                }
-                name = registration.getName();
-            } catch (Exception e) {
-                // intended
-            }
-
-            return BeanFactory.getHandlebarsService().getDeregistrationThanks(Collections.singletonMap("name", name));
-        } else {
-            return BeanFactory.getHandlebarsService().getDeregistration(model);
-        }
+    public String deleteFromUi(DeregistrationForm form) {
+        Registration registration = registrationDao.findByEventIdAndEmail(form.getEventId(), form.getEmail().toLowerCase());
+        return deleteFromUri(registration.getId());
     }
 
     public String deleteFromUri(String id) {
-            String name = "";
-            try {
-                RegistrationDao registrationDao = BeanFactory.getRegistrationDao();
-                Registration registration = registrationDao.delete(id);
-                if (!registration.isWaitlist()) {
-                    processWaitlist(registration.getEventId());
-                }
-                name = registration.getName();
-            } catch (Exception e) {
-                // intended
+        String name = "";
+        try {
+            Registration registration = registrationDao.delete(id);
+            if (!registration.isWaitlist()) {
+                processWaitlist(registration.getEventId());
             }
-
-            return BeanFactory.getHandlebarsService().getDeregistrationThanks(Collections.singletonMap("name", name));
-    }
-
-    public void deleteFromRequest(String id) {
-        BeanFactory.getRegistrationDao().delete(id);
-    }
-
-    @SuppressWarnings("Duplicates")
-    private boolean isValid(Map<String, Object> model) {
-        boolean valid = true;
-        String email = model.getOrDefault(RequestParam.EMAIL, "").toString();
-        if ("".equals(email.trim())) {
-            model.put("emailError", "true");
-            valid = false;
+            name = registration.getName();
+        } catch (Exception e) {
+            // intended
         }
-        return valid;
+        return name;
+    }
+
+    public void delete(String id) {
+        registrationDao.delete(id);
     }
 
     private void processWaitlist(String eventId) {
-        List<Registration> waitlist = BeanFactory.getRegistrationDao().findWaitlistByEventId(eventId);
+        List<Registration> waitlist = registrationDao.findWaitlistByEventId(eventId);
         if (!waitlist.isEmpty()) {
             Registration waiter = waitlist.get(0);
             waiter.setWaitlist(false);
-            BeanFactory.getRegistrationDao().save(waiter);
-            BeanFactory.getEmailService().sendWaitlistToAttendeeConfirmation(waiter);
+            registrationDao.save(waiter);
+            emailService.sendWaitlistToAttendeeConfirmation(waiter);
         }
     }
 
