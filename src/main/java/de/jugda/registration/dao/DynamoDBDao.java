@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.xray.AWSXRay;
 import de.jugda.registration.model.Registration;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,8 @@ public class DynamoDBDao implements RegistrationDao {
 
     @Synchronized
     public static RegistrationDao instance() {
+        AWSXRay.beginSegment("AmazonDynamoDBv2");
+
         if (instance == null) {
             instance = new DynamoDBDao();
         }
