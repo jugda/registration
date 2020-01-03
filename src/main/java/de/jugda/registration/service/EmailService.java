@@ -8,12 +8,12 @@ import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import de.jugda.registration.model.Registration;
+import io.quarkus.qute.Template;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -23,7 +23,12 @@ import java.util.regex.Pattern;
 public class EmailService {
 
     @Inject
-    HandlebarsService handlebarsService;
+    Template mail_registration;
+    @Inject
+    Template mail_waitlist2attendee;
+
+    @ConfigProperty(name = "aws.region.ses")
+    String awsSesRegion;
 
     private final AmazonSimpleEmailService ses;
 
@@ -36,13 +41,11 @@ public class EmailService {
 
         String subject = "[JUG DA] Anmeldebestätigung für die Veranstaltung am " + eventDate;
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("name", registration.getName());
-        model.put("id", registration.getId());
-        model.put("date", eventDate);
-        model.put("waitlist", registration.isWaitlist());
-
-        String mailBody = handlebarsService.getRegistrationConfirmMail(model);
+        String mailBody = mail_registration.data("name", registration.getName())
+            .data("id", registration.getId())
+            .data("date", eventDate)
+            .data("waitlist", registration.isWaitlist())
+            .render();
 
         sendEmail(registration, subject, mailBody);
     }
@@ -51,12 +54,10 @@ public class EmailService {
         String eventDate = isoToGermanDateFormat(registration.getEventId());
         String subject = "[JUG DA] Dein Wartelisten-Eintrag für die Veranstaltung am " + eventDate;
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("name", registration.getName());
-        model.put("id", registration.getId());
-        model.put("date", eventDate);
-
-        String mailBody = handlebarsService.getWaitlistToAttendeeMail(model);
+        String mailBody = mail_waitlist2attendee.data("name", registration.getName())
+            .data("id", registration.getId())
+            .data("date", eventDate)
+            .render();
 
         sendEmail(registration, subject, mailBody);
     }

@@ -1,17 +1,19 @@
-<h3>Hallo, {{ name }}!</h3>
-{{#if waitlist}}
+<h3>Hallo, {name}!</h3>
+{#if waitlist}
 <p>
-    Vielen Dank für Deine Anmeldung für unsere Veranstaltung am {{ date }}.<br/>
+    Vielen Dank für Deine Anmeldung für unsere Veranstaltung am {date}.<br/>
     Da wir derzeit komplett ausgebucht sind, haben wir Dich in der Warteliste aufgenommen.
     Wir informieren Dich, sobald wir Dich auf die Teilnehmerliste übernehmen können.
 </p>
-{{else}}
+{#else}
 <p>
     Vielen Dank für Deine Anmeldung.<br/>
-    Wir freuen uns, Dich am {{ date }} bei uns begrüßen zu dürfen.
+    Wir freuen uns, Dich am {date} bei uns begrüßen zu dürfen.
 </p>
-{{/if}}
-{{> deregistration_link }}
+{/if}
+{#include deregistration_link.html}
+{#id}{id}{/id}
+{/include}
 <p>
     Vielen Dank,<br/>
     <i>Dein JUG DA Orga-Team</i>

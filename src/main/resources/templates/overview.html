@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html>
-{{> head }}
-<body>
+{#include template.html}
+{#body}
     <div class="container">
     <h2>JUG DA Event-Anmeldungen</h2>
     <table class="table table-striped table-condensed">
@@ -12,14 +10,14 @@
         </tr>
         </thead>
         <tbody>
-        {{#each events}}
+        {#for event in events}
             <tr>
-                <td><a href="?eventId={{ @key }}">{{ @key }}</a></td>
-                <td>{{ this }}</td>
+                <td><a href="list/{event.key}">{event.key}</a></td>
+                <td>{event.value}</td>
             </tr>
-        {{/each}}
+        {/for}
         </tbody>
     </table>
     </div>
-</body>
-</html>
+{/body}
+{/include}

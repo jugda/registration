@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html>
-{{> head }}
-<body>
-    <div class="container">
-    <h2>JUG DA Anmeldungen für EventId {{ eventId }}: {{ total }}</h2>
+{#include template.html}
+{#body}
+<div class="container">
+    <h2>JUG DA Anmeldungen für EventId {eventId}: {total}</h2>
     <table class="table table-striped table-condensed">
         <thead>
         <tr>
@@ -17,21 +15,21 @@
         </tr>
         </thead>
         <tbody>
-        {{#each registrations}}
-            <tr id="{{ id }}">
-                <td>{{ @index }}</td>
-                <td>{{ name }}</td>
-                <td><a href="mailto:{{ email }}">{{ email }}</a></td>
+        {#for reg in registrations}
+            <tr id="{reg.id}">
+                <td>{count}</td>
+                <td>{reg.name}</td>
+                <td><a href="mailto:{reg.email}">{reg.email}</a></td>
                 <td>
-                    {{#if pub}}<span class="glyphicon glyphicon-ok"></span>{{/if}}
+                    {#if reg.pub}<span class="glyphicon glyphicon-ok"></span>{/if}
                 </td>
                 <td>
-                    {{#if waitlist}}<span class="glyphicon glyphicon-pushpin"></span>{{/if}}
+                    {#if reg.waitlist}<span class="glyphicon glyphicon-pushpin"></span>{/if}
                 </td>
-                <td>{{ datetime created }}</td>
-                <td><span class="glyphicon glyphicon-trash text-danger" onclick="delReg('{{ id }}', '{{ name }}')" style="cursor: pointer"></span></td>
+                <td>{reg.formattedCreationDate}</td>
+                <td><span class="glyphicon glyphicon-trash text-danger" onclick="delReg('{reg.id}', '{reg.name}')" style="cursor: pointer"></span></td>
             </tr>
-        {{/each}}
+        {/for}
         </tbody>
     </table>
     <div>
@@ -41,30 +39,30 @@
         <div class="collapse" id="collapseEmails">
             <div class="form-group">
                 <label for="names">Namen</label>
-                <textarea id="names" class="form-control" rows="5">{{#each registrations}}{{name}}
-{{/each}}</textarea>
+                <textarea id="names" class="form-control" rows="5">{#for reg in registrations}{reg.name}
+{/for}</textarea>
             </div>
             <div class="form-group">
                 <label for="emails">E-Mails</label>
-                <textarea id="emails" class="form-control" rows="5">{{#each registrations}}{{email}}, {{/each}}</textarea>
+                <textarea id="emails" class="form-control" rows="5">{#for reg in registrations}{reg.email}, {/for}</textarea>
             </div>
         </div>
     </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://www.jug-da.de/js/bootstrap.min.js"></script>
-    <script>
-        var delReg = function(id, name) {
-            if (confirm('Delete registration of ' + name + '?')) {
-                console.log('deleting registration', id);
-                $.ajax({
-                    url: '/delete?id=' + id,
-                    type: 'DELETE'
-                }).done(function () {
-                    $('#' + id).remove();
-                });
-            }
+</div>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://www.jug-da.de/js/bootstrap.min.js"></script>
+<script>
+    var delReg = function(id, name) {
+        if (confirm('Delete registration of ' + name + '?')) {
+            console.log('deleting registration', id);
+            $.ajax({
+                url: '/delete?id=' + id,
+                type: 'DELETE'
+            }).done(function () {
+                $('#' + id).remove();
+            });
         }
-    </script>
-</body>
-</html>
+    }
+</script>
+{/body}
+{/include}
