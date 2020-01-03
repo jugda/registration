@@ -35,22 +35,11 @@ provider:
       Resource: "*"
 
 package:
-  artifact: target/jugda-registration.jar
+  individually: true
 
 functions:
-  admin:
-    handler: de.jugda.registration.AdminResource
-    events:
-      - http:
-          path: /admin/{proxy+}
-          method: any
-          authorizer:
-            name: basicAuthorizr
-            type: token
-            identitySource: method.request.header.Authoriztion
-            resultTtlInSeconds: 30
   registration:
-    handler: de.jugda.registration.RegistrationResource
+    handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler
     environment:
       SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
       SLACK_CHANNEL_GENERAL: ${s3:${self:provider.deploymentBucket}/jugda/slack_channel_general}
@@ -58,10 +47,27 @@ functions:
       - http:
           path: /{proxy+}
           method: any
+          authorizer:
+            name: basicAuthorizr
+            type: token
+            identitySource: method.request.header.Authorization
+            resultTtlInSeconds: 0
+    package:
+      artifact: target/jugda-registration-runner.jar
   basicAuthorizr:
-    handler: de.jugda.registration.auth.BasicAuthHandler
+    handler: js/basicAuthorizr.handler
+    runtime: nodejs12.x
+    memorySize: 128
+    timeout: 3
     environment:
       REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
+    package:
+      exclude:
+        - .idea/**
+        - src/**
+        - target/**
+        - .editorconfig
+        - '*.*ml'
 
 resources:
   Resources:
