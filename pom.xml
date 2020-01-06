@@ -102,7 +102,6 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>io.quarkus</groupId>
@@ -119,10 +118,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler-plugin.version}</version>
-            </plugin>
 <!--            <plugin>-->
 <!--                <artifactId>maven-surefire-plugin</artifactId>-->
 <!--                <version>${surefire-plugin.version}</version>-->
@@ -134,5 +129,46 @@
 <!--            </plugin>-->
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>public</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <finalName>${project.artifactId}-public</finalName>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${compiler-plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>de/jugda/registration/AdminResource.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>admin</id>
+            <build>
+                <finalName>${project.artifactId}-admin</finalName>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${compiler-plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>de/jugda/registration/DeleteResource.java</exclude>
+                                <exclude>de/jugda/registration/RegistrationResource.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

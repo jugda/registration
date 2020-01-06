@@ -28,7 +28,7 @@ public class DynamoDBDao implements RegistrationDao {
 
     @Synchronized
     public static RegistrationDao instance() {
-        AWSXRay.beginSegment("AmazonDynamoDBv2");
+        AWSXRay.beginSubsegment("AmazonDynamoDBv2");
 
         if (instance == null) {
             instance = new DynamoDBDao();

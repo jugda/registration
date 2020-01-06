@@ -1,27 +1,24 @@
 exports.handler = function(event, context, callback) {
     console.log('Received event', JSON.stringify(event, null, 2));
 
-    let policy = allowPolicy("anonymous", event.methodArn);
-    const parts = event.methodArn.split(':');
-    if (parts[5].includes('/list')) {
+    if (event.authorizationToken) {
 
-        policy = denyPolicy("anonymous", event.methodArn);
+        const token = event.authorizationToken.replace(/Basic /g, '');
+        const decoded = Buffer.from(token, 'base64').toString('utf8');
+        const credentials = decoded.split(':');
 
-        if (event.authorizationToken) {
-
-            const token = event.authorizationToken.replace(/Basic /g, '');
-            const decoded = Buffer.from(token, 'base64').toString('utf8');
-            const credentials = decoded.split(':');
-
-            if (authorizationValid(credentials)) {
-                policy = allowPolicy(credentials[0], event.methodArn);
-            }
-
+        let policy;
+        if (authorizationValid(credentials)) {
+            policy = allowPolicy(credentials[0], event.methodArn);
+        } else {
+            policy = denyPolicy("anonymous", event.methodArn);
         }
 
-    }
+        callback(null, policy);
 
-    callback(null, policy);
+    } else {
+        callback(Error("missing authorization token"))
+    }
 };
 
 const authorizationValid = function(credentials) {

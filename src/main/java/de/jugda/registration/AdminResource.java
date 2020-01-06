@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
-@Path("list")
+@Path("admin/events")
 @Produces(MediaType.TEXT_HTML)
 public class AdminResource {
 

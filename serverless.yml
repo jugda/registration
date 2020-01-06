@@ -38,7 +38,20 @@ package:
   individually: true
 
 functions:
-  registration:
+  admin:
+    handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler
+    events:
+      - http:
+          path: /admin/{proxy+}
+          method: any
+          authorizer:
+            name: basicAuthorizr
+            type: token
+            identitySource: method.request.header.Authorization
+            resultTtlInSeconds: 30
+    package:
+      artifact: target/jugda-registration-admin-runner.jar
+  public:
     handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler
     environment:
       SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
@@ -47,13 +60,8 @@ functions:
       - http:
           path: /{proxy+}
           method: any
-          authorizer:
-            name: basicAuthorizr
-            type: token
-            identitySource: method.request.header.Authorization
-            resultTtlInSeconds: 0
     package:
-      artifact: target/jugda-registration-runner.jar
+      artifact: target/jugda-registration-public-runner.jar
   basicAuthorizr:
     handler: js/basicAuthorizr.handler
     runtime: nodejs12.x
