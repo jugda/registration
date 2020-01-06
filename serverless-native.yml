@@ -1,0 +1,118 @@
+service: jugda-registration
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: provided
+  stage: quarkus
+  region: eu-central-1
+  memorySize: 256
+  timeout: 10
+  deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
+  logRetentionInDays: 30
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
+    SES_REGION: eu-west-1
+    DISABLE_SIGNAL_HANDLERS: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+      Resource: "arn:aws:ses:${self:provider.environment.SES_REGION}:*:identity/jug-da.de"
+    - Effect: Allow
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: "*"
+
+package:
+  individually: true
+
+functions:
+  admin:
+    handler: not.used.in.provided.runtime
+    events:
+      - http:
+          path: /admin/{proxy+}
+          method: any
+          authorizer:
+            name: basicAuthorizr
+            type: token
+            identitySource: method.request.header.Authorization
+            resultTtlInSeconds: 30
+    package:
+      artifact: target/function-admin.zip
+  public:
+    handler: not.used.in.provided.runtime
+    environment:
+      SLACK_OAUTH_ACCESS_TOKEN: ${file(sls-props.yml):slack.access_token}
+      SLACK_CHANNEL_GENERAL: ${file(sls-props.yml):slack.channel_general}
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+    package:
+      artifact: target/function-public.zip
+  basicAuthorizr:
+    handler: js/basicAuthorizr.handler
+    runtime: nodejs12.x
+    memorySize: 128
+    timeout: 3
+    environment:
+      REGISTRATION_SECRET: ${file(sls-props.yml):registration.secret}
+    package:
+      exclude:
+        - .idea/**
+        - lambda-layer/**
+        - lsp/**
+        - src/**
+        - target/**
+        - .editorconfig
+        - '*.*ml'
+
+layers:
+  GraalmSecurity:
+    path: lambda-layer
+
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 2
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
+        SSESpecification:
+          SSEEnabled: true
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.WWW-Authenticate: "'Basic'"
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StatusCode: 401
