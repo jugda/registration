@@ -12,7 +12,7 @@
             <h2>Anmeldung</h2>
             <div class="text-success">Noch {freeSeats} freie Plätze ({actualCount} bereits angemeldet).</div>
         {/if}
-        <div class="form-group {#if nameError}has-error{/if}">
+        <div class="form-group {#each validationErrors}{#if it.key == 'name'}has-error{/if}{/each}">
             <label for="name" class="control-label">Name*</label>
             <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{name}"/>
             <small class="text-muted">
@@ -22,7 +22,7 @@
                 In vereinzelten Fällen kann es sein, dass wir Deinen Namen dem örtlichen Raum-Sponsor zur Verfügung stellen müssen.
             </small>
         </div>
-        <div class="form-group {#if emailError}has-error{/if}">
+        <div class="form-group {#each validationErrors}{#if it.key == 'email'}has-error{/if}{/each}">
             <label for="email" class="control-label">E-Mail*</label>
             <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail" value="{email}"/>
             <small class="text-muted">
@@ -59,6 +59,7 @@
         <input type="hidden" name="actualCount" value="{actualCount}"/>
         <input type="hidden" name="limit" value="{limit}"/>
         <input type="hidden" name="waitlist" value="{waitlist}"/>
+        <input type="hidden" name="showPub" value="{showPub}"/>
     </form>
     <p class="text-muted">
         <small>

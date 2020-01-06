@@ -52,20 +52,4 @@ public class RegistrationService {
         }
     }
 
-//    private boolean isValid(Map<String, Object> model) {
-//        boolean valid = true;
-//        String name = model.getOrDefault(RequestParam.NAME, "").toString();
-//        if ("".equals(name.trim())) {
-//            model.put("nameError", "true");
-//            valid = false;
-//        }
-//        String email = model.getOrDefault(RequestParam.EMAIL, "").toString();
-//        if ("".equals(email.trim())) {
-//            model.put("emailError", "true");
-//            valid = false;
-//        }
-//
-//        return valid;
-//    }
-
 }

@@ -6,7 +6,8 @@ import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
@@ -29,6 +31,8 @@ public class RegistrationResource {
 
     @Inject
     RegistrationService registrationService;
+    @Inject
+    Validator validator;
     @Inject
     Template closed;
     @Inject
@@ -74,9 +78,16 @@ public class RegistrationResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public TemplateInstance postForm(@Valid @BeanParam RegistrationForm registrationForm) {
-        RegistrationForm registrationSaved = registrationService.handleRegistration(registrationForm);
-        return thanks.data(registrationSaved);
+    public TemplateInstance postForm(@BeanParam RegistrationForm registrationForm) {
+        Set<ConstraintViolation<RegistrationForm>> violations = validator.validate(registrationForm);
+        if (violations.isEmpty()) {
+            RegistrationForm registrationSaved = registrationService.handleRegistration(registrationForm);
+            return thanks.data(registrationSaved);
+        } else {
+            violations.forEach(cv ->
+                registrationForm.addValidationError(cv.getPropertyPath().toString(), cv.getMessage()));
+            return registration.data(registrationForm);
+        }
     }
 
 }
