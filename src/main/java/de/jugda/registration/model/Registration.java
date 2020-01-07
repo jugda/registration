@@ -1,10 +1,10 @@
 package de.jugda.registration.model;
 
-import com.amazonaws.util.StringUtils;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.utils.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,6 +76,6 @@ public class Registration {
     }
 
     private static boolean onOrOff(String s) {
-        return (StringUtils.isNullOrEmpty(s) ? "off" : s).equalsIgnoreCase("on");
+        return (StringUtils.isBlank(s) ? "off" : s).equalsIgnoreCase("on");
     }
 }

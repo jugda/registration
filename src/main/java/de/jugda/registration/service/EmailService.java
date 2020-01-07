@@ -1,15 +1,13 @@
 package de.jugda.registration.service;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Template;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.ses.model.Body;
+import software.amazon.awssdk.services.ses.model.Content;
+import software.amazon.awssdk.services.ses.model.Destination;
+import software.amazon.awssdk.services.ses.model.Message;
+import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,18 +21,11 @@ import java.util.regex.Pattern;
 public class EmailService {
 
     @Inject
+    SesClient ses;
+    @Inject
     Template mail_registration;
     @Inject
     Template mail_waitlist2attendee;
-
-    @ConfigProperty(name = "aws.region.ses")
-    String awsSesRegion;
-
-    private final AmazonSimpleEmailService ses;
-
-    public EmailService() {
-        ses = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(System.getenv("SES_REGION")).build();
-    }
 
     void sendRegistrationConfirmation(Registration registration) {
         String eventDate = isoToGermanDateFormat(registration.getEventId());
@@ -63,25 +54,30 @@ public class EmailService {
     }
 
     private void sendEmail(Registration registration, String subject, String mailBody) {
-        SendEmailRequest request = new SendEmailRequest()
-            .withSource("JUG Darmstadt <info@jug-da.de>")
-            .withDestination(new Destination()
-                .withToAddresses(registration.getEmail()))
-            .withMessage(new Message()
-                .withSubject(utf8Content(subject))
-                .withBody(new Body()
-                    .withHtml(utf8Content(mailBody))
-                    .withText(utf8Content(strip(mailBody)))
+        SendEmailRequest request = SendEmailRequest.builder()
+            .source("JUG Darmstadt <info@jug-da.de>")
+            .destination(Destination.builder()
+                .toAddresses(registration.getEmail())
+                .build())
+            .message(Message.builder()
+                .subject(utf8Content(subject))
+                .body(Body.builder()
+                    .html(utf8Content(mailBody))
+                    .text(utf8Content(strip(mailBody)))
+                    .build()
                 )
-            );
+                .build()
+            )
+            .build();
 
         ses.sendEmail(request);
     }
 
     private Content utf8Content(String data) {
-        return new Content()
-            .withCharset(StandardCharsets.UTF_8.name())
-            .withData(data);
+        return Content.builder()
+            .charset(StandardCharsets.UTF_8.name())
+            .data(data)
+            .build();
     }
 
     private String isoToGermanDateFormat(String iso) {
