@@ -1,63 +1,63 @@
 package de.jugda.registration.slack;
 
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-
 import javax.enterprise.context.ApplicationScoped;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
  */
-@Slf4j
 @ApplicationScoped
 public class SlackWebClient {
 
     private static final String SLACK_URL = "https://slack.com/api/";
 
-    private static HttpClient httpClient = HttpClientBuilder.create().build();
-
-    private final String oauthAccessToken;
-
-    public SlackWebClient() {
-        this.oauthAccessToken = System.getenv("SLACK_OAUTH_ACCESS_TOKEN");
-    }
-
     public void postMessage(String text, String channel) {
         String method = "chat.postMessage";
 
-        Map<String, String> reply = new HashMap<>();
-        reply.put("text", text);
-        reply.put("channel", channel);
+        Map<String, String> params = new HashMap<>();
+        params.put("text", text);
+        params.put("channel", channel);
+        params.put("token", System.getenv("SLACK_OAUTH_ACCESS_TOKEN"));
 
-        sendRequest(method, reply);
+        try {
+            sendRequest(method, params);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
-    @SneakyThrows
-    private void sendRequest(String method, Map<String, String> params) {
-        log.info("Sending " + method + " request to Slack: " + params);
+    private void sendRequest(String method, Map<String, String> params) throws IOException {
+        String postData = params.entrySet().stream()
+            .map(e -> {
+                try {
+                    return e.getKey() + "=" + URLEncoder.encode(e.getValue(), "UTF-8");
+                } catch (UnsupportedEncodingException ex) {
+                    return e.getKey() + "=" + e.getValue();
+                }
+            })
+            .collect(Collectors.joining("&"));
 
-        params.put("token", oauthAccessToken);
+        URL url = new URL(SLACK_URL + method);
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setDoOutput(true);
+        try (OutputStream os = conn.getOutputStream()) {
+            byte [] postDataBytes = postData.getBytes(StandardCharsets.UTF_8);
+            os.write(postDataBytes, 0, postDataBytes.length);
+        }
 
-        HttpPost post = new HttpPost(SLACK_URL + method);
-
-        List<NameValuePair> nameValuePairs = params.entrySet().stream()
-                .map(e -> new BasicNameValuePair(e.getKey(), e.getValue()))
-                .collect(Collectors.toList());
-
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-        post.setEntity(entity);
-
-        httpClient.execute(post);
+        conn.getResponseCode();
     }
 
 }

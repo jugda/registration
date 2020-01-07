@@ -2,7 +2,6 @@ package de.jugda.registration.service;
 
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
-import lombok.SneakyThrows;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,7 +18,6 @@ public class ListService {
     @Inject
     RegistrationDao registrationDao;
 
-    @SneakyThrows
     public List<Registration> singleEventRegistrations(String eventId) {
         return registrationDao.findByEventId(eventId);
     }
