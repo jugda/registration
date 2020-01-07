@@ -20,7 +20,10 @@ public class DeleteService {
     EmailService emailService;
 
     public String deleteFromUi(DeregistrationForm form) {
-        Registration registration = registrationDao.findByEventIdAndEmail(form.getEventId(), form.getEmail().toLowerCase());
+        Registration registration = new Registration();
+        registration.setEventId(form.getEventId());
+        registration.setEmail(form.getEmail().toLowerCase());
+        registration = registrationDao.find(registration);
         return deleteFromUri(registration.getId());
     }
 

@@ -57,22 +57,16 @@
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-amazon-dynamodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>url-connection-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ses</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-xray-recorder-sdk-aws-sdk</artifactId>
-            <version>${xray.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-xray-recorder-sdk-aws-sdk-instrumentor</artifactId>
-            <version>${xray.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -137,9 +131,6 @@
     <profiles>
         <profile>
             <id>public</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <finalName>${project.artifactId}-public</finalName>
                 <plugins>

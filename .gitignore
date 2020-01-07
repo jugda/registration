@@ -3,3 +3,4 @@
 target
 .serverless
 sls-props.yml
+lsp
