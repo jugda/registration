@@ -5,7 +5,7 @@ frameworkVersion: ">=1.2.0 <2.0.0"
 provider:
   name: aws
   runtime: java8
-  stage: quarkus
+  stage: prod
   region: eu-central-1
   memorySize: 2048
   timeout: 10
