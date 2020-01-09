@@ -21,15 +21,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @RegisterForReflection
 public class Registration {
-    private String id;
-    private String eventId;
-    private String name;
-    private String email;
-    private boolean pub;
-    private boolean waitlist;
-    private boolean privacy;
-    private LocalDateTime created;
-    private Long ttl;
+    public String id;
+    public String eventId;
+    public String name;
+    public String email;
+    public boolean pub;
+    public boolean waitlist;
+    public boolean privacy;
+    public LocalDateTime created;
+    public Long ttl;
+
+    public String formattedCreationDate() {
+        return created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
 
     public static Registration of(RegistrationForm form) {
         Registration registration = new Registration();

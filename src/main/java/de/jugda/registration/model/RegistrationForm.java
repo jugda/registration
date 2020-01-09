@@ -1,5 +1,6 @@
 package de.jugda.registration.model;
 
+import io.quarkus.qute.TemplateData;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -11,34 +12,35 @@ import java.util.Map;
  * @author Niko Köbler, https://www.n-k.de, @dasniko
  */
 @Data
+@TemplateData
 public class RegistrationForm {
     @FormParam("id")
-    private String id;
+    public String id;
     @FormParam("eventId")
-    private String eventId;
+    public String eventId;
     @NotBlank
     @FormParam("name")
-    private String name;
+    public String name;
     @NotBlank
     @FormParam("email")
-    private String email;
+    public String email;
     @FormParam("privacy")
-    private String privacy;
+    public String privacy;
     @FormParam("pub")
-    private String pub;
+    public String pub;
     @FormParam("waitlist")
-    private boolean waitlist;
+    public boolean waitlist;
 
     @FormParam("limit")
-    private int limit;
+    public int limit;
     @FormParam("freeSeats")
-    private int freeSeats;
+    public int freeSeats;
     @FormParam("actualCount")
-    private int actualCount;
+    public int actualCount;
     @FormParam("showPub")
-    private boolean showPub;
+    public boolean showPub;
 
-    private Map<String, String> validationErrors = new HashMap<>();
+    public Map<String, String> validationErrors = new HashMap<>();
 
     public void addValidationError(String key, String value) {
         validationErrors.put(key, value);
