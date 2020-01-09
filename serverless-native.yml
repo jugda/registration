@@ -5,14 +5,14 @@ frameworkVersion: ">=1.2.0 <2.0.0"
 provider:
   name: aws
   runtime: provided
-  stage: quarkus
+  stage: prod
   region: eu-central-1
   memorySize: 256
   timeout: 10
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
   environment:
-    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
+    DYNAMODB_TABLE: ${self:service}
     SES_REGION: eu-west-1
     DISABLE_SIGNAL_HANDLERS: true
   iamRoleStatements:
