@@ -52,24 +52,28 @@ functions:
             resultTtlInSeconds: 30
     package:
       artifact: target/function-admin.zip
+    layers:
+      - { Ref: GraalvmSecurityLambdaLayer }
   public:
     handler: not.used.in.provided.runtime
     environment:
-      SLACK_OAUTH_ACCESS_TOKEN: ${file(sls-props.yml):slack.access_token}
-      SLACK_CHANNEL_GENERAL: ${file(sls-props.yml):slack.channel_general}
+      SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
+      SLACK_CHANNEL_GENERAL: ${s3:${self:provider.deploymentBucket}/jugda/slack_channel_general}
     events:
       - http:
           path: /{proxy+}
           method: any
     package:
       artifact: target/function-public.zip
+    layers:
+      - { Ref: GraalvmSecurityLambdaLayer }
   basicAuthorizr:
     handler: js/basicAuthorizr.handler
     runtime: nodejs12.x
     memorySize: 128
     timeout: 3
     environment:
-      REGISTRATION_SECRET: ${file(sls-props.yml):registration.secret}
+      REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
     package:
       exclude:
         - .idea/**
@@ -81,7 +85,7 @@ functions:
         - '*.*ml'
 
 layers:
-  GraalmSecurity:
+  GraalvmSecurity:
     path: lambda-layer
 
 resources:
