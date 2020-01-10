@@ -7,6 +7,7 @@ provider:
   runtime: provided
   stage: prod
   region: eu-central-1
+  endpointType: REGIONAL
   memorySize: 256
   timeout: 10
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
@@ -49,7 +50,7 @@ functions:
             name: basicAuthorizr
             type: token
             identitySource: method.request.header.Authorization
-            resultTtlInSeconds: 30
+            resultTtlInSeconds: 300
     package:
       artifact: target/function-admin.zip
     layers:
