@@ -1,6 +1,4 @@
 exports.handler = function(event, context, callback) {
-    console.log('Received event', JSON.stringify(event, null, 2));
-
     if (event.authorizationToken) {
 
         const token = event.authorizationToken.replace(/Basic /g, '');
