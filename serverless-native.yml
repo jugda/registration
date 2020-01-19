@@ -8,7 +8,7 @@ provider:
   stage: prod
   region: eu-central-1
   endpointType: REGIONAL
-  memorySize: 256
+  memorySize: 384
   timeout: 10
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
