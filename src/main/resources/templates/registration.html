@@ -2,20 +2,20 @@
 {#body}
     <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
         {#if waitlist}
-            <h2>Warteliste</h2>
+            <h3>Warteliste</h3>
             <p class="lead text-danger">
                 Für diese Veranstaltung sind zur Zeit alle verfügbaren Plätze belegt.
                 Du kannst Dich aber auf der Warteliste eintragen.
                 Wir informieren Dich dann, wenn wir Dich auf die Teilnehmerliste setzen können.
             </p>
         {#else}
-            <h2>Anmeldung</h2>
+            <h3>Anmeldung</h3>
             <div class="text-success">Noch {freeSeats} freie Plätze ({actualCount} bereits angemeldet).</div>
         {/if}
         <div class="form-group {#if validationErrors.containsKey('name')}has-error{/if}">
-            <label for="name" class="control-label">Name*</label>
+            <label for="name">Name*</label>
             <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{name}"/>
-            <small class="text-muted">
+            <small class="form-text text-muted">
                 Ohne Deinen Namen wissen wir nicht, wer Du bist.
                 Wenn Du Dich anmeldest und wir eine Verlosung durchführen, nimmst Du automatisch an dieser teil.
                 Wirst Du als Gewinner gezogen, wird Dein Name während der Veranstaltung bekanntgegeben.
@@ -23,9 +23,9 @@
             </small>
         </div>
         <div class="form-group {#if validationErrors.containsKey('email')}has-error{/if}">
-            <label for="email" class="control-label">E-Mail*</label>
+            <label for="email">E-Mail*</label>
             <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail" value="{email}"/>
-            <small class="text-muted">
+            <small class="form-text text-muted">
                 Deine E-Mail Adresse nutzen wir, um die Eindeutigkeit Deiner Anmeldung zu bestimmen.
                 Außerdem kannst Du Dich mithilfe Deiner E-Mail Adresse wieder abmelden bzw. Deine Daten löschen (Link s.u.).
                 Du erhälst zusätzlich eine E-Mail als Anmeldebestätigung, in der auch ein Abmeldelink enthalten ist.
@@ -34,10 +34,9 @@
             </small>
         </div>
         {#if showPub}
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="pub"> Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)
-            </label>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="pub" id="pub">
+            <label class="form-check-label" for="pub">Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)</label>
         </div>
         {/if}
         <p class="text-muted">
@@ -46,9 +45,9 @@
                 Wir löschen Deine persönlichen Daten aus dieser Anmeldung ca. 1 Monat nach der Veranstaltung.
             </small>
         </p>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="privacy" id="privacy" onclick="checkPrivacy(this)">
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="privacy" id="privacy" onclick="checkPrivacy(this)">
+            <label class="form-check-label" for="privacy">
                 Ja, ich habe die o.g. Hinweise gelesen, verstanden und erkläre mich damit einverstanden.*
             </label>
         </div>

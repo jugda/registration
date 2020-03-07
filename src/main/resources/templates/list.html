@@ -1,8 +1,8 @@
 {#include template.html}
 {#body}
 <div class="container">
-    <h2>JUG DA Anmeldungen für EventId {eventId}: {total}</h2>
-    <table class="table table-striped table-condensed">
+    <h2>JUG DA Anmeldungen für Event am {eventId}: {total}</h2>
+    <table class="table table-striped table-sm">
         <thead>
         <tr>
             <th>Lfd.Nr.</th>
@@ -52,7 +52,7 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://www.jug-da.de/js/bootstrap.min.js"></script>
 <script>
-    var delReg = function(id, name) {
+    function delReg(id, name) {
         if (confirm('Delete registration of ' + name + '?')) {
             console.log('deleting registration', id);
             $.ajax({
