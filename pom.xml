@@ -88,29 +88,12 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>io.quarkus</groupId>
-                    <artifactId>quarkus-maven-plugin</artifactId>
-                    <version>${quarkus.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${assembly-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus.version}</version>
                 <configuration>
                     <uberJar>true</uberJar>
                 </configuration>
@@ -122,7 +105,12 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            <plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+            </plugin>
+            <!--            <plugin>-->
 <!--                <artifactId>maven-surefire-plugin</artifactId>-->
 <!--                <version>${surefire-plugin.version}</version>-->
 <!--                <configuration>-->
@@ -136,45 +124,10 @@
 
     <profiles>
         <profile>
-            <id>public</id>
-            <build>
-                <finalName>${project.artifactId}-public</finalName>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>de/jugda/registration/AdminResource.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>admin</id>
-            <build>
-                <finalName>${project.artifactId}-admin</finalName>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>de/jugda/registration/DeleteResource.java</exclude>
-                                <exclude>de/jugda/registration/RegistrationResource.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>native-public</id>
+            <id>native</id>
             <activation>
                 <property>
-                    <name>native-public</name>
+                    <name>native</name>
                 </property>
             </activation>
             <build>
@@ -182,6 +135,7 @@
                     <plugin>
                         <groupId>io.quarkus</groupId>
                         <artifactId>quarkus-maven-plugin</artifactId>
+                        <version>${quarkus.version}</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -193,6 +147,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>${assembly-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>zip-assembly</id>
@@ -201,53 +156,9 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
-                                    <finalName>function-public</finalName>
+                                    <finalName>function</finalName>
                                     <descriptors>
-                                        <descriptor>src/assembly/public.xml</descriptor>
-                                    </descriptors>
-                                    <attach>false</attach>
-                                    <appendAssemblyId>false</appendAssemblyId>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>native-admin</id>
-            <activation>
-                <property>
-                    <name>native-admin</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.quarkus</groupId>
-                        <artifactId>quarkus-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>native-image</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>zip-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration>
-                                    <finalName>function-admin</finalName>
-                                    <descriptors>
-                                        <descriptor>src/assembly/admin.xml</descriptor>
+                                        <descriptor>src/assembly/zip.xml</descriptor>
                                     </descriptors>
                                     <attach>false</attach>
                                     <appendAssemblyId>false</appendAssemblyId>

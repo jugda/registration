@@ -51,7 +51,7 @@ functions:
             identitySource: method.request.header.Authorization
             resultTtlInSeconds: 300
     package:
-      artifact: target/jugda-registration-admin-runner.jar
+      artifact: target/jugda-registration-runner.jar
   public:
     handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler
     environment:
@@ -62,7 +62,7 @@ functions:
           path: /{proxy+}
           method: any
     package:
-      artifact: target/jugda-registration-public-runner.jar
+      artifact: target/jugda-registration-runner.jar
   basicAuthorizr:
     handler: js/basicAuthorizr.handler
     runtime: nodejs12.x

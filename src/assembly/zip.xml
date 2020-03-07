@@ -13,7 +13,7 @@
             <fileMode>755</fileMode>
         </file>
         <file>
-            <source>${project.build.directory}${file.separator}${artifactId}-public-runner</source>
+            <source>${project.build.directory}${file.separator}${artifactId}-runner</source>
             <outputDirectory>/</outputDirectory>
 <!--            <destName>bootstrap</destName>-->
             <fileMode>755</fileMode>

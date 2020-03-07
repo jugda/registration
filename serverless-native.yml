@@ -52,7 +52,7 @@ functions:
             identitySource: method.request.header.Authorization
             resultTtlInSeconds: 300
     package:
-      artifact: target/function-admin.zip
+      artifact: target/function.zip
     layers:
       - { Ref: GraalvmSecurityLambdaLayer }
   public:
@@ -65,7 +65,7 @@ functions:
           path: /{proxy+}
           method: any
     package:
-      artifact: target/function-public.zip
+      artifact: target/function.zip
     layers:
       - { Ref: GraalvmSecurityLambdaLayer }
   basicAuthorizr:
