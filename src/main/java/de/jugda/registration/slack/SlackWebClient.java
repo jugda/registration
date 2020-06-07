@@ -4,8 +4,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -31,20 +29,14 @@ public class SlackWebClient {
 
         try {
             sendRequest(method, params);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void sendRequest(String method, Map<String, String> params) throws IOException {
         String postData = params.entrySet().stream()
-            .map(e -> {
-                try {
-                    return e.getKey() + "=" + URLEncoder.encode(e.getValue(), "UTF-8");
-                } catch (UnsupportedEncodingException ex) {
-                    return e.getKey() + "=" + e.getValue();
-                }
-            })
+            .map(e -> e.getKey() + "=" + URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
             .collect(Collectors.joining("&"));
 
         URL url = new URL(SLACK_URL + method);
