@@ -98,6 +98,12 @@ resources:
           -
             AttributeName: id
             AttributeType: S
+          -
+            AttributeName: eventId
+            AttributeType: S
+          -
+            AttributeName: email
+            AttributeType: S
         KeySchema:
           -
             AttributeName: id
@@ -109,8 +115,18 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
-        SSESpecification:
-          SSEEnabled: true
+        GlobalSecondaryIndexes:
+          IndexName: event-email-index
+          KeySchema:
+            - AttributeName: eventId
+              KeyType: HASH
+            - AttributeName: email
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 2
     GatewayResponse:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:

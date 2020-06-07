@@ -1,19 +1,15 @@
 package de.jugda.registration.dao;
 
 import de.jugda.registration.model.Registration;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
-import software.amazon.awssdk.services.dynamodb.model.DeleteItemRequest;
-import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
-import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
-import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
+import software.amazon.awssdk.services.dynamodb.model.QueryRequest;
 import software.amazon.awssdk.services.dynamodb.model.Select;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,125 +23,98 @@ public class RegistrationDao {
     @Inject
     DynamoDbClient dynamoDB;
 
-    private static final String attributesToGet = "id, eventId, #name, email, pub, waitlist, privacy, created, #ttl";
-    private static final Map<String, String> expressionAttributeNames;
+    @ConfigProperty(name = "app.dynamodb.table", defaultValue = "jugda-registration")
+    String tableName;
+    @ConfigProperty(name = "app.dynamodb.index", defaultValue = "event-email-index")
+    String indexName;
 
-    static {
-        expressionAttributeNames = new HashMap<>();
-        expressionAttributeNames.put("#name", "name");
-        expressionAttributeNames.put("#ttl", "ttl");
-    }
+    private static final String attributesToGet = "id, eventId, #name, email, pub, waitlist, privacy, created, #ttl";
+    private static final Map<String, String> expressionAttributeNames = Map.of("#name", "name", "#ttl", "ttl");
 
     public void save(Registration registration) {
-        Map<String, AttributeValue> item = registration.toItem();
-
-        PutItemRequest putItemRequest = PutItemRequest.builder()
-            .tableName(getTableName())
-            .item(item)
-            .build();
-
-        dynamoDB.putItem(putItemRequest);
+        dynamoDB.putItem(builder -> builder
+            .tableName(tableName)
+            .item(registration.toItem()));
     }
 
     public Registration find(Registration registration) {
-        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
-        expressionAttributeValues.put(":v_eventId", AttributeValue.builder().s(registration.getEventId()).build());
-        expressionAttributeValues.put(":v_email", AttributeValue.builder().s(registration.getEmail()).build());
-
-        ScanRequest scanRequest = createBaseScanRequestBuilder()
-            .filterExpression("eventId = :v_eventId and email = :v_email")
-            .expressionAttributeValues(expressionAttributeValues)
-            .build();
-
-        return dynamoDB.scanPaginator(scanRequest).items().stream()
+        return dynamoDB.query(builder -> baseQueryRequestBuilder(builder)
+            .tableName(tableName)
+            .indexName(indexName)
+            .expressionAttributeNames(expressionAttributeNames)
+            .expressionAttributeValues(Map.of(
+                ":v_eventId", toAttribute(registration.getEventId()),
+                ":v_email", toAttribute(registration.getEmail())
+            ))
+            .keyConditionExpression("eventId = :v_eventId and email = :v_email")
+        ).items().stream()
             .map(Registration::from)
             .findFirst()
             .orElse(null);
     }
 
     public List<Registration> findAll() {
-        return dynamoDB.scanPaginator(createBaseScanRequestBuilder().build())
-            .items().stream()
+        return dynamoDB.scanPaginator(builder -> builder
+            .tableName(tableName)
+            .projectionExpression(attributesToGet)
+            .expressionAttributeNames(expressionAttributeNames)
+        ).items().stream()
             .map(Registration::from)
             .sorted(Comparator.comparing(Registration::getEventId))
             .collect(Collectors.toList());
     }
 
     public List<Registration> findByEventId(String eventId) {
-        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
-        expressionAttributeValues.put(":v_eventId", AttributeValue.builder().s(eventId).build());
-
-        ScanRequest scanRequest = createBaseScanRequestBuilder()
-            .filterExpression("eventId = :v_eventId")
-            .expressionAttributeValues(expressionAttributeValues)
-            .build();
-
-        return dynamoDB.scanPaginator(scanRequest).items().stream()
+        return dynamoDB.queryPaginator(builder -> byEventIdQueryBuilder(builder, eventId))
+            .items().stream()
             .map(Registration::from)
             .sorted(Comparator.comparing(Registration::getCreated))
             .collect(Collectors.toList());
     }
 
     public List<Registration> findWaitlistByEventId(String eventId) {
-        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
-        expressionAttributeValues.put(":v_eventId", AttributeValue.builder().s(eventId).build());
-        expressionAttributeValues.put(":v_waitlist", AttributeValue.builder().bool(true).build());
-
-        ScanRequest scanRequest = createBaseScanRequestBuilder()
-            .filterExpression("eventId = :v_eventId and waitlist = :v_waitlist")
-            .expressionAttributeValues(expressionAttributeValues)
-            .build();
-
-        return dynamoDB.scanPaginator(scanRequest).items().stream()
-            .map(Registration::from)
-            .sorted(Comparator.comparing(Registration::getCreated))
-            .collect(Collectors.toList());
+        return findByEventId(eventId).stream().filter(Registration::isWaitlist).collect(Collectors.toUnmodifiableList());
     }
 
     public int getCount(String eventId) {
-        ScanRequest scanRequest = ScanRequest.builder()
-            .tableName(getTableName())
-            .filterExpression("eventId = :v_eventId")
-            .expressionAttributeValues(Collections.singletonMap(":v_eventId", AttributeValue.builder().s(eventId).build()))
-            .select(Select.COUNT)
-            .build();
-        return dynamoDB.scan(scanRequest).count();
+        return dynamoDB.query(builder -> byEventIdQueryBuilder(builder, eventId).projectionExpression(null).expressionAttributeNames(null).select(Select.COUNT)).count();
     }
 
     public Registration delete(String id) {
-        Map<String, AttributeValue> key = Collections.singletonMap("id", AttributeValue.builder().s(id).build());
+        Map<String, AttributeValue> key = Map.of("id", toAttribute(id));
 
-        GetItemRequest getItemRequest = GetItemRequest.builder()
-            .tableName(getTableName())
+        Registration registration = Registration.from(dynamoDB.getItem(builder -> builder
+            .tableName(tableName)
             .key(key)
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
-            .build();
-
-        Registration registration = Registration.from(dynamoDB.getItem(getItemRequest).item());
+        ).item());
         //noinspection ResultOfMethodCallIgnored
         registration.getId(); // materialize object
 
-        DeleteItemRequest deleteItemRequest = DeleteItemRequest.builder()
-            .tableName(getTableName())
-            .key(key)
-            .build();
-
-        dynamoDB.deleteItem(deleteItemRequest);
+        dynamoDB.deleteItem(builder -> builder.tableName(tableName).key(key));
 
         return registration;
     }
 
-    private ScanRequest.Builder createBaseScanRequestBuilder() {
-        return ScanRequest.builder()
-            .tableName(getTableName())
+    private QueryRequest.Builder baseQueryRequestBuilder(QueryRequest.Builder builder) {
+        return builder
+            .tableName(tableName)
+            .indexName(indexName)
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
             ;
     }
 
-    private String getTableName() {
-        return System.getenv("DYNAMODB_TABLE");
+    private QueryRequest.Builder byEventIdQueryBuilder(QueryRequest.Builder builder, String eventId) {
+        return baseQueryRequestBuilder(builder)
+            .keyConditionExpression("eventId = :v_eventId")
+            .expressionAttributeValues(Map.of(":v_eventId", toAttribute(eventId)))
+            ;
+    }
+
+    private AttributeValue toAttribute(String value) {
+        return AttributeValue.builder().s(value).build();
     }
 
 }
