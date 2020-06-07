@@ -14,7 +14,6 @@
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <assembly-plugin.version>3.1.0</assembly-plugin.version>
         <surefire-plugin.version>2.22.0</surefire-plugin.version>
-        <aws.version>2.10.3</aws.version>
         <quarkus.version>1.5.0.Final</quarkus.version>
     </properties>
 
@@ -52,13 +51,12 @@
             <artifactId>quarkus-amazon-dynamodb</artifactId>
         </dependency>
         <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>url-connection-client</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-amazon-ses</artifactId>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
-            <artifactId>ses</artifactId>
-            <version>${aws.version}</version>
+            <artifactId>url-connection-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

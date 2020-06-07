@@ -14,7 +14,6 @@ provider:
   logRetentionInDays: 30
   environment:
     DYNAMODB_TABLE: ${self:service}
-    SES_REGION: eu-west-1
   iamRoleStatements:
     - Effect: Allow
       Action:

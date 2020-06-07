@@ -5,9 +5,6 @@ import io.quarkus.qute.Template;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.Body;
 import software.amazon.awssdk.services.ses.model.Content;
-import software.amazon.awssdk.services.ses.model.Destination;
-import software.amazon.awssdk.services.ses.model.Message;
-import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,23 +51,18 @@ public class EmailService {
     }
 
     private void sendEmail(Registration registration, String subject, String mailBody) {
-        SendEmailRequest request = SendEmailRequest.builder()
+        ses.sendEmail(builder -> builder
             .source("JUG Darmstadt <info@jug-da.de>")
-            .destination(Destination.builder()
-                .toAddresses(registration.getEmail())
-                .build())
-            .message(Message.builder()
+            .destination(db -> db.toAddresses(registration.getEmail()))
+            .message(mb -> mb
                 .subject(utf8Content(subject))
                 .body(Body.builder()
                     .html(utf8Content(mailBody))
                     .text(utf8Content(strip(mailBody)))
                     .build()
                 )
-                .build()
             )
-            .build();
-
-        ses.sendEmail(request);
+        );
     }
 
     private Content utf8Content(String data) {
