@@ -2,10 +2,10 @@ package de.jugda.registration;
 
 import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RegistrationForm;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko

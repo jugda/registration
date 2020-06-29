@@ -47,7 +47,7 @@ public class RegistrationService {
     private void notifySlack(String eventId, int limit) {
         int registrationCount = getRegistrationCount(eventId);
         if (((float) registrationCount / (float) limit) >= 0.9) {
-            String message = String.format(":bangbang: Event %1$s hat mehr als 90%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/list?eventId=%1$s",
+            String message = String.format(":bangbang: Event %1$s hat mehr als 90%% Anmeldungen (%2$d):\nhttps://registration.jug-da.de/admin/events/%1$s",
                 eventId, registrationCount);
             slack.postMessage(message, System.getenv("SLACK_CHANNEL_GENERAL"));
         }
