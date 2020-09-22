@@ -1,14 +1,12 @@
 service: jugda-registration
 
-frameworkVersion: ">=1.2.0 <2.0.0"
-
 provider:
   name: aws
   runtime: provided
   stage: prod
   region: eu-central-1
   endpointType: REGIONAL
-  memorySize: 384
+  memorySize: 512
   timeout: 10
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
@@ -24,11 +22,13 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}/index/*"
     - Effect: Allow
       Action:
         - ses:SendEmail
-      Resource: "arn:aws:ses:${self:provider.environment.SES_REGION}:*:identity/jug-da.de"
+      Resource: "arn:aws:ses:eu-west-1:*:identity/jug-da.de"
     - Effect: Allow
       Action:
         - xray:PutTraceSegments
@@ -105,18 +105,23 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
+        SSESpecification:
+          SSEEnabled: true
         GlobalSecondaryIndexes:
-          IndexName: event-email-index
-          KeySchema:
-            - AttributeName: eventId
-              KeyType: HASH
-            - AttributeName: email
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 2
+          -
+            IndexName: event-email-index
+            KeySchema:
+              -
+                AttributeName: eventId
+                KeyType: HASH
+              -
+                AttributeName: email
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 2
     GatewayResponse:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:

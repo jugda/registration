@@ -39,9 +39,6 @@ public class RegistrationDao {
 
     public Registration find(Registration registration) {
         return dynamoDB.query(builder -> baseQueryRequestBuilder(builder)
-            .tableName(tableName)
-            .indexName(indexName)
-            .expressionAttributeNames(expressionAttributeNames)
             .expressionAttributeValues(Map.of(
                 ":v_eventId", toAttribute(registration.getEventId()),
                 ":v_email", toAttribute(registration.getEmail())
