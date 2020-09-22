@@ -41,7 +41,9 @@ const generatePolicy = function(principalId, effect, resource) {
         const statementOne = {};
         statementOne.Action = 'execute-api:Invoke'; // default action
         statementOne.Effect = effect;
-        statementOne.Resource = resource;
+        // remove the http verb and path from the resource method arn and set a wildcard
+        const resourceParts = resource.split('/');
+        statementOne.Resource = resourceParts[0] + '/' + resourceParts[1] + '/*';
         policyDocument.Statement[0] = statementOne;
         authResponse.policyDocument = policyDocument;
     }
