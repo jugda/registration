@@ -13,6 +13,9 @@ provider:
   environment:
     DYNAMODB_TABLE: ${self:service}
     DISABLE_SIGNAL_HANDLERS: true
+  tracing:
+    apiGateway: true
+    lambda: true
   iamRoleStatements:
     - Effect: Allow
       Action:

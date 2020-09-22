@@ -12,6 +12,9 @@ provider:
   logRetentionInDays: 30
   environment:
     DYNAMODB_TABLE: ${self:service}
+  tracing:
+    apiGateway: true
+    lambda: true
   iamRoleStatements:
     - Effect: Allow
       Action:
