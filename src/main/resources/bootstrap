@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-RUNNER=$( find . -maxdepth 1 -name '*-runner' )
-export DISABLE_SIGNAL_HANDLERS=true
-$RUNNER -Djavax.net.ssl.trustStore=/opt/graalvm/jre/lib/security/cacerts  -Djavax.net.ssl.trustAnchors=/opt/graalvm/jre/lib/security/cacerts -Djava.library.path=/opt/graalvm/jre/lib/amd64

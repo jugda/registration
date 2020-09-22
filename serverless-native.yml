@@ -52,8 +52,6 @@ functions:
             resultTtlInSeconds: 300
     package:
       artifact: target/function.zip
-    layers:
-      - { Ref: GraalvmSecurityLambdaLayer }
   public:
     handler: not.used.in.provided.runtime
     environment:
@@ -65,8 +63,6 @@ functions:
           method: any
     package:
       artifact: target/function.zip
-    layers:
-      - { Ref: GraalvmSecurityLambdaLayer }
   basicAuthorizr:
     handler: js/basicAuthorizr.handler
     runtime: nodejs12.x
@@ -77,16 +73,10 @@ functions:
     package:
       exclude:
         - .idea/**
-        - lambda-layer/**
-        - lsp/**
         - src/**
         - target/**
         - .editorconfig
         - '*.*ml'
-
-layers:
-  GraalvmSecurity:
-    path: lambda-layer
 
 resources:
   Resources:
