@@ -4,6 +4,7 @@ import de.jugda.registration.model.Event;
 import de.jugda.registration.service.EventService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.quarkus.runtime.LaunchMode;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -25,6 +26,8 @@ public class WebinarResource {
     @Inject
     EventService eventService;
     @Inject
+    LaunchMode launchMode;
+    @Inject
     Template webinar;
     @Inject
     Template webinarNotAvailable;
@@ -33,7 +36,7 @@ public class WebinarResource {
     @Path("{eventId}")
     public TemplateInstance getWebinar(@PathParam("eventId") String eventId) {
         String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-        if (eventId.equals(today)) {
+        if (!launchMode.isDevOrTest() && !eventId.equals(today)) {
             return webinarNotAvailable.instance();
         }
 
