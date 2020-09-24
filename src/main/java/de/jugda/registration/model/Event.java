@@ -2,6 +2,7 @@ package de.jugda.registration.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.quarkus.qute.TemplateData;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Data
 @TemplateData
+@RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
     public String uid;
