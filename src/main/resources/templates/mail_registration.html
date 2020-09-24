@@ -1,18 +1,18 @@
-<h3>Hallo {name}!</h3>
-{#if waitlist}
+<h3>Hallo {registration.name}!</h3>
+{#if registration.waitlist}
 <p>
-    Vielen Dank für Deine Anmeldung für unsere Veranstaltung am {date}.<br/>
+    Vielen Dank für Deine Anmeldung für unsere Veranstaltung "{event.summary} am {event.startDate}.<br/>
     Da wir derzeit komplett ausgebucht sind, haben wir Dich in der Warteliste aufgenommen.
     Wir informieren Dich, sobald wir Dich auf die Teilnehmerliste übernehmen können.
 </p>
 {#else}
 <p>
-    Vielen Dank für Deine Anmeldung.<br/>
-    Wir freuen uns, Dich am {date} bei uns begrüßen zu dürfen.
+    Vielen Dank für Deine Anmeldung für unsere Veranstaltung "{event.summary}".<br/>
+    Wir freuen uns, Dich am {event.startDate} bei uns begrüßen zu dürfen.
 </p>
 {/if}
 {#include deregistration_link.html}
-{#id}{id}{/id}
+{#id}{registration.id}{/id}
 {/include}
 <p>
     Vielen Dank,<br/>

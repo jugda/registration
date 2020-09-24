@@ -1,10 +1,10 @@
-<h3>Hallo {name}!</h3>
+<h3>Hallo {registration.name}!</h3>
 <p>
     Herzlichen Glückwunsch!<br/>
-    Wir konnten Dich für unsere Veranstaltung am {date} von der Warteliste auf die reguläre Teilnehmerliste setzen.
+    Wir konnten Dich für unsere Veranstaltung "{event.summary}" am {event.startDate} von der Warteliste auf die reguläre Teilnehmerliste setzen.
 </p>
 {#include deregistration_link.html}
-{#id}{id}{/id}
+{#id}{registration.id}{/id}
 {/include}
 <p>
     Vielen Dank,<br/>
