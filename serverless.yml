@@ -79,12 +79,11 @@ functions:
     environment:
       REGISTRATION_SECRET: ${s3:${self:provider.deploymentBucket}/jugda/registration_secret}
     package:
+      include:
+        - js/basicAuthorizr.js
       exclude:
-        - .idea/**
-        - src/**
-        - target/**
-        - .editorconfig
-        - '*.*ml'
+        - "*.*"
+        - "*/**"
 
 resources:
   Resources:
