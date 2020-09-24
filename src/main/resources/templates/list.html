@@ -1,7 +1,8 @@
 {#include template.html}
 {#body}
 <div class="container">
-    <h2>JUG DA Anmeldungen für Event am {eventId}: {total}</h2>
+    <h2 class="my-3">JUG DA Anmeldungen für Event am {event.startDate}: {registrations.size}</h2>
+    <h3 class="my-3"><a href="{event.url}" target="_blank">{event.summary}</a></h3>
     <table class="table table-striped table-sm">
         <thead>
         <tr>
@@ -32,7 +33,7 @@
         {/for}
         </tbody>
     </table>
-    <div>
+    <div class="my-3">
         <button class="btn btn-sm btn-outline-danger" data-toggle="collapse" data-target="#collapseEmails">
             Zeige Namen und E-Mails kopierbar
         </button>
@@ -46,6 +47,22 @@
                 <label for="emails">E-Mails</label>
                 <textarea id="emails" class="form-control" rows="5">{#for reg in registrations}{reg.email}, {/for}</textarea>
             </div>
+        </div>
+    </div>
+    <div class="my-3">
+        <button class="btn btn-sm btn-outline-primary" data-toggle="collapse" data-target="#collapseEventData">
+            Zusätzliche Event-Daten
+        </button>
+        <div class="collapse" id="collapseEventData">
+            <form onsubmit="return submitEventData()">
+                <div class="form-group row">
+                    <label for="webinarLink" class="col-2 col-form-label">Webinar-Link</label>
+                    <div class="col-10">
+                        <input type="text" class="form-control" id="webinarLink" value="{eventData.get('webinarLink')}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Seichern</button>
+            </form>
         </div>
     </div>
 </div>
@@ -62,6 +79,20 @@
                 $('#' + id).remove();
             });
         }
+    }
+    function submitEventData() {
+        const data = {
+            webinarLink: $('#webinarLink').val()
+        };
+        $.ajax({
+            url: '{eventId}',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+        }).done(function() {
+            alert('Event-Daten gespeichert.');
+        });
+        return false;
     }
 </script>
 {/body}
