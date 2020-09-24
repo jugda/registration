@@ -2,17 +2,16 @@ service: jugda-registration
 
 provider:
   name: aws
-  runtime: provided
+  runtime: java11
   stage: prod
   region: eu-central-1
   endpointType: REGIONAL
-  memorySize: 512
+  memorySize: 2048
   timeout: 10
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
   environment:
     DYNAMODB_TABLE: ${self:service}
-    DISABLE_SIGNAL_HANDLERS: true
   tracing:
     apiGateway: true
     lambda: true
@@ -30,6 +29,11 @@ provider:
         - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}/index/*"
     - Effect: Allow
       Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource: "arn:aws:s3:::jugda"
+    - Effect: Allow
+      Action:
         - ses:SendEmail
       Resource: "arn:aws:ses:eu-west-1:*:identity/jug-da.de"
     - Effect: Allow
@@ -43,7 +47,7 @@ package:
 
 functions:
   admin:
-    handler: not.used.in.provided.runtime
+    handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler
     events:
       - http:
           path: /admin/{proxy+}
@@ -56,7 +60,7 @@ functions:
     package:
       artifact: target/function.zip
   public:
-    handler: not.used.in.provided.runtime
+    handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler
     environment:
       SLACK_OAUTH_ACCESS_TOKEN: ${s3:${self:provider.deploymentBucket}/jugda/slack_access_token}
       SLACK_CHANNEL_GENERAL: ${s3:${self:provider.deploymentBucket}/jugda/slack_channel_general}
