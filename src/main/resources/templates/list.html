@@ -22,13 +22,15 @@
                 <td>{reg.name}</td>
                 <td><a href="mailto:{reg.email}">{reg.email}</a></td>
                 <td>
-                    {#if reg.pub}<span class="glyphicon glyphicon-ok"></span>{/if}
+                    {#if reg.pub}<img src="/webjars/bootstrap-icons/icons/check.svg" alt=""/>{/if}
                 </td>
                 <td>
-                    {#if reg.waitlist}<span class="glyphicon glyphicon-pushpin"></span>{/if}
+                    {#if reg.waitlist}<img src="/webjars/bootstrap-icons/icons/hourglass-split.svg" alt=""/>{/if}
                 </td>
                 <td>{reg.formattedCreationDate}</td>
-                <td><span class="glyphicon glyphicon-trash text-danger" onclick="delReg('{reg.id}', '{reg.name}')" style="cursor: pointer"></span></td>
+                <td>
+                    <img src="/webjars/bootstrap-icons/icons/trash.svg" alt="" onclick="delReg('{reg.id}', '{reg.name}')" style="cursor: pointer"/>
+                </td>
             </tr>
         {/for}
         </tbody>
