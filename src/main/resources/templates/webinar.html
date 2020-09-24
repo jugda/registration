@@ -1,0 +1,56 @@
+{#include template.html}
+{#title}JUG DA Event Information{/title}
+{#body}
+<div class="container">
+    <div class="row justify-content-between align-items-center">
+        <div class="col-auto d-flex align-items-center">
+            <a href="https://www.jug-da.de"><img src="https://www.jug-da.de/images/jugda_logo_rund.png" class="m-3" style="width: 70px" alt="JUG DA Logo"/></a>
+            <h3 class="font-weight-light">Java User Group Darmstadt</h3>
+        </div>
+        <div class="col-auto">
+            <a href="https://www.jug-da.de/datenschutz/" class="small m-1">Datenschutz</a>
+            <a href="https://www.jug-da.de/impressum/" class="small m-1">Impressum</a>
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div class="col-12 py-1 text-center">
+            <h3>Link zu unserem Online-Meeting</h3>
+        </div>
+        <div class="col-12 py-1 text-center">
+            <h2>{event.summary}</h2>
+        </div>
+        <div class="col-12 py-1 text-center">
+            <h4>am {event.startDate} um {event.startTime} Uhr ({event.timezone})</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 py-3">
+            Bitte nutzt den folgenden Link für die Einwahl.
+            Start ist um {event.startTime} Uhr.
+            Wir sind aber auch schon etwas früher da.
+        </div>
+        <div class="col-12 py-3 text-center">
+            <a href="{eventData.get('webinarLink')}" target="_blank" class="btn btn-lg btn-primary">Zoom Meeting starten</a>
+            <br/>
+            <a href="{eventData.get('webinarLink')}" target="_blank" class="small">{eventData.get('webinarLink')}</a>
+        </div>
+        <div class="col-12 py-3">
+            Mit Eurer Einwahl in das Zoom-Meeting akzeptiert Ihr die Datenschutzbedingungen von Zoom Video Communications, Inc.<br/>
+            Weitere Informationen erhaltet Ihr unter
+            <a href="https://zoom.us/de-de/gdpr.html" target="_blank">https://zoom.us/de-de/gdpr.html</a>
+            und
+            <a href="https://zoom.us/de-de/privacy.html" target="_blank">https://zoom.us/de-de/privacy.html</a>
+        </div>
+        <div class="col-12 py-3">
+            <p>Die Besonderheit ist, dass Ihr alle Kamera und Mikrofon einschalten könnt, so dass wir vor, während und nach dem Vortrag möglichst einfach miteinander kommunizieren können.</p>
+            <p>
+                Wir zeichnen den Vortrag auf.
+                Bitte ergreift selbst für Euch notwendige Maßnahmen, wenn Euer Name oder Bild nicht im Video auftauchen sollen (z. B. anonymer Anmeldename und Kamera ausgeschaltet lassen).
+            </p>
+        </div>
+    </div>
+</div>
+{/body}
+{/include}
