@@ -32,21 +32,16 @@
             Wir sind aber auch schon etwas früher da.
         </div>
         <div class="col-12 py-3 text-center">
-            <a href="{eventData.get('webinarLink')}" target="_blank" class="btn btn-lg btn-primary">Zoom Meeting starten</a>
+            <a href="{eventData.webinarLink}" target="_blank" class="btn btn-lg btn-primary">Meeting starten</a>
             <br/>
-            <a href="{eventData.get('webinarLink')}" target="_blank" class="small">{eventData.get('webinarLink')}</a>
+            <a href="{eventData.webinarLink}" target="_blank" class="small">{eventData.webinarLink}</a>
         </div>
+        {#include webinarProvider.html/}
         <div class="col-12 py-3">
-            Mit Eurer Einwahl in das Zoom-Meeting akzeptiert Ihr die Datenschutzbedingungen von Zoom Video Communications, Inc.<br/>
-            Weitere Informationen erhaltet Ihr unter
-            <a href="https://zoom.us/de-de/gdpr.html" target="_blank">https://zoom.us/de-de/gdpr.html</a>
-            und
-            <a href="https://zoom.us/de-de/privacy.html" target="_blank">https://zoom.us/de-de/privacy.html</a>
-        </div>
-        <div class="col-12 py-3">
-            <p>Die Besonderheit ist, dass Ihr alle Kamera und Mikrofon einschalten könnt, so dass wir vor, während und nach dem Vortrag möglichst einfach miteinander kommunizieren können.</p>
+            <p>Die Besonderheit ist, dass Ihr alle Kamera  und Mikrofon einschalten könnt, so dass wir vor, während und nach dem Vortrag möglichst einfach miteinander kommunizieren können.</p>
             <p>
-                Wir zeichnen den Vortrag auf.
+                Wir zeichnen den Vortrag auf und veröffentlichen diesen später auf unserem <a href="https://youtube.com/channel/UC80eo8qsCItOcXe92-ECi0A" target="_blank">YouTube Kanal</a>
+                (diesen dürft Ihr gerne abonnieren und ein paar 👍&nbsp; da lassen).
                 Bitte ergreift selbst für Euch notwendige Maßnahmen, wenn Euer Name oder Bild nicht im Video auftauchen sollen (z. B. anonymer Anmeldename und Kamera ausgeschaltet lassen).
             </p>
         </div>

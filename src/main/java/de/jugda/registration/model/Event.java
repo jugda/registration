@@ -1,6 +1,7 @@
 package de.jugda.registration.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.quarkus.qute.TemplateData;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
  * @author Niko Köbler, https://www.n-k.de, @dasniko
  */
 @Data
+@TemplateData
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
     public String uid;

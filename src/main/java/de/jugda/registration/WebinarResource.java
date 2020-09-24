@@ -39,6 +39,7 @@ public class WebinarResource {
 
         Event event = eventService.getEvent(eventId);
         Map<String, String> eventData = eventService.getEventData().get(eventId);
+        eventData.put("webinarProvider", "zoom");
 
         return webinar.data("event", event)
             .data("eventData", eventData);

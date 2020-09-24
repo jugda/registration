@@ -1,5 +1,6 @@
 package de.jugda.registration.model;
 
+import io.quarkus.qute.TemplateData;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @RegisterForReflection
+@TemplateData
 public class Registration {
     public String id;
     public String eventId;
