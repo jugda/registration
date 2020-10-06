@@ -35,7 +35,7 @@ provider:
     - Effect: Allow
       Action:
         - ses:SendEmail
-      Resource: "arn:aws:ses:eu-west-1:*:identity/jug-da.de"
+      Resource: "arn:aws:ses:${self:provider.region}:*:identity/jug-da.de"
     - Effect: Allow
       Action:
         - xray:PutTraceSegments
