@@ -30,7 +30,7 @@
                 Außerdem kannst Du Dich mithilfe Deiner E-Mail Adresse wieder abmelden bzw. Deine Daten löschen (Link s.u.).
                 Du erhälst zusätzlich eine E-Mail als Anmeldebestätigung, in der auch ein Abmeldelink enthalten ist.
                 Im Falle von evtl. Veranstaltungsänderungen, schicken wir Dir ggf. eine E-Mail, um Dich darüber zu informieren.
-                Eine Weitergabe oder Veröffentlichung Deiner E-Mail Adresse erfolgt nicht.
+                Eine weitere Verwendung, Weitergabe oder Veröffentlichung Deiner E-Mail Adresse erfolgt nicht.
             </small>
         </div>
         {#if showPub}
@@ -39,11 +39,19 @@
             <label class="form-check-label" for="pub">Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)</label>
         </div>
         {/if}
-        <p class="text-muted">
-            <small>
-                Mit Deiner Anmeldung bestätigst Du, dass Du die Hinweise an den Eingabefeldern gelesen und verstanden hast und Du damit einverstanden bist.
-                Wir löschen Deine persönlichen Daten aus dieser Anmeldung ca. 1 Woche nach der Veranstaltung.
-            </small>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="videoRecording" id="videoRecording" onclick="checkPrivacy(this)">
+            <label class="form-check-label" for="videoRecording">
+                Mir ist bekannt, dass die Veranstaltung auf Video aufgezeichnet und veröffentlicht wird.*
+                <div class="text-muted small">
+                    Sofern ich nicht möchte, dass mein Bild, meine Stimme oder mein Name aufgenommen werden, treffe ich bestimmte Vorkehrungen
+                    (z.B. Kamera/Mikrofon ausschalten, Synonym als Name angeben, etc.)
+                </div>
+            </label>
+        </div>
+        <p class="text-muted small">
+            Mit Deiner Anmeldung bestätigst Du, dass Du die Hinweise an den Eingabefeldern gelesen und verstanden hast und Du damit einverstanden bist.
+            Wir löschen Deine persönlichen Daten aus dieser Anmeldung ca. 1 Woche nach der Veranstaltung.
         </p>
         <div class="form-group form-check">
             <input type="checkbox" class="form-check-input" name="privacy" id="privacy" onclick="checkPrivacy(this)">
@@ -67,8 +75,10 @@
         </small>
     </p>
 <script>
+const elems = [];
 function checkPrivacy(elem) {
-    document.forms[0].submit.disabled = !elem.checked;
+    if (elem.checked) elems.push(elem); else elems.pop();
+    document.forms[0].submit.disabled = elems.length !== 2;
 }
 </script>
 {/body}

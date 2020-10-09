@@ -30,6 +30,7 @@ public class Registration {
     public boolean pub;
     public boolean waitlist;
     public boolean privacy;
+    public boolean videoRecording;
     public LocalDateTime created;
     public Long ttl;
 
@@ -43,6 +44,7 @@ public class Registration {
         registration.setName(form.getName().trim());
         registration.setEmail(form.getEmail().trim().toLowerCase());
         registration.setPrivacy(onOrOff(form.getPrivacy()));
+        registration.setVideoRecording(onOrOff(form.getVideoRecording()));
         registration.setPub(onOrOff(form.getPub()));
         registration.setWaitlist(form.isWaitlist());
         registration.setTtl(LocalDate.parse(form.getEventId()).plusWeeks(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC));
@@ -59,6 +61,7 @@ public class Registration {
             registration.setPub(item.get("pub").bool());
             registration.setWaitlist(item.get("waitlist").bool());
             registration.setPrivacy(item.get("privacy").bool());
+            registration.setVideoRecording(item.getOrDefault("videoRecording", AttributeValue.builder().bool(false).build()).bool());
             registration.setCreated(LocalDateTime.parse(item.get("created").s()));
             registration.setTtl(Long.valueOf(item.get("ttl").n()));
         }
@@ -74,6 +77,7 @@ public class Registration {
         item.put("pub", AttributeValue.builder().bool(pub).build());
         item.put("waitlist", AttributeValue.builder().bool(waitlist).build());
         item.put("privacy", AttributeValue.builder().bool(privacy).build());
+        item.put("videoRecording", AttributeValue.builder().bool(videoRecording).build());
         item.put("created", AttributeValue.builder().s(
             (created == null ? LocalDateTime.now() : created).format(DateTimeFormatter.ISO_DATE_TIME)
         ).build());

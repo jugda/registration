@@ -26,6 +26,8 @@ public class RegistrationForm {
     public String email;
     @FormParam("privacy")
     public String privacy;
+    @FormParam("videoRecording")
+    public String videoRecording;
     @FormParam("pub")
     public String pub;
     @FormParam("waitlist")
