@@ -1,8 +1,9 @@
 {#include template.html}
 {#body}
 <div class="container">
-    <h2 class="my-3">JUG DA Anmeldungen für Event am {event.startDate}: {registrations.size}</h2>
-    <h3 class="my-3"><a href="{event.url}" target="_blank">{event.summary}</a></h3>
+    {#include logoheader.html/}
+    <h2 class="font-weight-light my-3">Anmeldungen für Event am {event.startDate}: {registrations.size}</h2>
+    <h3 class="font-weight-light my-3"><a href="{event.url}" target="_blank">{event.summary}</a></h3>
     <table class="table table-striped table-sm">
         <thead>
         <tr>
