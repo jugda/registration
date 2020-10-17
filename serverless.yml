@@ -12,7 +12,7 @@ provider:
   logRetentionInDays: 30
   environment:
     DYNAMODB_TABLE: ${self:service}
-    DISABLE_SIGNAL_HANDLERS: true
+    DISABLE_SIGNAL_HANDLERS: 'true'
   tracing:
     apiGateway: true
     lambda: true
@@ -54,7 +54,7 @@ functions:
           path: /admin/{proxy+}
           method: any
           authorizer:
-            name: basicAuthorizr
+            name: basicAuthorizer
             type: token
             identitySource: method.request.header.Authorization
             resultTtlInSeconds: 300
@@ -71,7 +71,7 @@ functions:
           method: any
     package:
       artifact: target/function.zip
-  basicAuthorizr:
+  basicAuthorizer:
     handler: js/basicAuthorizr.handler
     runtime: nodejs12.x
     memorySize: 128

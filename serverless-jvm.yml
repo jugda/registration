@@ -53,7 +53,7 @@ functions:
           path: /admin/{proxy+}
           method: any
           authorizer:
-            name: basicAuthorizr
+            name: basicAuthorizer
             type: token
             identitySource: method.request.header.Authorization
             resultTtlInSeconds: 300
@@ -70,7 +70,7 @@ functions:
           method: any
     package:
       artifact: target/function.zip
-  basicAuthorizr:
+  basicAuthorizer:
     handler: js/basicAuthorizr.handler
     runtime: nodejs12.x
     memorySize: 128
