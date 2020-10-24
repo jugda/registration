@@ -51,7 +51,7 @@ public class EmailService {
         sendEmail(registration, subject, mailBody);
     }
 
-    private void sendEmail(Registration registration, String subject, String mailBody) {
+    public void sendEmail(Registration registration, String subject, String mailBody) {
         ses.sendEmail(builder -> builder
             .source("JUG Darmstadt <info@jug-da.de>")
             .destination(db -> db.toAddresses(registration.getEmail()))

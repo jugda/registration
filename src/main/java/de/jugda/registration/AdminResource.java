@@ -2,8 +2,10 @@ package de.jugda.registration;
 
 import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
+import de.jugda.registration.service.EmailService;
 import de.jugda.registration.service.EventService;
 import de.jugda.registration.service.ListService;
+import io.quarkus.qute.Engine;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 
@@ -31,9 +33,13 @@ public class AdminResource {
     @Inject
     EventService eventService;
     @Inject
+    EmailService emailService;
+    @Inject
     Template overview;
     @Inject
     Template list;
+    @Inject
+    Engine engine;
 
     @GET
     public TemplateInstance getAllEvents() {
@@ -56,10 +62,26 @@ public class AdminResource {
     }
 
     @PUT
-    @Path("{eventId}")
+    @Path("{eventId}/data")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putEventData(@PathParam("eventId") String eventId, Map<String, String> data) {
         eventService.putEventData(eventId, data);
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @Path("{eventId}/message")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response sendMessage(@PathParam("eventId") String eventId, Map<String, String> data) {
+        List<Registration> registrations = listService.singleEventRegistrations(eventId);
+        Template tplMessage = engine.parse(data.get("message"));
+
+        registrations.forEach(person -> {
+            String message = tplMessage.data("person", person).data("eventId", eventId).render();
+            message = message.replaceAll("\\n", "<br>");
+            emailService.sendEmail(person, data.get("subject"), message);
+        });
+
         return Response.noContent().build();
     }
 

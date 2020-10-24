@@ -12,7 +12,7 @@
             <th>E-Mail</th>
             <th>Stammtisch</th>
             <th>Warteliste</th>
-            <th>Datum</th>
+            <th>Datum (UTC)</th>
             <th></th>
         </tr>
         </thead>
@@ -37,10 +37,42 @@
         </tbody>
     </table>
     <div class="my-3">
-        <button class="btn btn-sm btn-outline-danger" data-toggle="collapse" data-target="#collapseEmails">
-            Zeige Namen und E-Mails kopierbar
-        </button>
-        <div class="collapse" id="collapseEmails">
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-info" data-toggle="collapse" data-target="#collapseWriteEmail">
+                Schreibe E-Mail an Teilnehmer
+            </button>
+            <button class="btn btn-sm btn-outline-danger" data-toggle="collapse" data-target="#collapseEmails">
+                Zeige Namen und E-Mails kopierbar
+            </button>
+            <button class="btn btn-sm btn-outline-primary" data-toggle="collapse" data-target="#collapseEventData">
+                Zusätzliche Event-Daten
+            </button>
+        </div>
+        <div class="collapse mt-3 mb-3" id="collapseWriteEmail">
+            <h4>E-Mail an Teilnehmer</h4>
+            <form onsubmit="return sendMail()">
+                <div class="form-group">
+                    <label for="webinarLink">Betreff</label>
+                    <input type="text" class="form-control" id="subject" value="Einwahl zum Online-Vortrag der JUG Darmstadt heute Abend">
+                </div>
+                <div class="form-group">
+                    <label for="message">Nachricht</label>
+                    <textarea id="message" class="form-control" rows="8">{[Hallo {person.name}!
+
+Du hast Dich für unseren heutigen Online-Vortrag angemeldet. Den Link zur Einwahl und weitere Informationen findest Du hier:
+
+https://registration.jug-da.de/webinar/{eventId}
+
+Bis heute Abend, wir freuen uns auf Dein Kommen. Im Anschluss an den Vortrag kannst Du übrigens gern noch bei unserem virtuellen Stammtisch mit plaudern oder einfach nur zuhören.
+
+Viele Grüße
+JUG DA]}</textarea>
+                </div>
+                <button type="submit" class="btn btn-info">Senden</button>
+            </form>
+        </div>
+        <div class="collapse mt-3 mb-3" id="collapseEmails">
+            <h4>Namen und E-Mails</h4>
             <div class="form-group">
                 <label for="names">Namen</label>
                 <textarea id="names" class="form-control" rows="5">{#for reg in registrations}{reg.name}
@@ -51,12 +83,8 @@
                 <textarea id="emails" class="form-control" rows="5">{#for reg in registrations}{reg.email}, {/for}</textarea>
             </div>
         </div>
-    </div>
-    <div class="my-3">
-        <button class="btn btn-sm btn-outline-primary" data-toggle="collapse" data-target="#collapseEventData">
-            Zusätzliche Event-Daten
-        </button>
-        <div class="collapse" id="collapseEventData">
+        <div class="collapse mt-3 mb-3" id="collapseEventData">
+            <h4>Event-Infos</h4>
             <form onsubmit="return submitEventData()">
                 <div class="form-group row">
                     <label for="webinarLink" class="col-2 col-form-label">Webinar-Link</label>
@@ -88,12 +116,28 @@
             webinarLink: $('#webinarLink').val()
         };
         $.ajax({
-            url: '{eventId}',
+            url: '{eventId}/data',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
-        }).done(function() {
+        }).done(() => {
             alert('Event-Daten gespeichert.');
+        });
+        return false;
+    }
+    function sendMail() {
+        const data = {
+            subject: $('#subject').val(),
+            message: $('#message').val(),
+        };
+        console.log(JSON.stringify(data));
+        $.ajax({
+            url: '{eventId}/message',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+        }).done(() => {
+            alert('Nachricht an Teilnehmer gesendet.');
         });
         return false;
     }
