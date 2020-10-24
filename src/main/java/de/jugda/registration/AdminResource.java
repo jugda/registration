@@ -72,14 +72,19 @@ public class AdminResource {
     @PUT
     @Path("{eventId}/message")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response sendMessage(@PathParam("eventId") String eventId, Map<String, String> data) {
+    public Response sendMessage(@PathParam("eventId") String eventId, Map<String, Object> data) {
+        Template tplMessage = engine.parse((String) data.get("message"));
+
+        //noinspection unchecked
+        List<String> registrationIds = (List<String>) data.get("registrationIds");
         List<Registration> registrations = listService.singleEventRegistrations(eventId);
-        Template tplMessage = engine.parse(data.get("message"));
 
         registrations.forEach(person -> {
-            String message = tplMessage.data("person", person).data("eventId", eventId).render();
-            message = message.replaceAll("\\n", "<br>");
-            emailService.sendEmail(person, data.get("subject"), message);
+            if (registrationIds.contains(person.getId())) {
+                String message = tplMessage.data("person", person).data("eventId", eventId).render();
+                message = message.replaceAll("\\n", "<br>");
+                emailService.sendEmail(person, (String) data.get("subject"), message);
+            }
         });
 
         return Response.noContent().build();

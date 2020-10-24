@@ -19,7 +19,10 @@
         <tbody>
         {#for reg in registrations}
             <tr id="{reg.id}">
-                <td>{count}</td>
+                <td>
+                    <input type="checkbox" value="{reg.id}" onclick="checkRegistration(this)"/>
+                    {count}
+                </td>
                 <td>{reg.name}</td>
                 <td><a href="mailto:{reg.email}">{reg.email}</a></td>
                 <td>
@@ -125,19 +128,27 @@ JUG DA]}</textarea>
         });
         return false;
     }
+    const selectedRegistrations = [];
+    function checkRegistration(elem) {
+        if (elem.checked) {
+            selectedRegistrations.push(elem.value);
+        } else {
+            selectedRegistrations.splice(selectedRegistrations.findIndex(e => e === elem.value), 1);
+        }
+    }
     function sendMail() {
         const data = {
             subject: $('#subject').val(),
             message: $('#message').val(),
+            registrationIds: selectedRegistrations,
         };
-        console.log(JSON.stringify(data));
         $.ajax({
             url: '{eventId}/message',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
         }).done(() => {
-            alert('Nachricht an Teilnehmer gesendet.');
+            alert('Nachricht an ' + selectedRegistrations.length + ' Teilnehmer gesendet.');
         });
         return false;
     }
