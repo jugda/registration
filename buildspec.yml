@@ -2,7 +2,10 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      nodejs: latest
     commands:
+      - npm install serverless -g
       - mvn clean compile
   build:
     commands:
