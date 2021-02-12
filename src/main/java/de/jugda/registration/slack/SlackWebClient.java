@@ -20,6 +20,9 @@ public class SlackWebClient {
     private static final String SLACK_URL = "https://slack.com/api/";
 
     public void postMessage(String text, String channel) {
+        if (channel == null || channel.isBlank())
+            return;
+
         String method = "chat.postMessage";
 
         Map<String, String> params = new HashMap<>();
