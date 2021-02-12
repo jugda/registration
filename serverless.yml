@@ -1,4 +1,4 @@
-service: jugda-registration
+service: ${opt:tenant, 'jugda'}-registration
 
 provider:
   name: aws
@@ -7,13 +7,13 @@ provider:
   region: eu-central-1
   endpointType: REGIONAL
   apiGateway:
-    shouldStartNameWithService: "true"
+    shouldStartNameWithService: true
   memorySize: 512
   timeout: 30
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
   environment:
-    DYNAMODB_TABLE: ${self:service}
+    APP_DYNAMODB_TABLE: ${self:service}
     DISABLE_SIGNAL_HANDLERS: 'true'
   tracing:
     apiGateway: true
@@ -28,19 +28,19 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
-        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}/index/*"
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_DYNAMODB_TABLE}"
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_DYNAMODB_TABLE}/index/*"
     - Effect: Allow
       Action:
         - s3:GetObject
         - s3:PutObject
-      Resource: "arn:aws:s3:::jugda/*"
+      Resource: "arn:aws:s3:::${opt:tenant, 'jugda'}/*"
     - Effect: Allow
       Action:
         - ses:SendEmail
       Resource: "arn:aws:ses:${self:provider.region}:*:identity/jug-da.de"
 
-custom: ${ssm:/aws/reference/secretsmanager/jugda-registration~true}
+custom: ${ssm:/aws/reference/secretsmanager/${opt:tenant, 'jugda'}-registration~true}
 
 package:
   individually: true
@@ -107,7 +107,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 2
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.APP_DYNAMODB_TABLE}
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
