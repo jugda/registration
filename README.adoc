@@ -1,0 +1,27 @@
+= JUG Registration App
+
+Quarkus based
+
+== Development Prerequisites
+
+* JDK 11+
+* IDE
+* Maven 3.6.2+
+
+== Build
+
+Native, Docker will be used.
+
+ $ mvn clean package -Pnative
+
+== Deployment
+
+https://www.serverless.com/[Serverless Framework 2.x+]
+
+=== JUG DA
+
+ $ sls deploy --tenant jugda
+
+=== Cyberland
+
+ $ sls deploy --tenant cyberland
