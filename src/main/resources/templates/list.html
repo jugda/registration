@@ -44,8 +44,8 @@
             <button class="btn btn-sm btn-outline-info" data-toggle="collapse" data-target="#collapseWriteEmail">
                 Schreibe E-Mail an Teilnehmer
             </button>
-            <button class="btn btn-sm btn-outline-danger" data-toggle="collapse" data-target="#collapseEmails">
-                Zeige Namen und E-Mails kopierbar
+            <button class="btn btn-sm btn-outline-danger" data-toggle="collapse" data-target="#collapseNames">
+                Zeige Namen kopierbar
             </button>
             <button class="btn btn-sm btn-outline-primary" data-toggle="collapse" data-target="#collapseEventData">
                 Zusätzliche Event-Daten
@@ -74,16 +74,12 @@ JUG DA]}</textarea>
                 <button type="submit" class="btn btn-info">Senden</button>
             </form>
         </div>
-        <div class="collapse mt-3 mb-3" id="collapseEmails">
-            <h4>Namen und E-Mails</h4>
+        <div class="collapse mt-3 mb-3" id="collapseNames">
+            <h4>Namen</h4>
             <div class="form-group">
                 <label for="names">Namen</label>
-                <textarea id="names" class="form-control" rows="5">{#for reg in registrations}{reg.name}
+                <textarea id="names" class="form-control" rows="8">{#for reg in registrations}{reg.name}
 {/for}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="emails">E-Mails</label>
-                <textarea id="emails" class="form-control" rows="5">{#for reg in registrations}{reg.email}, {/for}</textarea>
             </div>
         </div>
         <div class="collapse mt-3 mb-3" id="collapseEventData">
