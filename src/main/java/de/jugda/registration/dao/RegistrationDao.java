@@ -1,7 +1,7 @@
 package de.jugda.registration.dao;
 
+import de.jugda.registration.Config;
 import de.jugda.registration.model.Registration;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest;
@@ -22,18 +22,15 @@ public class RegistrationDao {
 
     @Inject
     DynamoDbClient dynamoDB;
-
-    @ConfigProperty(name = "app.dynamodb.table", defaultValue = "jugda-registration")
-    String tableName;
-    @ConfigProperty(name = "app.dynamodb.index", defaultValue = "event-email-index")
-    String indexName;
+    @Inject
+    Config config;
 
     private static final String attributesToGet = "id, eventId, #name, email, pub, waitlist, privacy, created, #ttl";
     private static final Map<String, String> expressionAttributeNames = Map.of("#name", "name", "#ttl", "ttl");
 
     public void save(Registration registration) {
         dynamoDB.putItem(builder -> builder
-            .tableName(tableName)
+            .tableName(config.dynamodb.table)
             .item(registration.toItem()));
     }
 
@@ -52,7 +49,7 @@ public class RegistrationDao {
 
     public List<Registration> findAll() {
         return dynamoDB.scanPaginator(builder -> builder
-            .tableName(tableName)
+            .tableName(config.dynamodb.table)
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
         ).items().stream()
@@ -81,7 +78,7 @@ public class RegistrationDao {
         Map<String, AttributeValue> key = Map.of("id", toAttribute(id));
 
         Registration registration = Registration.from(dynamoDB.getItem(builder -> builder
-            .tableName(tableName)
+            .tableName(config.dynamodb.table)
             .key(key)
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
@@ -89,15 +86,15 @@ public class RegistrationDao {
         //noinspection ResultOfMethodCallIgnored
         registration.getId(); // materialize object
 
-        dynamoDB.deleteItem(builder -> builder.tableName(tableName).key(key));
+        dynamoDB.deleteItem(builder -> builder.tableName(config.dynamodb.table).key(key));
 
         return registration;
     }
 
     private QueryRequest.Builder baseQueryRequestBuilder(QueryRequest.Builder builder) {
         return builder
-            .tableName(tableName)
-            .indexName(indexName)
+            .tableName(config.dynamodb.table)
+            .indexName(config.dynamodb.index)
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
             ;

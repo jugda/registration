@@ -2,6 +2,7 @@ package de.jugda.registration.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.jugda.registration.Config;
 import de.jugda.registration.model.Event;
 import lombok.SneakyThrows;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -26,10 +27,8 @@ public class EventService {
     ObjectMapper objectMapper;
     @Inject
     S3Client s3;
-
-    private static final String EVENTS_URL = "https://www.jug-da.de/events.json";
-    private static final String EVENTSDATA_BUCKET = "jugda";
-    private static final String EVENTSDATA_KEY = "eventData.json";
+    @Inject
+    Config config;
 
     private List<Event> allEvents;
     private Map<String, Map<String, String>> eventData;
@@ -37,7 +36,7 @@ public class EventService {
     @SneakyThrows
     public List<Event> getAllEvents() {
         if (allEvents == null) {
-            allEvents = objectMapper.readValue(new URL(EVENTS_URL), new TypeReference<>() {});
+            allEvents = objectMapper.readValue(new URL(config.events.jsonUrl), new TypeReference<>() {});
         }
         return allEvents;
     }
@@ -52,7 +51,7 @@ public class EventService {
     @SneakyThrows
     public Map<String, Map<String, String>> getEventData() {
         if (eventData == null) {
-            try (ResponseInputStream<GetObjectResponse> inputStream = s3.getObject(builder -> builder.bucket(EVENTSDATA_BUCKET).key(EVENTSDATA_KEY))) {
+            try (ResponseInputStream<GetObjectResponse> inputStream = s3.getObject(builder -> builder.bucket(config.events.dataBucket).key(config.events.dataKey))) {
                 eventData = objectMapper.readValue(inputStream, new TypeReference<>() {});
             }
         }
@@ -63,7 +62,7 @@ public class EventService {
     public void putEventData(String eventId, Map<String, String> data) {
         getEventData().put(eventId, data);
         byte[] bytes = objectMapper.writeValueAsBytes(eventData);
-        s3.putObject(builder -> builder.bucket(EVENTSDATA_BUCKET).key(EVENTSDATA_KEY),
+        s3.putObject(builder -> builder.bucket(config.events.dataBucket).key(config.events.dataKey),
             RequestBody.fromInputStream(new ByteArrayInputStream(bytes), bytes.length));
     }
 }

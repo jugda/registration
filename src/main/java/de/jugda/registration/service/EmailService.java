@@ -1,5 +1,6 @@
 package de.jugda.registration.service;
 
+import de.jugda.registration.Config;
 import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Template;
@@ -21,6 +22,8 @@ public class EmailService {
     @Inject
     SesClient ses;
     @Inject
+    Config config;
+    @Inject
     EventService eventService;
     @Inject
     Template mail_registration;
@@ -29,7 +32,8 @@ public class EmailService {
 
     void sendRegistrationConfirmation(Registration registration) {
         Event event = eventService.getEvent(registration.eventId);
-        String subject = String.format("[JUG DA] Anmeldebestätigung für \"%s\" am %s", event.summary, event.startDate());
+        String subject = String.format("[%s] Anmeldebestätigung für \"%s\" am %s",
+            config.email.subjectPrefix, event.summary, event.startDate());
 
         String mailBody = mail_registration
             .data("registration", registration)
@@ -41,7 +45,8 @@ public class EmailService {
 
     void sendWaitlistToAttendeeConfirmation(Registration registration) {
         Event event = eventService.getEvent(registration.eventId);
-        String subject = String.format("[JUG DA] Dein Wartelisten-Eintrag für \"%s\" am %s", event.summary, event.startDate());
+        String subject = String.format("[%s] Dein Wartelisten-Eintrag für \"%s\" am %s",
+            config.email.subjectPrefix, event.summary, event.startDate());
 
         String mailBody = mail_waitlist2attendee
             .data("registration", registration)
@@ -53,7 +58,7 @@ public class EmailService {
 
     public void sendEmail(Registration registration, String subject, String mailBody) {
         ses.sendEmail(builder -> builder
-            .source("JUG Darmstadt <info@jug-da.de>")
+            .source(config.email.from)
             .destination(db -> db.toAddresses(registration.getEmail()))
             .message(mb -> mb
                 .subject(utf8Content(subject))
