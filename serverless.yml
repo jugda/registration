@@ -6,8 +6,10 @@ provider:
   stage: prod
   region: eu-central-1
   endpointType: REGIONAL
+  apiGateway:
+    shouldStartNameWithService: "true"
   memorySize: 512
-  timeout: 10
+  timeout: 30
   deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
   environment:
