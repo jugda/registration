@@ -76,6 +76,7 @@ functions:
     memorySize: 128
     timeout: 3
     environment:
+      REGISTRATION_ADMIN: ${self:custom.registration.admin}
       REGISTRATION_SECRET: ${self:custom.registration.secret}
     package:
       include:

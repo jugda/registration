@@ -20,7 +20,7 @@ exports.handler = function(event, context, callback) {
 };
 
 const authorizationValid = function(credentials) {
-    return 'JUG DA' === credentials[0] && process.env.REGISTRATION_SECRET === credentials[1];
+    return process.env.REGISTRATION_ADMIN === credentials[0] && process.env.REGISTRATION_SECRET === credentials[1];
 };
 
 const denyPolicy = function(principalId, resource) {
