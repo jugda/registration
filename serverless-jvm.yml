@@ -1,3 +1,6 @@
+# THIS DEPLOYMENT SPEC IS OUTDATED!
+# PLEASE ALIGN WITH serverless.yml FOR LATEST SETTINGS!!
+
 service: jugda-registration
 
 provider:
