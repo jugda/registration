@@ -10,14 +10,11 @@ phases:
   build:
     commands:
       - mvn package -Pnative
-
-artifacts:
-  files:
-    - target/function.zip
-    - js/basicAuthorizr.js
-  name: jugda-registration
-  discard-paths: yes
+  post_build:
+    commands:
+      - sls deploy
 
 cache:
   paths:
     - '/root/.m2/**/*'
+    - '/root/.npm/**/*'
