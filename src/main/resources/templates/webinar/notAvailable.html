@@ -1,5 +1,5 @@
 {#include template.html}
-{#title}JUG DA Event Information{/title}
+{#title}{tenant.name} Event Information{/title}
 {#body}
 <div class="container">
     {#include logoheader.html/}
@@ -10,7 +10,7 @@
         <div class="col-12 py-1 text-center">
             <p>Die gewünschten Informationen sind noch nicht oder nicht mehr verfügbar.</p>
             <p>
-                <a href="https://www.jug-da.de" class="btn btn-primary">Zu unserer Homepage</a>
+                <a href="{tenant.website}" class="btn btn-primary">Zu unserer Homepage</a>
             </p>
         </div>
     </div>

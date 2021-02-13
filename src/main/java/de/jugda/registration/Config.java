@@ -37,5 +37,6 @@ public class Config {
         public String privacy;
         public String imprint;
         public String logo;
+        public String website;
     }
 }

@@ -1,5 +1,5 @@
 {#include template.html}
-{#title}JUG DA Event Information{/title}
+{#title}{tenant.name} Event Information{/title}
 {#body}
 <div class="container">
     {#include logoheader.html/}
@@ -27,7 +27,7 @@
             <br/>
             <a href="{eventData.webinarLink}" target="_blank" class="small">{eventData.webinarLink}</a>
         </div>
-        {#include webinarProvider.html/}
+        {#include webinar/provider.html/}
         <div class="col-12 py-3">
             <p>Die Besonderheit ist, dass Ihr alle Kamera und Mikrofon einschalten könnt, so dass wir vor, während und nach dem Vortrag möglichst einfach miteinander kommunizieren können.</p>
             <p>
