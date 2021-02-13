@@ -36,7 +36,7 @@ public class EmailService {
     ObjectMapper objectMapper;
     @ResourcePath("mail/registration")
     Template tplRegistration;
-    @ResourcePath("mail/weitlist2attendee")
+    @ResourcePath("mail/waitlist2attendee")
     Template tplWaitlist2attendee;
 
     void sendRegistrationConfirmation(Registration registration) {
