@@ -5,7 +5,6 @@ import de.jugda.registration.model.Registration;
 import de.jugda.registration.service.EmailService;
 import de.jugda.registration.service.EventService;
 import de.jugda.registration.service.ListService;
-import io.quarkus.qute.Engine;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 
@@ -20,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
@@ -38,8 +38,6 @@ public class AdminResource {
     Template overview;
     @Inject
     Template list;
-    @Inject
-    Engine engine;
 
     @GET
     public TemplateInstance getAllEvents() {
@@ -73,19 +71,17 @@ public class AdminResource {
     @Path("{eventId}/message")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response sendMessage(@PathParam("eventId") String eventId, Map<String, Object> data) {
-        Template tplMessage = engine.parse((String) data.get("message"));
+        String templateName = "custom";
+        String subject = (String) data.get("subject");
+        String message = (String) data.get("message");
 
         //noinspection unchecked
         List<String> registrationIds = (List<String>) data.get("registrationIds");
-        List<Registration> registrations = listService.singleEventRegistrations(eventId);
+        List<Registration> registrations = listService.singleEventRegistrations(eventId).stream()
+            .filter(registration -> registrationIds.contains(registration.getId()))
+            .collect(Collectors.toList());
 
-        registrations.forEach(person -> {
-            if (registrationIds.contains(person.getId())) {
-                String message = tplMessage.data("person", person).data("eventId", eventId).render();
-                message = message.replaceAll("\\n", "<br>");
-                emailService.sendEmail(person, (String) data.get("subject"), message);
-            }
-        });
+        emailService.sendBulkEmail(registrations, templateName, subject, message);
 
         return Response.noContent().build();
     }

@@ -8,6 +8,8 @@ import io.quarkus.arc.config.ConfigProperties;
 @ConfigProperties(prefix = "app")
 public class Config {
 
+    public TenantConfig tenant;
+
     public EmailConfig email;
     public EventsConfig events;
     public DynamoDbConfig dynamodb;
@@ -26,5 +28,11 @@ public class Config {
     public static class DynamoDbConfig {
         public String table;
         public String index;
+    }
+
+    public static class TenantConfig {
+        public String id;
+        public String name;
+        public String baseUrl;
     }
 }

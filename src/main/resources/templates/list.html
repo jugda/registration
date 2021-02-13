@@ -56,20 +56,20 @@
             <form onsubmit="return sendMail()">
                 <div class="form-group">
                     <label for="webinarLink">Betreff</label>
-                    <input type="text" class="form-control" id="subject" value="Einwahl zum Online-Vortrag der JUG Darmstadt heute Abend">
+                    <input type="text" class="form-control" id="subject" value="Link zum Online-Vortrag der {{tenant.name}} heute Abend">
                 </div>
                 <div class="form-group">
                     <label for="message">Nachricht</label>
-                    <textarea id="message" class="form-control" rows="8">{[Hallo {person.name}!
+                    <textarea id="message" class="form-control" rows="8">{[Hallo {{name}}!
 
 Du hast Dich für unseren heutigen Online-Vortrag angemeldet. Den Link zur Einwahl und weitere Informationen findest Du hier:
 
-https://registration.jug-da.de/webinar/{eventId}
+{{tenant.baseUrl}}/webinar/{{eventId}}
 
-Bis heute Abend, wir freuen uns auf Dein Kommen. Im Anschluss an den Vortrag kannst Du übrigens gern noch bei unserem virtuellen Stammtisch mit plaudern oder einfach nur zuhören.
+Bis heute Abend, wir freuen uns auf Dein Kommen. Im Anschluss an den Vortrag kannst Du übrigens gern noch bei unserem virtuellen Stammtisch mitplaudern oder einfach nur zuhören.
 
 Viele Grüße
-JUG DA]}</textarea>
+Dein {{tenant.name}} Orga-Team]}</textarea>
                 </div>
                 <button type="submit" class="btn btn-info">Senden</button>
             </form>

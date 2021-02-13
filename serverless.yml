@@ -18,6 +18,7 @@ provider:
     DISABLE_SIGNAL_HANDLERS: 'true'
     APP_DYNAMODB_TABLE: ${self:service}
     APP_EVENTS_DATA_BUCKET: ${self:custom.tenant}
+    APP_TENANT_ID: ${self:custom.tenant}
     QUARKUS_PROFILE: ${self:custom.tenant}
   tracing:
     apiGateway: true
@@ -42,7 +43,14 @@ provider:
     - Effect: Allow
       Action:
         - ses:SendEmail
-      Resource: "arn:aws:ses:${self:provider.region}:*:identity/jug-da.de"
+        - ses:SendTemplatedEmail
+        - ses:SendBulkTemplatedEmail
+      Resource: ${self:custom.secrets.aws.sesIdentity}
+    - Effect: Allow
+      Action:
+        - ses:CreateTemplate
+        - ses:UpdateTemplate
+      Resource: "*"
 
 custom:
   tenant: ${opt:tenant, 'jugda'}

@@ -1,17 +1,23 @@
 package de.jugda.registration.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.jugda.registration.Config;
 import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Template;
+import lombok.SneakyThrows;
 import software.amazon.awssdk.services.ses.SesClient;
-import software.amazon.awssdk.services.ses.model.Body;
+import software.amazon.awssdk.services.ses.model.BulkEmailDestination;
 import software.amazon.awssdk.services.ses.model.Content;
+import software.amazon.awssdk.services.ses.model.TemplateDoesNotExistException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
@@ -25,6 +31,8 @@ public class EmailService {
     Config config;
     @Inject
     EventService eventService;
+    @Inject
+    ObjectMapper objectMapper;
     @Inject
     Template mail_registration;
     @Inject
@@ -56,19 +64,59 @@ public class EmailService {
         sendEmail(registration, subject, mailBody);
     }
 
-    public void sendEmail(Registration registration, String subject, String mailBody) {
+    private void sendEmail(Registration registration, String subject, String mailBody) {
         ses.sendEmail(builder -> builder
             .source(config.email.from)
             .destination(db -> db.toAddresses(registration.getEmail()))
             .message(mb -> mb
                 .subject(utf8Content(subject))
-                .body(Body.builder()
+                .body(bb -> bb
                     .html(utf8Content(mailBody))
                     .text(utf8Content(strip(mailBody)))
-                    .build()
                 )
             )
         );
+    }
+
+    public void sendBulkEmail(List<Registration> registrations, String templateName, String subject, String body) {
+        String tenantTemplateName = config.tenant.id + "_" + templateName;
+        updateSesTemplate(tenantTemplateName, subject, body);
+
+        String defaultTemplateData = objectToString(Map.of("tenant", config.tenant));
+
+        List<BulkEmailDestination> destinations = registrations.stream()
+            .map(registration -> BulkEmailDestination.builder()
+                .destination(db -> db.toAddresses(registration.getEmail()))
+                .replacementTemplateData(objectToString(registration))
+                .build())
+            .collect(Collectors.toList());
+
+        ses.sendBulkTemplatedEmail(builder -> builder
+            .template(tenantTemplateName)
+            .defaultTemplateData(defaultTemplateData)
+            .source(config.email.from)
+            .destinations(destinations)
+            .configurationSetName("BasicConfigSet")
+        );
+    }
+
+    private void updateSesTemplate(String templateName, String subject, String body) {
+        software.amazon.awssdk.services.ses.model.Template sesTemplate =
+            software.amazon.awssdk.services.ses.model.Template.builder()
+                .templateName(templateName)
+                .subjectPart(subject)
+                .textPart(body)
+                .build();
+        try {
+            ses.updateTemplate(builder -> builder.template(sesTemplate));
+        } catch (TemplateDoesNotExistException e) {
+            ses.createTemplate(builder -> builder.template(sesTemplate));
+        }
+    }
+
+    @SneakyThrows
+    private String objectToString(Object o) {
+        return objectMapper.writeValueAsString(o);
     }
 
     private Content utf8Content(String data) {
