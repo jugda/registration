@@ -7,6 +7,7 @@ import de.jugda.registration.service.EventService;
 import de.jugda.registration.service.ListService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.quarkus.qute.api.ResourcePath;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -35,15 +36,17 @@ public class AdminResource {
     @Inject
     EmailService emailService;
     @Inject
+    Config config;
+    @ResourcePath("admin/overview")
     Template overview;
-    @Inject
+    @ResourcePath("admin/list")
     Template list;
 
     @GET
     public TemplateInstance getAllEvents() {
         Map<String, Integer> events = listService.allEvents();
 
-        return overview.data("events", events);
+        return overview.data("tenant", config.tenant).data("events", events);
     }
 
     @GET
@@ -56,6 +59,7 @@ public class AdminResource {
         return list.data("eventId", eventId)
             .data("event", event)
             .data("eventData", eventData)
+            .data("tenant", config.tenant)
             .data("registrations", registrations);
     }
 

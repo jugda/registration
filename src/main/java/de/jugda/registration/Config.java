@@ -34,5 +34,8 @@ public class Config {
         public String id;
         public String name;
         public String baseUrl;
+        public String privacy;
+        public String imprint;
+        public String logo;
     }
 }
