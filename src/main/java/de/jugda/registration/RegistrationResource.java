@@ -34,6 +34,8 @@ public class RegistrationResource {
     @Inject
     Validator validator;
     @Inject
+    Config config;
+    @Inject
     Template closed;
     @Inject
     Template not_yet_open;
@@ -82,7 +84,7 @@ public class RegistrationResource {
         Set<ConstraintViolation<RegistrationForm>> violations = validator.validate(registrationForm);
         if (violations.isEmpty()) {
             RegistrationForm registrationSaved = registrationService.handleRegistration(registrationForm);
-            return thanks.data(registrationSaved);
+            return thanks.data("tenant", config.tenant).data(registrationSaved);
         } else {
             violations.forEach(cv ->
                 registrationForm.addValidationError(cv.getPropertyPath().toString(), cv.getMessage()));
