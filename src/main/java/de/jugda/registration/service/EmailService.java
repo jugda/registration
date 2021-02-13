@@ -5,6 +5,7 @@ import de.jugda.registration.Config;
 import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Template;
+import io.quarkus.qute.api.ResourcePath;
 import lombok.SneakyThrows;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.BulkEmailDestination;
@@ -33,17 +34,18 @@ public class EmailService {
     EventService eventService;
     @Inject
     ObjectMapper objectMapper;
-    @Inject
-    Template mail_registration;
-    @Inject
-    Template mail_waitlist2attendee;
+    @ResourcePath("mail/registration")
+    Template tplRegistration;
+    @ResourcePath("mail/weitlist2attendee")
+    Template tplWaitlist2attendee;
 
     void sendRegistrationConfirmation(Registration registration) {
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Anmeldebestätigung für \"%s\" am %s",
             config.email.subjectPrefix, event.summary, event.startDate());
 
-        String mailBody = mail_registration
+        String mailBody = tplRegistration
+            .data("tenant", config.tenant)
             .data("registration", registration)
             .data("event", event)
             .render();
@@ -56,7 +58,8 @@ public class EmailService {
         String subject = String.format("[%s] Dein Wartelisten-Eintrag für \"%s\" am %s",
             config.email.subjectPrefix, event.summary, event.startDate());
 
-        String mailBody = mail_waitlist2attendee
+        String mailBody = tplWaitlist2attendee
+            .data("tenant", config.tenant)
             .data("registration", registration)
             .data("event", event)
             .render();
