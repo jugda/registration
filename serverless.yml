@@ -46,7 +46,6 @@ provider:
 
 custom:
   tenant: ${opt:tenant, 'jugda'}
-  app: ${file(./config/${self:custom.tenant}.yml):app}
   secrets: ${ssm:/aws/reference/secretsmanager/${self:custom.tenant}-registration~true}
 
 package:
