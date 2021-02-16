@@ -1,7 +1,7 @@
 {#include template.html}
 {#body}
-    <h3>Vielen Dank, {name}</h3>
-    {#if waitlist}
+    <h3>Vielen Dank, {reg.name}</h3>
+    {#if reg.waitlist}
         <p class="lead">Wir haben Deine Anmeldung erhalten und auf die Warteliste gesetzt.</p>
         <p class="lead">Wir informieren Dich per E-Mail, wenn wir Dich auf die Teilnehmerliste setzen können.</p>
     {#else}
@@ -10,7 +10,7 @@
     {/if}
     <p>
         Falls Du wider Erwarten doch nicht kommen kannst, melde Dich bitte unter folgendem Link ab:<br/>
-        <a href="{tenant.baseUrl}/delete?id={id}">{tenant.baseUrl}/delete?id={id}</a>
+        <a href="{tenant.baseUrl}/delete?id={reg.id}">{tenant.baseUrl}/delete?id={reg.id}</a>
     </p>
 {/body}
 {/include}

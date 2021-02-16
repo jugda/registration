@@ -14,6 +14,8 @@ public class Config {
     public EventsConfig events;
     public DynamoDbConfig dynamodb;
 
+    public PageConfig page;
+
     public static class EmailConfig {
         public String from;
         public String subjectPrefix;
@@ -38,5 +40,17 @@ public class Config {
         public String imprint;
         public String logo;
         public String website;
+    }
+
+    public static class PageConfig {
+        public RegistrationPageConfig registration;
+    }
+
+    public static class RegistrationPageConfig {
+        public String name;
+        public String email;
+        public String video;
+        public String disclaimer;
+        public String waitlist;
     }
 }

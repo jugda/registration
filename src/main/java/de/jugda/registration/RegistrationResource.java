@@ -72,7 +72,7 @@ public class RegistrationResource {
             form.setLimit(limit);
             form.setShowPub(showPub);
             form.setWaitlist(registrationCount >= limit);
-            response = registration.data(form);
+            response = registration.data("form", form).data("helptext", config.page.registration);
         }
 
         return response;
@@ -84,11 +84,11 @@ public class RegistrationResource {
         Set<ConstraintViolation<RegistrationForm>> violations = validator.validate(registrationForm);
         if (violations.isEmpty()) {
             RegistrationForm registrationSaved = registrationService.handleRegistration(registrationForm);
-            return thanks.data("tenant", config.tenant).data(registrationSaved);
+            return thanks.data("tenant", config.tenant).data("reg", registrationSaved);
         } else {
             violations.forEach(cv ->
                 registrationForm.addValidationError(cv.getPropertyPath().toString(), cv.getMessage()));
-            return registration.data(registrationForm);
+            return registration.data("form", registrationForm).data("helptext", config.page.registration);
         }
     }
 
