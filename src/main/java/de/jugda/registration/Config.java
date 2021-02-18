@@ -1,6 +1,9 @@
 package de.jugda.registration;
 
 import io.quarkus.arc.config.ConfigProperties;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
@@ -32,6 +35,9 @@ public class Config {
         public String index;
     }
 
+    @Getter
+    @Setter
+    @RegisterForReflection
     public static class TenantConfig {
         public String id;
         public String name;
@@ -46,6 +52,9 @@ public class Config {
         public RegistrationPageConfig registration;
     }
 
+    @Getter
+    @Setter
+    @RegisterForReflection
     public static class RegistrationPageConfig {
         public String name;
         public String email;
