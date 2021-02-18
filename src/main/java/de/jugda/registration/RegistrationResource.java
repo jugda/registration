@@ -47,7 +47,7 @@ public class RegistrationResource {
     @GET
     public TemplateInstance getForm(@QueryParam("eventId") String eventId,
                                     @QueryParam("limit") @DefaultValue("60") int limit,
-                                    @QueryParam("showPub") @DefaultValue("true") boolean showPub,
+                                    @QueryParam("showPub") @DefaultValue("false") boolean showPub,
                                     @QueryParam("deadline") String deadline) {
         if (deadline == null) {
             deadline = eventId + "T18:00:00+02:00";

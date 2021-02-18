@@ -22,8 +22,8 @@ Root page is `/registration?eventId=...`.
 |Participant limit
 
 |showPub
-|true
-|If true, the checkbox for pub participation will be shown, otherwise not.
+|false
+|If `true`, the checkbox for pub participation will be shown, otherwise not.
 
 |deadline
 |Date of eventId, 18:00:00+02:00
