@@ -1,0 +1,28 @@
+### Show number of registrations and registration form <1>
+GET http://localhost:8080/registration?eventId=2021-02-23
+
+### Register new participant <2>
+POST http://localhost:8080/registration
+Content-Type: application/x-www-form-urlencoded
+
+eventId=2021-02-23&name=Gerd&email=gerd@aschemann.net&
+
+### Upload data to event (???) <3>
+PUT http://localhost:8080/admin/events/2021-02-23/data
+Content-Type: application/json
+
+{"message" : "hallo", "summary" : "Herzlich willkommen"}
+
+### Send message to participants (???) <4>
+PUT http://localhost:8080/admin/events/2021-02-23/message
+Content-Type: application/json
+
+{"message" : "hallo", "summary" : "Herzlich willkommen"}
+
+### Show overview of events <5>
+GET http://localhost:8080/admin/events
+
+### ??? <6>
+GET http://localhost:8080/admin/events/2021-02-23
+
+
