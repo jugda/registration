@@ -1,4 +1,5 @@
 = JUG Registration App
+:icons: font
 
 https://quarkus.io[Quarkus] based application.
 
@@ -32,11 +33,44 @@ Root page is `/registration?eventId=...`.
 |===
 
 
-== Development Prerequisites
+== Development
+
+=== Prerequisites
 
 * JDK 11+
 * IDE
 * Maven 3.6.2+
+[[local-environment]]
+* Optional (for local development):
+** https://github.com/localstack/localstack[localstack]
+** https://github.com/localstack/awscli-local[awscli-local]
+
+=== Development with localstack
+
+https://github.com/localstack/localstack[localstack] enables local development without any AWS cloud access.
+
+* Install software for <<local-environment,local AWS development>>
+* Run localstack with `localstack start` (this opens a serverless stack at http://localstack:4566, containing DynamoDB, Lambda, SES and other services known from the AWS cloud)
+* Create DynamoDB tables: `awslocal dynamodb create-table --cli-input-json file://src/test/resources/dynamo-schema.json`
+* Build application: `mvn clean package`
+* Run application with `dev` profile:
+** TBD: How to start the application via CLI (`java -jar ...`)?
+** In IntelliJ start via run configuration:
++
+image::src/main/asciidoctor/images/intellij-run-configuration-dev.png[]
+
+* Run HTTP requests to test registration
++
+[source]
+----
+include::registration-requests.http[]
+----
+<1> Show the current number of registrations and the HTML form to register
+<2> Register for an event
+<3> TBD: Check purpose of this call
+<4> TBD: Clear exact semantics/prerequisites for this call (send mail to attendees?)
+<5> Show overview of events
+<6> TBD: Check purpose of this call
 
 == Build
 
