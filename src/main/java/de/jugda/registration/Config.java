@@ -20,6 +20,7 @@ public class Config {
     public PageConfig page;
 
     public static class EmailConfig {
+        public boolean enabled = true;
         public String from;
         public String subjectPrefix;
     }

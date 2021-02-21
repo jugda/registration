@@ -40,6 +40,9 @@ public class EmailService {
     Template tplWaitlist2attendee;
 
     void sendRegistrationConfirmation(Registration registration) {
+        if (!config.email.enabled) {
+            return;
+        }
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Anmeldebestätigung für \"%s\" am %s",
             config.email.subjectPrefix, event.summary, event.startDate());
@@ -54,6 +57,9 @@ public class EmailService {
     }
 
     void sendWaitlistToAttendeeConfirmation(Registration registration) {
+        if (!config.email.enabled) {
+            return;
+        }
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Dein Wartelisten-Eintrag für \"%s\" am %s",
             config.email.subjectPrefix, event.summary, event.startDate());
@@ -82,6 +88,9 @@ public class EmailService {
     }
 
     public void sendBulkEmail(List<Registration> registrations, String templateName, String subject, String body) {
+        if (!config.email.enabled) {
+            return;
+        }
         String tenantTemplateName = config.tenant.id + "_" + templateName;
         updateSesTemplate(tenantTemplateName, subject, body);
 
