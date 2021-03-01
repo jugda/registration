@@ -49,7 +49,8 @@ public class WebinarResource {
 
         return webinar.data("event", event)
             .data("tenant", config.tenant)
-            .data("eventData", eventData);
+            .data("eventData", eventData)
+            .data("helptext", config.page.webinar);
     }
 
 }

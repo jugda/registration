@@ -50,6 +50,7 @@ public class Config {
 
     public static class PageConfig {
         public RegistrationPageConfig registration;
+        public WebinarPageConfig webinar;
     }
 
     @Getter
@@ -61,5 +62,17 @@ public class Config {
         public String video;
         public String disclaimer;
         public String waitlist;
+    }
+
+    @Getter
+    @Setter
+    @RegisterForReflection
+    public static class WebinarPageConfig {
+        public String tools;
+        public String toolsLinkId;
+        public String communication;
+        public String recording;
+        public String subscribeYoutube;
+        public String privacyHint;
     }
 }
