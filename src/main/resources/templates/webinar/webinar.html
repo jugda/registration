@@ -27,7 +27,10 @@
             <br/>
             <a href="{eventData.webinarLink}" target="_blank" class="small">{eventData.webinarLink}</a>
         </div>
-        {#include webinar/provider.html/}
+        <div class="col-12 py-3">
+            {helptext.tools}
+            <a href="{tenant.privacy}#{helptext.toolsLinkId}" target="_blank">{tenant.privacy}#{helptext.toolsLinkId}</a>
+        </div>
         <div class="col-12 py-3">
             <p>{helptext.communication}</p>
             <p>
