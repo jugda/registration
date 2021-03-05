@@ -28,14 +28,13 @@
             <a href="{eventData.webinarLink}" target="_blank" class="small">{eventData.webinarLink}</a>
         </div>
         <div class="col-12 py-3">
-            {helptext.tools}
-            <a href="{tenant.privacy}#{helptext.toolsLinkId}" target="_blank">{tenant.privacy}#{helptext.toolsLinkId}</a>
+            {helptext.tools.raw}
         </div>
         <div class="col-12 py-3">
             <p>{helptext.communication}</p>
             <p>
-                {helptext.recording} <a href="{tenant.youtube}" target="_blank">YouTube Kanal</a> {helptext.subscribeYoutube}
-                {helptext.privacyHint}
+                {helptext.recording.raw}
+                {helptext.recordingPrivacyHint}
             </p>
         </div>
     </div>

@@ -46,6 +46,7 @@ public class Config {
         public String imprint;
         public String logo;
         public String website;
+        public String youtube;
     }
 
     public static class PageConfig {
@@ -69,10 +70,8 @@ public class Config {
     @RegisterForReflection
     public static class WebinarPageConfig {
         public String tools;
-        public String toolsLinkId;
         public String communication;
         public String recording;
-        public String subscribeYoutube;
-        public String privacyHint;
+        public String recordingPrivacyHint;
     }
 }
