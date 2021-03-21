@@ -1,28 +1,39 @@
 ### Show number of registrations and registration form <1>
-GET http://localhost:8080/registration?eventId=2021-02-23
+GET http://localhost:8080/registration?eventId=2021-03-25
 
 ### Register new participant <2>
 POST http://localhost:8080/registration
 Content-Type: application/x-www-form-urlencoded
 
-eventId=2021-02-23&name=Gerd&email=gerd@aschemann.net&
+eventId=2021-03-25&name=Gerd&email=gerd@aschemann.net
 
-### Upload data to event (???) <3>
-PUT http://localhost:8080/admin/events/2021-02-23/data
+### Upload additional webinar data to event <3>
+PUT http://localhost:8080/admin/events/2021-03-25/data
 Content-Type: application/json
 
-{"message" : "hallo", "summary" : "Herzlich willkommen"}
+{"webinarLink" : "https://example.com/webinar"}
 
-### Send message to participants (???) <4>
-PUT http://localhost:8080/admin/events/2021-02-23/message
+### Send e-mail message to participants <4>
+PUT http://localhost:8080/admin/events/2021-03-25/message
 Content-Type: application/json
 
-{"message" : "hallo", "summary" : "Herzlich willkommen"}
+{"subject" : "Event XXX", "summary" : "Herzlich willkommen", "registrationIds" : []}
 
 ### Show overview of events <5>
 GET http://localhost:8080/admin/events
 
-### ??? <6>
-GET http://localhost:8080/admin/events/2021-02-23
+### Show registrations of one event <6>
+GET http://localhost:8080/admin/events/2021-03-25
 
+### Show Webinar data <7>
+GET http://localhost:8080/webinar/2021-03-25
+
+### Delete my registration <8>
+DELETE http://localhost:8080/registration?eventId=2021-03-25...ADDITIONAL
+
+### Delete my registration by date and mail address <9>
+POST http://localhost:8080/delete
+Content-Type: application/x-www-form-urlencoded
+
+eventId=2021-03-25&email=gerd@aschemann.net
 

@@ -71,11 +71,14 @@ TIP: This makes it even possible to run the application in debug mode.
 include::registration-requests.http[]
 ----
 <1> Show the current number of registrations and the HTML form to register
-<2> Register for an event
-<3> TBD: Check purpose of this call
-<4> TBD: Clear exact semantics/prerequisites for this call (send mail to attendees?)
+<2> Register participant for an event
+<3> Upload additional webinar data to event
+<4> Send e-mail message to participants
 <5> Show overview of events
-<6> TBD: Check purpose of this call
+<6> Event administration UI (send mail, upload Webinar data)
+<7> Show Webinar data
+<8> Delete registration by eventId and unique key (incomplete)
+<9> Delete registration of participant by eventId and e-mail address
 
 == Build
 
