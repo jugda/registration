@@ -55,6 +55,7 @@ https://github.com/localstack/localstack[localstack] enables local development w
 ** Create DynamoDB tables: `awslocal dynamodb create-table --cli-input-json file://src/test/resources/dynamo-schema.json`
 ** Create test data bucket in s3: `awslocal s3api create-bucket --bucket test`
 ** Upload test events to s3: `awslocal s3 cp src/test/resources/s3/events.json s3://test`
+** Upload test event data to s3: `awslocal s3 cp src/test/resources/s3/eventData.json s3://test`
 * (Optional) Build application: `mvn clean package`
 * Run application with `dev` profile:
 ** With Maven, use https://quarkus.io/guides/maven-tooling#development-mode[Quarkus Development Mode]: `mvn compile quarkus:dev`
