@@ -81,8 +81,9 @@ include::registration-requests.http[]
 <5> Show overview of events
 <6> Event administration UI (send mail, upload Webinar data)
 <7> Show Webinar data
-<8> Delete registration by eventId and unique key (incomplete)
+<8> Delete registration by unique key (_Caution_: This request is incomplete, you need to add the unique id you received on registration)
 <9> Delete registration of participant by eventId and e-mail address
+<10> Delete registration by eventId and unique key (_Caution_: This request is incomplete, you need to add the unique id you received on registration)
 
 == Build
 

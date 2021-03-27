@@ -28,8 +28,8 @@ GET http://localhost:8080/admin/events/2021-03-25
 ### Show Webinar data <7>
 GET http://localhost:8080/webinar/2021-03-25
 
-### Delete my registration <8>
-DELETE http://localhost:8080/registration?eventId=2021-03-25...ADDITIONAL
+### Delete my registration - You need to append the registration UUID received in #<2> <8>
+DELETE http://localhost:8080/delete?id=3053214b-39fb-448a-8dbb-eb148c984a99
 
 ### Delete my registration by date and mail address <9>
 POST http://localhost:8080/delete
@@ -37,3 +37,5 @@ Content-Type: application/x-www-form-urlencoded
 
 eventId=2021-03-25&email=gerd@aschemann.net
 
+### Delete my registration - You need to append the event id and the registration UUID received in #<2> <10>
+GET http://localhost:8080/delete?eventId=2021-03-25&id=e6c05d25-0c3e-4974-810c-62c408d88d09
