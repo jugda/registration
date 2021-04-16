@@ -85,6 +85,8 @@ include::registration-requests.http[]
 <9> Delete registration of participant by eventId and e-mail address
 <10> Delete registration by eventId and unique key (_Caution_: This request is incomplete, you need to add the unique id you received on registration)
 
+NOTE: Find/change the variables in link:http-client.env.json[].
+
 == Build
 
 Native, Docker will be used.

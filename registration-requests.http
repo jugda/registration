@@ -1,41 +1,41 @@
 ### Show number of registrations and registration form <1>
-GET http://localhost:8080/registration?eventId=2021-03-25
+GET {{baseurl}}/registration?eventId={{eventId}}
 
 ### Register new participant <2>
-POST http://localhost:8080/registration
+POST {{baseurl}}/registration
 Content-Type: application/x-www-form-urlencoded
 
-eventId=2021-03-25&name=Gerd&email=gerd@aschemann.net
+eventId={{eventId}}&name=Gerd&email=gerd@aschemann.net
 
 ### Upload additional webinar data to event <3>
-PUT http://localhost:8080/admin/events/2021-03-25/data
+PUT {{baseurl}}/admin/events/{{eventId}}/data
 Content-Type: application/json
 
 {"webinarLink" : "https://example.com/webinar"}
 
 ### Send e-mail message to participants <4>
-PUT http://localhost:8080/admin/events/2021-03-25/message
+PUT {{baseurl}}/admin/events/{{eventId}}/message
 Content-Type: application/json
 
 {"subject" : "Event XXX", "summary" : "Herzlich willkommen", "registrationIds" : []}
 
 ### Show overview of events <5>
-GET http://localhost:8080/admin/events
+GET {{baseurl}}/admin/events
 
 ### Show registrations of one event <6>
-GET http://localhost:8080/admin/events/2021-03-25
+GET {{baseurl}}/admin/events/{{eventId}}
 
 ### Show Webinar data <7>
-GET http://localhost:8080/webinar/2021-03-25
+GET {{baseurl}}/webinar/{{eventId}}
 
 ### Delete my registration - You need to append the registration UUID received in #<2> <8>
-DELETE http://localhost:8080/delete?id=3053214b-39fb-448a-8dbb-eb148c984a99
+DELETE {{baseurl}}/delete?id=3053214b-39fb-448a-8dbb-eb148c984a99
 
 ### Delete my registration by date and mail address <9>
-POST http://localhost:8080/delete
+POST {{baseurl}}/delete
 Content-Type: application/x-www-form-urlencoded
 
-eventId=2021-03-25&email=gerd@aschemann.net
+eventId={{eventId}}&email=gerd@aschemann.net
 
 ### Delete my registration - You need to append the event id and the registration UUID received in #<2> <10>
-GET http://localhost:8080/delete?eventId=2021-03-25&id=e6c05d25-0c3e-4974-810c-62c408d88d09
+GET {{baseurl}}/delete?eventId={{eventId}}&id=e6c05d25-0c3e-4974-810c-62c408d88d09
