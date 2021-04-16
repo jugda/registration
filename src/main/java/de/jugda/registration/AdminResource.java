@@ -81,6 +81,9 @@ public class AdminResource {
 
         //noinspection unchecked
         List<String> registrationIds = (List<String>) data.get("registrationIds");
+        if (null == registrationIds) {
+            throw new IllegalArgumentException("Data does not contain any registrationIds");
+        }
         List<Registration> registrations = listService.singleEventRegistrations(eventId).stream()
             .filter(registration -> registrationIds.contains(registration.getId()))
             .collect(Collectors.toList());
