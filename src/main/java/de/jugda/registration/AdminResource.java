@@ -81,7 +81,7 @@ public class AdminResource {
 
         //noinspection unchecked
         List<String> registrationIds = (List<String>) data.get("registrationIds");
-        if (null == registrationIds) {
+        if (null == registrationIds || registrationIds.isEmpty()) {
             throw new IllegalArgumentException("Data does not contain any registrationIds");
         }
         List<Registration> registrations = listService.singleEventRegistrations(eventId).stream()
