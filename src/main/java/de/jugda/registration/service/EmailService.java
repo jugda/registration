@@ -6,6 +6,7 @@ import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.api.ResourcePath;
+import io.quarkus.runtime.configuration.ProfileManager;
 import lombok.SneakyThrows;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.BulkEmailDestination;
@@ -40,9 +41,6 @@ public class EmailService {
     Template tplWaitlist2attendee;
 
     void sendRegistrationConfirmation(Registration registration) {
-        if (!config.email.enabled) {
-            return;
-        }
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Anmeldebestätigung für \"%s\" am %s",
             config.email.subjectPrefix, event.summary, event.startDate());
@@ -57,9 +55,6 @@ public class EmailService {
     }
 
     void sendWaitlistToAttendeeConfirmation(Registration registration) {
-        if (!config.email.enabled) {
-            return;
-        }
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Dein Wartelisten-Eintrag für \"%s\" am %s",
             config.email.subjectPrefix, event.summary, event.startDate());
@@ -88,9 +83,6 @@ public class EmailService {
     }
 
     public void sendBulkEmail(List<Registration> registrations, String templateName, String subject, String body) {
-        if (!config.email.enabled) {
-            return;
-        }
         String tenantTemplateName = config.tenant.id + "_" + templateName;
         updateSesTemplate(tenantTemplateName, subject, body);
 
@@ -103,13 +95,15 @@ public class EmailService {
                 .build())
             .collect(Collectors.toList());
 
-        ses.sendBulkTemplatedEmail(builder -> builder
-            .template(tenantTemplateName)
-            .defaultTemplateData(defaultTemplateData)
-            .source(config.email.from)
-            .destinations(destinations)
-            .configurationSetName("BasicConfigSet")
-        );
+        if (!"localstack".equals(ProfileManager.getActiveProfile())) {
+            ses.sendBulkTemplatedEmail(builder -> builder
+                .template(tenantTemplateName)
+                .defaultTemplateData(defaultTemplateData)
+                .source(config.email.from)
+                .destinations(destinations)
+                .configurationSetName("BasicConfigSet")
+            );
+        }
     }
 
     private void updateSesTemplate(String templateName, String subject, String body) {
