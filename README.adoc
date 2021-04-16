@@ -41,21 +41,15 @@ Root page is `/registration?eventId=...`.
 * IDE
 * Maven 3.6.2+
 [[local-environment]]
-* Optional (for local development):
-** https://github.com/localstack/localstack[localstack]
-** https://github.com/localstack/awscli-local[awscli-local]
+* Docker (optional, for local development)
 
 === Development with localstack
 
-https://github.com/localstack/localstack[localstack] enables local development without any AWS cloud access.
+https://github.com/localstack/localstack[localstack] enables local development without any AWS cloud access. +
+We use the Docker container of localstack directly without the need to install any additional tool locally.
 
-* Install software for <<local-environment,local AWS development>>
-* Run localstack with `localstack start` (this opens a serverless stack at http://localstack:4566, containing DynamoDB, Lambda, SES and other services known from the AWS cloud)
-* Prepare local AWS stack
-** Create DynamoDB tables: `awslocal dynamodb create-table --cli-input-json file://src/test/resources/dynamo-schema.json`
-** Create test data bucket in s3: `awslocal s3api create-bucket --bucket test`
-** Upload test events to s3: `awslocal s3 cp src/test/resources/s3/events.json s3://test`
-** Upload test event data to s3: `awslocal s3 cp src/test/resources/s3/eventData.json s3://test`
+* For <<local-environment,local AWS development>>, simply power up the provided `docker-compose.yml` file in the project root with `docker compose up` command. +
+The container will start and initialize all the needed AWS resoures like DynamoDB, S3 bucket and files and SES, available at http://localhost:4566
 * (Optional) Build application: `mvn clean package`
 * Run application with `dev` profile:
 ** With Maven, use https://quarkus.io/guides/maven-tooling#development-mode[Quarkus Development Mode]: `mvn compile quarkus:dev`
@@ -68,8 +62,8 @@ image::src/main/asciidoctor/images/intellij-run-configuration-dev.png[]
 TIP: This makes it even possible to run the application in debug mode.
 ** TBD: How to start the application via CLI (`java -jar ...`)?
 
-* Run HTTP requests to test registration
-+
+=== Run HTTP requests to test registration
+
 [source]
 ----
 include::registration-requests.http[]
