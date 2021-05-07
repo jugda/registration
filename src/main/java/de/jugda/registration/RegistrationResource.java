@@ -48,13 +48,14 @@ public class RegistrationResource {
     public TemplateInstance getForm(@QueryParam("eventId") String eventId,
                                     @QueryParam("limit") @DefaultValue("60") int limit,
                                     @QueryParam("showPub") @DefaultValue("false") boolean showPub,
-                                    @QueryParam("deadline") String deadline) {
+                                    @QueryParam("deadline") String deadline,
+                                    @QueryParam("opensBeforeInMonths") @DefaultValue("1") int opensBeforeInMonths) {
         if (deadline == null) {
             deadline = eventId + "T18:00:00+02:00";
         }
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineTime = LocalDateTime.parse(deadline, DateTimeFormatter.ISO_DATE_TIME);
-        LocalDate startDate = LocalDate.parse(eventId).minusMonths(1);
+        LocalDate startDate = LocalDate.parse(eventId).minusMonths(opensBeforeInMonths);
 
         TemplateInstance response;
         if (now.isAfter(deadlineTime)) {
