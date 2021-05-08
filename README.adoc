@@ -30,6 +30,10 @@ Root page is `/registration?eventId=...`.
 |Date of eventId, 18:00:00+02:00
 |ISO timestamp. Registration closes after given deadline.
 
+|opensBeforeInMonths
+|1
+|Months before an event takes place the registration is available/opened
+
 |===
 
 
