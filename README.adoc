@@ -47,7 +47,7 @@ Root page is `/registration?eventId=...`.
 [[local-environment]]
 * Docker (optional, for local development)
 
-=== Development with localstack
+=== Development with profile `localstack`
 
 https://github.com/localstack/localstack[localstack] enables local development without any AWS cloud access. +
 We use the Docker container of localstack directly without the need to install any additional tool locally.
@@ -55,16 +55,17 @@ We use the Docker container of localstack directly without the need to install a
 * For <<local-environment,local AWS development>>, simply power up the provided `docker-compose.yml` file in the project root with `docker compose up` command. +
 The container will start and initialize all the needed AWS resoures like DynamoDB, S3 bucket and files and SES, available at http://localhost:4566
 * (Optional) Build application: `mvn clean package`
-* Run application with `dev` profile:
-** With Maven, use https://quarkus.io/guides/maven-tooling#development-mode[Quarkus Development Mode]: `mvn compile quarkus:dev`
+* Run application with `localstack` profile:
+** With Maven, use https://quarkus.io/guides/maven-tooling#development-mode[Quarkus Development Mode]: `mvn compile quarkus:dev -Dquarkus.profile=localstack`
 +
 TIP: You can now change classes, configurations and other resources on the fly and Quarkus will automatically reload on the next call.
 ** In IntelliJ start via run configuration:
 +
 image::src/main/asciidoctor/images/intellij-run-configuration-dev.png[]
 +
+IMPORTANT: Change the `dev` profile in the image with `localstack`
++
 TIP: This makes it even possible to run the application in debug mode.
-** TBD: How to start the application via CLI (`java -jar ...`)?
 
 === Run HTTP requests to test registration
 
