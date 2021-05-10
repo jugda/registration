@@ -46,6 +46,7 @@
         <input type="hidden" name="limit" value="{form.limit}"/>
         <input type="hidden" name="waitlist" value="{form.waitlist}"/>
         <input type="hidden" name="showPub" value="{form.showPub}"/>
+        <input type="hidden" name="showVideoRecording" value="{form.showVideoRecording}"/>
     </form>
     <p class="text-muted">
         <small>
@@ -54,11 +55,14 @@
         </small>
     </p>
 <script>
-const elems = [];
-function checkPrivacy(elem) {
-    if (elem.checked) elems.push(elem); else elems.pop();
-    document.forms[0].submit.disabled = elems.length !== 2;
-}
+    const elems = [];
+    /*<![CDATA[*/
+    const numberOfRequiredElements = /*[[{form.showVideoRecording ? 2 : 1}]]*/ 2;
+    /*]]>*/
+    function checkPrivacy(elem) {
+        if (elem.checked) elems.push(elem); else elems.pop();
+        document.forms[0].submit.disabled = elems.length !== numberOfRequiredElements;
+    }
 </script>
 {/body}
 {/include}

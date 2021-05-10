@@ -41,6 +41,8 @@ public class RegistrationForm {
     public int actualCount;
     @FormParam("showPub")
     public boolean showPub;
+    @FormParam("showVideoRecording")
+    public boolean showVideoRecording;
 
     public Map<String, String> validationErrors = new HashMap<>();
 

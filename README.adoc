@@ -26,6 +26,10 @@ Root page is `/registration?eventId=...`.
 |false
 |If `true`, the checkbox for pub participation will be shown, otherwise not.
 
+|showVideoRecording
+|true
+|If `true`, the checkbox for accepting video recording will be shown, otherwise not.
+
 |deadline
 |Date of eventId, 18:00:00+02:00
 |ISO timestamp. Registration closes after given deadline.
