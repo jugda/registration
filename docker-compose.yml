@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   localstack:
-    container_name: localstack_jugda-registration
+#    container_name: localstack_jugda-registration
     image: localstack/localstack
     ports:
       - "4566:4566"

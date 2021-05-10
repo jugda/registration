@@ -3,3 +3,4 @@
 target
 .serverless
 deploy.sh
+src/test/resources/s3/events.json
