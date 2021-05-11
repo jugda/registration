@@ -1,7 +1,4 @@
-.idea/*
-!.idea/runConfigurations/cyberland.xml
-!.idea/runConfigurations/jugda.xml
-!.idea/runConfigurations/localstack.xml
+.idea
 *.iml
 target
 .serverless
