@@ -26,9 +26,9 @@ Root page is `/registration?eventId=...`.
 |false
 |If `true`, the checkbox for pub participation will be shown, otherwise not.
 
-|showVideoRecording
-|true
-|If `true`, the checkbox for accepting video recording will be shown, otherwise not.
+|hideVideoRecording
+|false
+|If `true`, the checkbox for accepting video recording will be hidden, otherwise not.
 
 |deadline
 |Date of eventId, 18:00:00+02:00
@@ -63,6 +63,16 @@ The container will start and initialize all the needed AWS resoures like DynamoD
 ** With Maven, use https://quarkus.io/guides/maven-tooling#development-mode[Quarkus Development Mode]: `mvn compile quarkus:dev -Dquarkus.profile=localstack`
 +
 TIP: You can now change classes, configurations and other resources on the fly and Quarkus will automatically reload on the next call.
++
+[IMPORTANT]
+====
+If an error occurs: "software.amazon.awssdk.core.exception.SdkClientException: Unable to load credentials from any of the providers in the chain", you need to set following env variables:
+
+export AWS_ACCESS_KEY_ID=foobar
+
+export AWS_SECRET_ACCESS_KEY=foobar
+====
+
 ** In IntelliJ start via run configuration:
 +
 image::src/main/asciidoctor/images/intellij-run-configuration-dev.png[]

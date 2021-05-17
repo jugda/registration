@@ -48,7 +48,7 @@ public class RegistrationResource {
     public TemplateInstance getForm(@QueryParam("eventId") String eventId,
                                     @QueryParam("limit") @DefaultValue("60") int limit,
                                     @QueryParam("showPub") @DefaultValue("false") boolean showPub,
-                                    @QueryParam("showVideoRecording") @DefaultValue("true") boolean showVideoRecording,
+                                    @QueryParam("hideVideoRecording") @DefaultValue("false") boolean hideVideoRecording,
                                     @QueryParam("deadline") String deadline,
                                     @QueryParam("opensBeforeInMonths") @DefaultValue("1") int opensBeforeInMonths) {
         if (deadline == null) {
@@ -73,7 +73,7 @@ public class RegistrationResource {
             form.setActualCount(registrationCount);
             form.setLimit(limit);
             form.setShowPub(showPub);
-            form.setShowVideoRecording(showVideoRecording);
+            form.setHideVideoRecording(hideVideoRecording);
             form.setWaitlist(registrationCount >= limit);
             response = registration.data("form", form).data("helptext", config.page.registration);
         }

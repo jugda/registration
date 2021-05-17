@@ -24,16 +24,18 @@
             <label class="form-check-label" for="pub">Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)</label>
         </div>
         {/if}
+        {#if !form.hideVideoRecording}
         <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" name="videoRecording" id="videoRecording" onclick="checkPrivacy(this)">
+            <input type="checkbox" class="form-check-input required" name="videoRecording" id="videoRecording">
             <label class="form-check-label" for="videoRecording">
                 Mir ist bekannt, dass die Veranstaltung auf Video aufgezeichnet und veröffentlicht wird.*
                 <small class="d-block text-muted">{helptext.video}</small>
             </label>
         </div>
+        {/if}
         <p class="text-muted small">{helptext.disclaimer}</p>
         <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" name="privacy" id="privacy" onclick="checkPrivacy(this)">
+            <input type="checkbox" class="form-check-input required" name="privacy" id="privacy">
             <label class="form-check-label" for="privacy">
                 Ja, ich habe die o.g. Hinweise gelesen, verstanden und erkläre mich damit einverstanden.*
             </label>
@@ -46,7 +48,7 @@
         <input type="hidden" name="limit" value="{form.limit}"/>
         <input type="hidden" name="waitlist" value="{form.waitlist}"/>
         <input type="hidden" name="showPub" value="{form.showPub}"/>
-        <input type="hidden" name="showVideoRecording" value="{form.showVideoRecording}"/>
+        <input type="hidden" name="hideVideoRecording" value="{form.hideVideoRecording}"/>
     </form>
     <p class="text-muted">
         <small>
@@ -54,15 +56,13 @@
             <a href="/delete?eventId={form.eventId}">Dann klicke hier.</a>
         </small>
     </p>
+<script src="/webjars/jquery/jquery.min.js"></script>
 <script>
-    const elems = [];
-    /*<![CDATA[*/
-    const numberOfRequiredElements = /*[[{form.showVideoRecording ? 2 : 1}]]*/ 2;
-    /*]]>*/
-    function checkPrivacy(elem) {
-        if (elem.checked) elems.push(elem); else elems.pop();
-        document.forms[0].submit.disabled = elems.length !== numberOfRequiredElements;
-    }
+    $(function() {
+        $(".required").click(function(){
+            $($(document.forms[0].submit)).prop('disabled',$('input.required:checked').length !== $('input.required').length);
+        });
+    });
 </script>
 {/body}
 {/include}
