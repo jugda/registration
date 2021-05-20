@@ -2,5 +2,4 @@
 *.iml
 target
 .serverless
-sls-props.yml
-lsp
+deploy.sh
