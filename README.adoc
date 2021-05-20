@@ -66,11 +66,11 @@ TIP: You can now change classes, configurations and other resources on the fly a
 +
 [IMPORTANT]
 ====
-If an error occurs: "software.amazon.awssdk.core.exception.SdkClientException: Unable to load credentials from any of the providers in the chain", you need to set following env variables:
-
-export AWS_ACCESS_KEY_ID=foobar
-
-export AWS_SECRET_ACCESS_KEY=foobar
+If an error occurs: "software.amazon.awssdk.core.exception.SdkClientException: Unable to load credentials from any of the providers in the chain", you need to set following env variables (dummy value is ok for localstack usage, it will automatically set when using the IntelliJ localstack run config):
+----
+AWS_ACCESS_KEY_ID=dummy
+AWS_SECRET_ACCESS_KEY=dummy
+----
 ====
 
 ** In IntelliJ start via run configuration:
