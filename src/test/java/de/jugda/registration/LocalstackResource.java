@@ -82,7 +82,7 @@ public class LocalstackResource implements QuarkusTestResourceLifecycleManager {
         event.setTimezone("Europe/Berlin");
         List<Event> events = List.of(event);
 
-        Writer w = new FileWriter("src/test/resources/s3/events.json");
+        Writer w = new FileWriter("target/events.json");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.writeValue(w, events);

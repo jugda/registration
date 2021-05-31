@@ -2,7 +2,6 @@ version: '2.1'
 
 services:
   localstack:
-#    container_name: localstack_jugda-registration
     image: localstack/localstack
     ports:
       - "4566:4566"
@@ -12,5 +11,5 @@ services:
     volumes:
       - ./src/test/resources/dynamodb-schema.json:/tmp/dynamodb-schema.json
       - ./src/test/resources/s3/eventData.json:/tmp/eventData.json
-      - ./src/test/resources/s3/events.json:/tmp/events.json
+      - ./target/events.json:/tmp/events.json
       - ./configure_localstack.sh:/docker-entrypoint-initaws.d/setup.sh
