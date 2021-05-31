@@ -6,6 +6,7 @@ import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.api.ResourcePath;
+import io.quarkus.runtime.LaunchMode;
 import io.quarkus.runtime.configuration.ProfileManager;
 import lombok.SneakyThrows;
 import software.amazon.awssdk.services.ses.SesClient;
@@ -39,6 +40,8 @@ public class EmailService {
     Template tplRegistration;
     @ResourcePath("mail/waitlist2attendee")
     Template tplWaitlist2attendee;
+    @Inject
+    LaunchMode launchMode;
 
     void sendRegistrationConfirmation(Registration registration) {
         Event event = eventService.getEvent(registration.eventId);
@@ -95,7 +98,7 @@ public class EmailService {
                 .build())
             .collect(Collectors.toList());
 
-        if (!"localstack".equals(ProfileManager.getActiveProfile())) {
+        if (launchMode != LaunchMode.TEST && !"localstack".equals(ProfileManager.getActiveProfile())) {
             ses.sendBulkTemplatedEmail(builder -> builder
                 .template(tenantTemplateName)
                 .defaultTemplateData(defaultTemplateData)
