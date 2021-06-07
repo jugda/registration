@@ -1,0 +1,18 @@
+name: Reverse SSH Tunnel
+on:
+  # pull_request: {}
+  workflow_dispatch: {}
+jobs:
+  reverse-ssh-tunnel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Reverse SSH Tunnel
+        env:
+          LOG: console
+          REVERSE_SSH_HOST: ${{ secrets.REVERSE_SSH_HOST }}
+          REVERSE_SSH_PRIVATE_KEY: ${{ secrets.REVERSE_SSH_PRIVATE_KEY }}
+          REVERSE_SSH_PUBLIC_KEY: ${{ secrets.REVERSE_SSH_PUBLIC_KEY }}
+        run: |
+          id -a
+          ./reverse-ssh-tunnel.sh
