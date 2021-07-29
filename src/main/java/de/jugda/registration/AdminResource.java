@@ -46,7 +46,7 @@ public class AdminResource {
     public TemplateInstance getAllEvents() {
         Map<String, Integer> events = listService.allEvents();
 
-        return overview.data("tenant", config.tenant).data("events", events);
+        return overview.data("tenant", config.tenant()).data("events", events);
     }
 
     @GET
@@ -59,7 +59,7 @@ public class AdminResource {
         return list.data("eventId", eventId)
             .data("event", event)
             .data("eventData", eventData)
-            .data("tenant", config.tenant)
+            .data("tenant", config.tenant())
             .data("registrations", registrations);
     }
 

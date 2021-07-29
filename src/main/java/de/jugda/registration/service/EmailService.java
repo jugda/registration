@@ -46,10 +46,10 @@ public class EmailService {
     void sendRegistrationConfirmation(Registration registration) {
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Anmeldebestätigung für \"%s\" am %s",
-            config.email.subjectPrefix, event.summary, event.startDate());
+            config.email().subjectPrefix(), event.summary, event.startDate());
 
         String mailBody = tplRegistration
-            .data("tenant", config.tenant)
+            .data("tenant", config.tenant())
             .data("registration", registration)
             .data("event", event)
             .render();
@@ -60,10 +60,10 @@ public class EmailService {
     void sendWaitlistToAttendeeConfirmation(Registration registration) {
         Event event = eventService.getEvent(registration.eventId);
         String subject = String.format("[%s] Dein Wartelisten-Eintrag für \"%s\" am %s",
-            config.email.subjectPrefix, event.summary, event.startDate());
+            config.email().subjectPrefix(), event.summary, event.startDate());
 
         String mailBody = tplWaitlist2attendee
-            .data("tenant", config.tenant)
+            .data("tenant", config.tenant())
             .data("registration", registration)
             .data("event", event)
             .render();
@@ -73,7 +73,7 @@ public class EmailService {
 
     private void sendEmail(Registration registration, String subject, String mailBody) {
         ses.sendEmail(builder -> builder
-            .source(config.email.from)
+            .source(config.email().from())
             .destination(db -> db.toAddresses(registration.getEmail()))
             .message(mb -> mb
                 .subject(utf8Content(subject))
@@ -86,10 +86,10 @@ public class EmailService {
     }
 
     public void sendBulkEmail(List<Registration> registrations, String templateName, String subject, String body) {
-        String tenantTemplateName = config.tenant.id + "_" + templateName;
+        String tenantTemplateName = config.tenant().id() + "_" + templateName;
         updateSesTemplate(tenantTemplateName, subject, body);
 
-        String defaultTemplateData = objectToString(Map.of("tenant", config.tenant));
+        String defaultTemplateData = objectToString(Map.of("tenant", config.tenant()));
 
         List<BulkEmailDestination> destinations = registrations.stream()
             .map(registration -> BulkEmailDestination.builder()
@@ -102,7 +102,7 @@ public class EmailService {
             ses.sendBulkTemplatedEmail(builder -> builder
                 .template(tenantTemplateName)
                 .defaultTemplateData(defaultTemplateData)
-                .source(config.email.from)
+                .source(config.email().from())
                 .destinations(destinations)
                 .configurationSetName("BasicConfigSet")
             );

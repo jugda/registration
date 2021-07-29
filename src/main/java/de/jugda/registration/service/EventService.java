@@ -36,7 +36,7 @@ public class EventService {
     @SneakyThrows
     public List<Event> getAllEvents() {
         if (allEvents == null) {
-            allEvents = objectMapper.readValue(new URL(config.events.jsonUrl), new TypeReference<>() {});
+            allEvents = objectMapper.readValue(new URL(config.events().jsonUrl()), new TypeReference<>() {});
         }
         return allEvents;
     }
@@ -51,7 +51,7 @@ public class EventService {
     @SneakyThrows
     public Map<String, Map<String, String>> getEventData() {
         if (eventData == null) {
-            try (ResponseInputStream<GetObjectResponse> inputStream = s3.getObject(builder -> builder.bucket(config.events.dataBucket).key(config.events.dataKey))) {
+            try (ResponseInputStream<GetObjectResponse> inputStream = s3.getObject(builder -> builder.bucket(config.events().dataBucket()).key(config.events().dataKey()))) {
                 eventData = objectMapper.readValue(inputStream, new TypeReference<>() {});
             }
         }
@@ -62,7 +62,7 @@ public class EventService {
     public void putEventData(String eventId, Map<String, String> data) {
         getEventData().put(eventId, data);
         byte[] bytes = objectMapper.writeValueAsBytes(eventData);
-        s3.putObject(builder -> builder.bucket(config.events.dataBucket).key(config.events.dataKey),
+        s3.putObject(builder -> builder.bucket(config.events().dataBucket()).key(config.events().dataKey()),
             RequestBody.fromInputStream(new ByteArrayInputStream(bytes), bytes.length));
     }
 }

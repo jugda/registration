@@ -30,7 +30,7 @@ public class RegistrationDao {
 
     public void save(Registration registration) {
         dynamoDB.putItem(builder -> builder
-            .tableName(config.dynamodb.table)
+            .tableName(config.dynamodb().table())
             .item(registration.toItem()));
     }
 
@@ -49,7 +49,7 @@ public class RegistrationDao {
 
     public List<Registration> findAll() {
         return dynamoDB.scanPaginator(builder -> builder
-            .tableName(config.dynamodb.table)
+            .tableName(config.dynamodb().table())
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
         ).items().stream()
@@ -78,7 +78,7 @@ public class RegistrationDao {
         Map<String, AttributeValue> key = Map.of("id", toAttribute(id));
 
         Registration registration = Registration.from(dynamoDB.getItem(builder -> builder
-            .tableName(config.dynamodb.table)
+            .tableName(config.dynamodb().table())
             .key(key)
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
@@ -86,15 +86,15 @@ public class RegistrationDao {
         //noinspection ResultOfMethodCallIgnored
         registration.getId(); // materialize object
 
-        dynamoDB.deleteItem(builder -> builder.tableName(config.dynamodb.table).key(key));
+        dynamoDB.deleteItem(builder -> builder.tableName(config.dynamodb().table()).key(key));
 
         return registration;
     }
 
     private QueryRequest.Builder baseQueryRequestBuilder(QueryRequest.Builder builder) {
         return builder
-            .tableName(config.dynamodb.table)
-            .indexName(config.dynamodb.index)
+            .tableName(config.dynamodb().table())
+            .indexName(config.dynamodb().index())
             .projectionExpression(attributesToGet)
             .expressionAttributeNames(expressionAttributeNames)
             ;
