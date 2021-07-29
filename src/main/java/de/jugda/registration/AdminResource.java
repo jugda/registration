@@ -5,9 +5,9 @@ import de.jugda.registration.model.Registration;
 import de.jugda.registration.service.EmailService;
 import de.jugda.registration.service.EventService;
 import de.jugda.registration.service.ListService;
+import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import io.quarkus.qute.api.ResourcePath;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -37,9 +37,9 @@ public class AdminResource {
     EmailService emailService;
     @Inject
     Config config;
-    @ResourcePath("admin/overview")
+    @Location("admin/overview")
     Template overview;
-    @ResourcePath("admin/list")
+    @Location("admin/list")
     Template list;
 
     @GET

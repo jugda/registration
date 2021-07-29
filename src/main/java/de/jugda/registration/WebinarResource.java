@@ -2,9 +2,9 @@ package de.jugda.registration;
 
 import de.jugda.registration.model.Event;
 import de.jugda.registration.service.EventService;
+import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.runtime.LaunchMode;
 
 import javax.inject.Inject;
@@ -30,9 +30,9 @@ public class WebinarResource {
     LaunchMode launchMode;
     @Inject
     Config config;
-    @ResourcePath("webinar/webinar")
+    @Location("webinar/webinar")
     Template webinar;
-    @ResourcePath("webinar/notAvailable")
+    @Location("webinar/notAvailable")
     Template webinarNotAvailable;
 
     @GET

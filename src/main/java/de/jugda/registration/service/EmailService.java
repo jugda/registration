@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.jugda.registration.Config;
 import de.jugda.registration.model.Event;
 import de.jugda.registration.model.Registration;
+import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
-import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.runtime.LaunchMode;
 import io.quarkus.runtime.configuration.ProfileManager;
 import lombok.SneakyThrows;
@@ -36,9 +36,9 @@ public class EmailService {
     EventService eventService;
     @Inject
     ObjectMapper objectMapper;
-    @ResourcePath("mail/registration")
+    @Location("mail/registration")
     Template tplRegistration;
-    @ResourcePath("mail/waitlist2attendee")
+    @Location("mail/waitlist2attendee")
     Template tplWaitlist2attendee;
     @Inject
     LaunchMode launchMode;
