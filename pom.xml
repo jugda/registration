@@ -78,6 +78,18 @@
       <artifactId>quarkus-webjars-locator</artifactId>
     </dependency>
     <dependency>
+      <groupId>net.sf.biweekly</groupId>
+      <artifactId>biweekly</artifactId>
+      <version>0.6.6</version>
+      <exclusions>
+        <!-- exclude jackson here and let quarkus set the used version -->
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
       <!--suppress MavenPackageUpdate -->
