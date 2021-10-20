@@ -3,9 +3,9 @@
     <form method="post" onsubmit="document.getElementById('submit').disabled=true;">
         <h3>Abmeldung</h3>
         <div class="text-muted"></div>
-        <div class="form-group {#if validationErrors.containsKey('email')}has-error{/if}">
+        <div class="form-group">
             <label for="email">E-Mail*</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail"/>
+            <input type="email" name="email" id="email" class="form-control {#if validationErrors.containsKey('email')}is-invalid{/if}" placeholder="E-Mail"/>
         </div>
         <div class="help-block">* = Pflichtfeld</div>
         <button type="submit" id="submit" class="btn btn-danger">Abmelden</button>

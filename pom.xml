@@ -15,7 +15,7 @@
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>2.0.3.Final</quarkus.version>
+    <quarkus.version>2.2.3.Final</quarkus.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <testcontainers.version>1.15.3</testcontainers.version>
   </properties>
@@ -80,7 +80,8 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>4.6.0</version>
+      <!--suppress MavenPackageUpdate -->
+      <version>4.6.0-1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
@@ -95,7 +96,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
+      <version>1.18.22</version>
       <scope>provided</scope>
     </dependency>
 
@@ -112,6 +113,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
+      <!--suppress MavenPackageUpdate -->
       <version>${testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
