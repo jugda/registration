@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -50,7 +51,7 @@ public class LocalstackResource implements QuarkusTestResourceLifecycleManager {
         localstack = new DockerComposeContainer(new File("docker-compose.yml"))
             .withLogConsumer("localstack", new Slf4jLogConsumer(log))
             .withExposedService("localstack", PORT,
-                Wait.forLogMessage(".*\"Location\": \"/test\".*", 1));
+                Wait.forLogMessage(".*upload:.*", 2).withStartupTimeout(Duration.ofMinutes(2)));
         localstack.start();
 
         //noinspection HttpUrlsUsage

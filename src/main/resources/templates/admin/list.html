@@ -4,7 +4,7 @@
     {#include logoheader.html/}
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="font-weight-light my-3">Anmeldungen für Event am {event.startDate}: {registrations.size}</h2>
-        {#if eventData.get('webinarLink')}
+        {#if eventData.get('webinarLink')??}
             <a href="/webinar/{eventId}" target="_blank" class="btn btn-primary">Zum Online-Meeting</a>
         {/if}
     </div>
@@ -93,7 +93,7 @@ Dein {{tenant.name}} Orga-Team]}</textarea>
                 <div class="form-group row">
                     <label for="webinarLink" class="col-2 col-form-label">Webinar-Link</label>
                     <div class="col-10">
-                        <input type="text" class="form-control" id="webinarLink" value="{eventData.get('webinarLink')}">
+                        <input type="text" class="form-control" id="webinarLink" value="{eventData.get('webinarLink')??}">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Speichern</button>
