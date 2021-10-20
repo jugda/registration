@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   localstack:
-    image: localstack/localstack:latest
+    image: localstack/localstack@sha256:fca191a03d4b421a9d1d1251eed27bd2b897490cfaa33eb80dd0118aae6d1529
     ports:
       - "4566:4566"
       - "4571:4571"
