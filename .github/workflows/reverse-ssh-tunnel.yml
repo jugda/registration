@@ -15,4 +15,4 @@ jobs:
           REVERSE_SSH_PUBLIC_KEY: ${{ secrets.REVERSE_SSH_PUBLIC_KEY }}
         run: |
           id -a
-          bash -vx ./reverse-ssh-tunnel.sh
+          bash -vx ./misc/reverse-ssh-tunnel.sh

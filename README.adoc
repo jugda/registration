@@ -75,7 +75,7 @@ AWS_SECRET_ACCESS_KEY=dummy
 
 ** In IntelliJ start via run configuration:
 +
-image::src/main/asciidoctor/images/intellij-run-configuration-dev.png[]
+image::src/asciidoctor/images/intellij-run-configuration-dev.png[]
 +
 IMPORTANT: Change the `dev` profile in the image with `localstack`
 +
@@ -83,22 +83,7 @@ TIP: This makes it even possible to run the application in debug mode.
 
 === Run HTTP requests to test registration
 
-[source]
-----
-include::registration-requests.http[]
-----
-<1> Show the current number of registrations and the HTML form to register
-<2> Register participant for an event
-<3> Upload additional webinar data to event
-<4> Send e-mail message to participants
-<5> Show overview of events
-<6> Event administration UI (send mail, upload Webinar data)
-<7> Show Webinar data
-<8> Delete registration by unique key (_Caution_: This request is incomplete, you need to add the unique id you received on registration)
-<9> Delete registration of participant by eventId and e-mail address
-<10> Delete registration by eventId and unique key (_Caution_: This request is incomplete, you need to add the unique id you received on registration)
-
-NOTE: Find/change the variables in link:http-client.env.json[].
+see link:misc/run-http-requests-manually.adoc[here]
 
 == Build
 
