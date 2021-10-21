@@ -17,7 +17,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>2.2.3.Final</quarkus.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <testcontainers.version>1.15.3</testcontainers.version>
   </properties>
 
   <dependencyManagement>
@@ -125,8 +124,6 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
-      <!--suppress MavenPackageUpdate -->
-      <version>${testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

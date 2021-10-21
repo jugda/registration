@@ -108,12 +108,12 @@ Native, Docker will be used.
 
 == Deployment
 
-https://www.serverless.com/[Serverless Framework 2.x+]
+https://www.serverless.com/[Serverless Framework]
 
 === JUG DA
 
- $ sls deploy --tenant jugda
+ $ TENANT=jugda sls deploy
 
 === Cyberland
 
- $ sls deploy --tenant cyberland
+ $ TENANT=cyberland sls deploy

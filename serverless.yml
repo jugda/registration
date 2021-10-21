@@ -1,7 +1,5 @@
 service: ${self:custom.tenant}-registration
 
-frameworkVersion: '2'
-
 provider:
   name: aws
   runtime: provided
@@ -53,8 +51,8 @@ provider:
       Resource: "*"
 
 custom:
-  tenant: ${opt:tenant, 'jugda'}
-  secrets: ${ssm:/aws/reference/secretsmanager/${self:custom.tenant}-registration~true}
+  tenant: ${env:TENANT, 'jugda'}
+  secrets: ${ssm:/aws/reference/secretsmanager/${self:custom.tenant}-registration}
 
 package:
   individually: true
