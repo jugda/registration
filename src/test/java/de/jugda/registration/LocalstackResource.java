@@ -48,7 +48,7 @@ public class LocalstackResource implements QuarkusTestResourceLifecycleManager {
         }
 
 
-        localstack = new DockerComposeContainer(new File("docker-compose.yml"))
+        localstack = new DockerComposeContainer(new File("src/docker/docker-compose.yml"))
             .withLogConsumer("localstack", new Slf4jLogConsumer(log))
             .withExposedService("localstack", PORT,
                 Wait.forLogMessage(".*upload:.*", 2).withStartupTimeout(Duration.ofMinutes(2)));

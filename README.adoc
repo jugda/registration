@@ -56,7 +56,7 @@ Root page is `/registration?eventId=...`.
 https://github.com/localstack/localstack[localstack] enables local development without any AWS cloud access. +
 We use the Docker container of localstack directly without the need to install any additional tool locally.
 
-* For <<local-environment,local AWS development>>, simply power up the provided `docker-compose.yml` file in the project root with `docker compose up` command. +
+* For <<local-environment,local AWS development>>, simply power up the provided `docker-compose.yml` file in the `src/docker` folder with `docker compose up` command. +
 The container will start and initialize all the needed AWS resoures like DynamoDB, S3 bucket and files and SES, available at http://localhost:4566
 * (Optional) Build application: `mvn clean package`
 * Run application with `localstack` profile:
