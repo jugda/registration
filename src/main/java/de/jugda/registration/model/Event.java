@@ -20,6 +20,7 @@ public class Event {
     public String uid;
     public String summary;
     public String title;
+    public String description;
     public String speaker;
     public String twitter;
     public String location;

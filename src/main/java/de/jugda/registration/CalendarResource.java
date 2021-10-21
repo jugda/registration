@@ -47,7 +47,8 @@ public class CalendarResource {
         vEvent.setDateStart(Date.from(event.getStart().atZone(ZoneId.of(event.getTimezone())).toInstant()));
         vEvent.setDateEnd(Date.from(event.getEnd().atZone(ZoneId.of(event.getTimezone())).toInstant()));
         vEvent.setSummary(config.email().subjectPrefix() + ": " + event.getSummary());
-        vEvent.setDescription(String.format("%s\n\n%s\n\nAlle weiteren Infos: %s", config.tenant().name(), event.getSummary(), event.getUrl()));
+        vEvent.setDescription(String.format("%s\n\n%s\n\n%s\n\nWeitere Infos: %s",
+            config.tenant().name(), event.getSummary(), event.getDescription(), event.getUrl()));
         vEvent.setLocation(event.getLocation());
         vEvent.setUrl(event.getUrl());
 
