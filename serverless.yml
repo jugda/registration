@@ -52,7 +52,7 @@ provider:
 
 custom:
   tenant: ${env:TENANT, 'jugda'}
-  secrets: ${ssm:/aws/reference/secretsmanager/${self:custom.tenant}-registration}
+  secrets: ${ssm:/aws/reference/secretsmanager/${self:custom.tenant}-registration~true}
 
 package:
   individually: true
@@ -83,7 +83,7 @@ functions:
     package:
       artifact: target/function.zip
   basicAuthorizer:
-    handler: js/basicAuthorizr.handler
+    handler: src/main/js/basicAuthorizr.handler
     runtime: nodejs12.x
     memorySize: 128
     timeout: 3
@@ -92,7 +92,7 @@ functions:
       REGISTRATION_SECRET: ${self:custom.secrets.registration.secret}
     package:
       include:
-        - js/basicAuthorizr.js
+        - src/main/js/basicAuthorizr.js
       exclude:
         - "*.*"
         - "*/**"
