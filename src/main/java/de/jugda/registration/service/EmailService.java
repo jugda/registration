@@ -90,8 +90,7 @@ public class EmailService {
         String tenantTemplateName = tenant.id() + "_" + templateName;
         updateSesTemplate(tenantTemplateName, subject, body);
 
-        String defaultTemplateData = objectToString(
-            Map.of("tenant", Map.of("id", tenant.id(), "name", tenant.name(), "baseUrl", tenant.baseUrl())));
+        String defaultTemplateData = objectToString(Map.of("tenant", tenant));
 
         List<BulkEmailDestination> destinations = registrations.stream()
             .map(registration -> BulkEmailDestination.builder()
