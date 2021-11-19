@@ -86,10 +86,12 @@ public class EmailService {
     }
 
     public void sendBulkEmail(List<Registration> registrations, String templateName, String subject, String body) {
-        String tenantTemplateName = config.tenant().id() + "_" + templateName;
+        Config.TenantConfig tenant = config.tenant();
+        String tenantTemplateName = tenant.id() + "_" + templateName;
         updateSesTemplate(tenantTemplateName, subject, body);
 
-        String defaultTemplateData = objectToString(Map.of("tenant", config.tenant()));
+        String defaultTemplateData = objectToString(
+            Map.of("tenant", Map.of("id", tenant.id(), "name", tenant.name(), "baseUrl", tenant.baseUrl())));
 
         List<BulkEmailDestination> destinations = registrations.stream()
             .map(registration -> BulkEmailDestination.builder()
