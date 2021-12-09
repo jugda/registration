@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.ses.model.TemplateDoesNotExistException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -85,29 +86,31 @@ public class EmailService {
         );
     }
 
-    public void sendBulkEmail(List<Registration> registrations, String templateName, String subject, String body) {
+    public void sendBulkEmail(Collection<List<Registration>> chunkedRegistrations, String templateName, String subject, String body) {
         Config.TenantConfig tenant = config.tenant();
         String tenantTemplateName = tenant.id() + "_" + templateName;
         updateSesTemplate(tenantTemplateName, subject, body);
 
         String defaultTemplateData = objectToString(Map.of("tenant", tenant));
 
-        List<BulkEmailDestination> destinations = registrations.stream()
-            .map(registration -> BulkEmailDestination.builder()
-                .destination(db -> db.toAddresses(registration.getEmail()))
-                .replacementTemplateData(objectToString(registration))
-                .build())
-            .collect(Collectors.toList());
+        chunkedRegistrations.forEach(registrationsChunk -> {
+            List<BulkEmailDestination> destinations = registrationsChunk.stream()
+                .map(registration -> BulkEmailDestination.builder()
+                    .destination(db -> db.toAddresses(registration.getEmail()))
+                    .replacementTemplateData(objectToString(registration))
+                    .build())
+                .collect(Collectors.toList());
 
-        if (launchMode != LaunchMode.TEST && !"localstack".equals(ProfileManager.getActiveProfile())) {
-            ses.sendBulkTemplatedEmail(builder -> builder
-                .template(tenantTemplateName)
-                .defaultTemplateData(defaultTemplateData)
-                .source(config.email().from())
-                .destinations(destinations)
-                .configurationSetName("BasicConfigSet")
-            );
-        }
+            if (launchMode != LaunchMode.TEST && !"localstack".equals(ProfileManager.getActiveProfile())) {
+                ses.sendBulkTemplatedEmail(builder -> builder
+                    .template(tenantTemplateName)
+                    .defaultTemplateData(defaultTemplateData)
+                    .source(config.email().from())
+                    .destinations(destinations)
+                    .configurationSetName("BasicConfigSet")
+                );
+            }
+        });
     }
 
     private void updateSesTemplate(String templateName, String subject, String body) {

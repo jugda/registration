@@ -18,8 +18,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -84,12 +86,14 @@ public class AdminResource {
         if (null == registrationIds) {
             throw new IllegalArgumentException("Data does not contain any registrationIds");
         }
-        List<Registration> registrations = listService.singleEventRegistrations(eventId).stream()
-            .filter(registration -> registrationIds.contains(registration.getId()))
-            .collect(Collectors.toList());
 
-        if (!registrations.isEmpty()) {
-            emailService.sendBulkEmail(registrations, templateName, subject, message);
+        AtomicInteger index = new AtomicInteger(0);
+        Collection<List<Registration>> chunkedRegistrations = listService.singleEventRegistrations(eventId).stream()
+            .filter(registration -> registrationIds.contains(registration.getId()))
+            .collect(Collectors.groupingBy(x -> index.getAndIncrement() / 50)).values();
+
+        if (!chunkedRegistrations.isEmpty()) {
+            emailService.sendBulkEmail(chunkedRegistrations, templateName, subject, message);
         }
 
         return Response.noContent().build();
