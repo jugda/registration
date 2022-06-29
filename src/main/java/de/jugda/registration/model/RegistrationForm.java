@@ -30,6 +30,8 @@ public class RegistrationForm {
     public String videoRecording;
     @FormParam("pub")
     public String pub;
+    @FormParam("remote")
+    public String remote;
     @FormParam("waitlist")
     public boolean waitlist;
 
@@ -43,6 +45,8 @@ public class RegistrationForm {
     public boolean showPub;
     @FormParam("hideVideoRecording")
     public boolean hideVideoRecording;
+    @FormParam("hybrid")
+    public boolean hybrid;
 
     public Map<String, String> validationErrors = new HashMap<>();
 

@@ -24,6 +24,12 @@
             <label class="form-check-label" for="pub">Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)</label>
         </div>
         {/if}
+        {#if form.hybrid}
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" name="remote" id="remote">
+                <label class="form-check-label" for="remote">Ich nehme nur Online/Remote teil.</label>
+            </div>
+        {/if}
         {#if !form.hideVideoRecording}
         <div class="form-group form-check">
             <input type="checkbox" class="form-check-input required" name="videoRecording" id="videoRecording">
@@ -49,6 +55,7 @@
         <input type="hidden" name="waitlist" value="{form.waitlist}"/>
         <input type="hidden" name="showPub" value="{form.showPub}"/>
         <input type="hidden" name="hideVideoRecording" value="{form.hideVideoRecording}"/>
+        <input type="hidden" name="hybrid" value="{form.hybrid}"/>
     </form>
     <p class="text-muted">
         <small>

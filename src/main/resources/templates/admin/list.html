@@ -16,6 +16,7 @@
             <th>Name</th>
             <th>E-Mail</th>
             <th>Stammtisch</th>
+            <th>Remote</th>
             <th>Warteliste</th>
             <th>Datum (UTC)</th>
             <th></th>
@@ -32,6 +33,9 @@
                 <td><a href="mailto:{reg.email}">{reg.email}</a></td>
                 <td>
                     {#if reg.pub}<img src="/webjars/bootstrap-icons/icons/check.svg" alt=""/>{/if}
+                </td>
+                <td>
+                    {#if reg.remote}<img src="/webjars/bootstrap-icons/icons/display.svg" alt=""/>{/if}
                 </td>
                 <td>
                     {#if reg.waitlist}<img src="/webjars/bootstrap-icons/icons/hourglass-split.svg" alt=""/>{/if}

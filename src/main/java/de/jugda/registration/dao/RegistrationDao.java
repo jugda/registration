@@ -25,7 +25,7 @@ public class RegistrationDao {
     @Inject
     Config config;
 
-    private static final String attributesToGet = "id, eventId, #name, email, pub, waitlist, privacy, created, #ttl";
+    private static final String attributesToGet = "id, eventId, #name, email, pub, remote, waitlist, privacy, created, #ttl";
     private static final Map<String, String> expressionAttributeNames = Map.of("#name", "name", "#ttl", "ttl");
 
     public void save(Registration registration) {
