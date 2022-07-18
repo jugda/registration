@@ -38,4 +38,12 @@ public class Event {
     public String startTime() {
         return start.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
+
+    public String getStartDateTimeBasic() {
+        return start.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HH:mm"));
+    }
+
+    public String getEndDateTimeBasic() {
+        return end.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HH:mm"));
+    }
 }
