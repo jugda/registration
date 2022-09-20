@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.dynamodb.model.Select;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,11 +68,19 @@ public class RegistrationDao {
     }
 
     public List<Registration> findWaitlistByEventId(String eventId) {
-        return findByEventId(eventId).stream().filter(Registration::isWaitlist).collect(Collectors.toUnmodifiableList());
+        return findByEventId(eventId).stream().filter(Registration::isWaitlist).toList();
     }
 
     public int getCount(String eventId) {
-        return dynamoDB.query(builder -> byEventIdQueryBuilder(builder, eventId).projectionExpression(null).expressionAttributeNames(null).select(Select.COUNT)).count();
+        HashMap<String, AttributeValue> attributeValues = new HashMap<>(getBaseAttributeValues(eventId));
+        attributeValues.put(":v_remote", AttributeValue.builder().bool(false).build());
+        return dynamoDB.query(builder -> byEventIdQueryBuilder(builder, eventId)
+            .projectionExpression(null)
+            .expressionAttributeNames(null)
+            .filterExpression("remote = :v_remote")
+            .expressionAttributeValues(attributeValues)
+            .select(Select.COUNT)
+        ).count();
     }
 
     public Registration delete(String id) {
@@ -103,12 +112,16 @@ public class RegistrationDao {
     private QueryRequest.Builder byEventIdQueryBuilder(QueryRequest.Builder builder, String eventId) {
         return baseQueryRequestBuilder(builder)
             .keyConditionExpression("eventId = :v_eventId")
-            .expressionAttributeValues(Map.of(":v_eventId", toAttribute(eventId)))
+            .expressionAttributeValues(getBaseAttributeValues(eventId))
             ;
     }
 
     private AttributeValue toAttribute(String value) {
         return AttributeValue.builder().s(value).build();
+    }
+
+    private Map<String, AttributeValue> getBaseAttributeValues(String eventId) {
+        return Map.of(":v_eventId", toAttribute(eventId));
     }
 
 }
