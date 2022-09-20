@@ -84,7 +84,7 @@ functions:
       artifact: target/function.zip
   basicAuthorizer:
     handler: src/main/js/basicAuthorizr.handler
-    runtime: nodejs12.x
+    runtime: nodejs16.x
     memorySize: 128
     timeout: 3
     environment:
