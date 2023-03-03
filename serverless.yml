@@ -52,7 +52,7 @@ provider:
 
 custom:
   tenant: ${env:TENANT, 'jugda'}
-  secrets: ${ssm:/aws/reference/secretsmanager/${self:custom.tenant}-registration~true}
+  secrets: ${ssm:/aws/reference/secretsmanager/jugda-secrets~true}.${self:custom.tenant}Registration
 
 package:
   individually: true
