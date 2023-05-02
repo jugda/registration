@@ -10,7 +10,8 @@ provider:
     shouldStartNameWithService: true
   memorySize: 512
   timeout: 30
-  deploymentBucket: dasniko.serverless.deployments.${self:provider.region}
+  deploymentBucket:
+    name: dasniko.serverless.deployments.${self:provider.region}
   logRetentionInDays: 30
   environment:
     DISABLE_SIGNAL_HANDLERS: 'true'
@@ -21,38 +22,45 @@ provider:
   tracing:
     apiGateway: true
     lambda: true
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource:
-        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_DYNAMODB_TABLE}"
-        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_DYNAMODB_TABLE}/index/*"
-    - Effect: Allow
-      Action:
-        - s3:GetObject
-        - s3:PutObject
-      Resource: "arn:aws:s3:::${self:custom.tenant}/*"
-    - Effect: Allow
-      Action:
-        - ses:SendEmail
-        - ses:SendTemplatedEmail
-        - ses:SendBulkTemplatedEmail
-      Resource: ${self:custom.secrets.aws.sesIdentity}
-    - Effect: Allow
-      Action:
-        - ses:CreateTemplate
-        - ses:UpdateTemplate
-      Resource: "*"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_DYNAMODB_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_DYNAMODB_TABLE}/index/*"
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+          Resource: "arn:aws:s3:::${self:custom.tenant}/*"
+        - Effect: Allow
+          Action:
+            - ses:SendEmail
+            - ses:SendTemplatedEmail
+            - ses:SendBulkTemplatedEmail
+          Resource: ${self:custom.secrets.${self:custom.tenant}Registration.aws.sesIdentity}
+        - Effect: Allow
+          Action:
+            - ses:SendTemplatedEmail
+            - ses:SendBulkTemplatedEmail
+          Resource: ${self:custom.secrets.${self:custom.tenant}Registration.aws.sesTemplate}
+        - Effect: Allow
+          Action:
+            - ses:CreateTemplate
+            - ses:UpdateTemplate
+          Resource: "*"
 
 custom:
   tenant: ${env:TENANT, 'jugda'}
-  secrets: ${ssm:/aws/reference/secretsmanager/jugda-secrets~true}.${self:custom.tenant}Registration
+  secrets: ${ssm:/aws/reference/secretsmanager/jugda-secrets}
 
 package:
   individually: true
@@ -74,8 +82,8 @@ functions:
   public:
     handler: not.used.in.provided.runtime
     environment:
-      SLACK_OAUTH_ACCESS_TOKEN: ${self:custom.secrets.slack.access_token}
-      SLACK_CHANNEL_GENERAL: ${self:custom.secrets.slack.channel_general}
+      SLACK_OAUTH_ACCESS_TOKEN: ${self:custom.secrets.${self:custom.tenant}Registration.slack.access_token}
+      SLACK_CHANNEL_GENERAL: ${self:custom.secrets.${self:custom.tenant}Registration.slack.channel_general}
     events:
       - http:
           path: /{proxy+}
@@ -88,8 +96,8 @@ functions:
     memorySize: 128
     timeout: 3
     environment:
-      REGISTRATION_ADMIN: ${self:custom.secrets.registration.admin}
-      REGISTRATION_SECRET: ${self:custom.secrets.registration.secret}
+      REGISTRATION_ADMIN: ${self:custom.secrets.${self:custom.tenant}Registration.registration.admin}
+      REGISTRATION_SECRET: ${self:custom.secrets.${self:custom.tenant}Registration.registration.secret}
     package:
       include:
         - src/main/js/basicAuthorizr.js
