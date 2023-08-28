@@ -3,6 +3,7 @@ service: ${self:custom.tenant}-registration
 provider:
   name: aws
   runtime: provided.al2
+  architecture: arm64
   stage: prod
   region: eu-central-1
   endpointType: REGIONAL
