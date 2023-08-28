@@ -2,7 +2,7 @@ service: ${self:custom.tenant}-registration
 
 provider:
   name: aws
-  runtime: java11
+  runtime: java17
   stage: prod
   region: eu-central-1
   endpointType: REGIONAL
@@ -83,7 +83,7 @@ functions:
       artifact: target/function.zip
   basicAuthorizer:
     handler: src/main/js/basicAuthorizr.handler
-    runtime: nodejs16.x
+    runtime: nodejs18.x
     memorySize: 128
     timeout: 3
     environment:
