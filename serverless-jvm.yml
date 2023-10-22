@@ -17,9 +17,6 @@ provider:
     APP_EVENTS_DATA_KEY: registration/${self:custom.tenant}/eventData.json
     APP_TENANT_ID: ${self:custom.tenant}
     QUARKUS_PROFILE: ${self:custom.tenant}
-  tracing:
-    apiGateway: true
-    lambda: true
   iamRoleStatements:
     - Effect: Allow
       Action:
