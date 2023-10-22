@@ -14,7 +14,7 @@ provider:
   logRetentionInDays: 30
   environment:
     APP_DYNAMODB_TABLE: ${self:service}
-    APP_EVENTS_DATA_BUCKET: ${self:custom.tenant}
+    APP_EVENTS_DATA_KEY: registration/${self:custom.tenant}/eventData.json
     APP_TENANT_ID: ${self:custom.tenant}
     QUARKUS_PROFILE: ${self:custom.tenant}
   tracing:
