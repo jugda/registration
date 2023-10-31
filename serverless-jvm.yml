@@ -33,7 +33,7 @@ provider:
       Action:
         - s3:GetObject
         - s3:PutObject
-      Resource: "arn:aws:s3:::${self:custom.tenant}/*"
+      Resource: "arn:aws:s3:::jugda/*"
     - Effect: Allow
       Action:
         - ses:SendEmail
