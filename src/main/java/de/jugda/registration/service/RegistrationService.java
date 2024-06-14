@@ -7,6 +7,7 @@ import de.jugda.registration.slack.SlackWebClient;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Niko Köbler, http://www.n-k.de, @dasniko
@@ -34,10 +35,28 @@ public class RegistrationService {
         }
 
         registrationDao.save(registration);
-        registration = registrationDao.find(registration);
-        model.setId(registration.getId());
 
-        emailService.sendRegistrationConfirmation(registration);
+        // registration may be null when retrieved, due to eventual consistency
+        // try to get it some time later...
+        Registration savedRegistration;
+        AtomicInteger counter = new AtomicInteger();
+        do {
+            savedRegistration = registrationDao.find(registration);
+            if (savedRegistration == null) {
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                counter.incrementAndGet();
+            }
+        } while (savedRegistration == null && counter.intValue() < 3);
+
+        if (savedRegistration != null) {
+            model.setId(savedRegistration.getId());
+            emailService.sendRegistrationConfirmation(savedRegistration);
+        }
 
         notifySlack(registration.getEventId(), model.getLimit());
 
