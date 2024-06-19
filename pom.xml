@@ -9,8 +9,8 @@
   <version>2.0-SNAPSHOT</version>
 
   <properties>
-    <compiler-plugin.version>3.10.1</compiler-plugin.version>
-    <maven.compiler.release>17</maven.compiler.release>
+    <compiler-plugin.version>3.13.0</compiler-plugin.version>
+    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -82,7 +82,7 @@
     <dependency>
       <groupId>net.sf.biweekly</groupId>
       <artifactId>biweekly</artifactId>
-      <version>0.6.6</version>
+      <version>0.6.8</version>
       <exclusions>
         <!-- exclude jackson here and let quarkus set the used version -->
         <exclusion>
@@ -100,17 +100,17 @@
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>bootstrap-icons</artifactId>
-      <version>1.9.1</version>
+      <version>1.11.3</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>jquery</artifactId>
-      <version>3.6.2</version>
+      <version>3.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.26</version>
+      <version>1.18.32</version>
       <scope>provided</scope>
     </dependency>
 
