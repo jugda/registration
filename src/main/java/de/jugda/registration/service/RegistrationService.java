@@ -4,9 +4,9 @@ import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
 import de.jugda.registration.model.RegistrationForm;
 import de.jugda.registration.slack.SlackWebClient;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

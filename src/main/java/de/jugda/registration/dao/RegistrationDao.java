@@ -2,13 +2,13 @@ package de.jugda.registration.dao;
 
 import de.jugda.registration.Config;
 import de.jugda.registration.model.Registration;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest;
 import software.amazon.awssdk.services.dynamodb.model.Select;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;

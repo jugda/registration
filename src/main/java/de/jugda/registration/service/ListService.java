@@ -2,9 +2,9 @@ package de.jugda.registration.service;
 
 import de.jugda.registration.dao.RegistrationDao;
 import de.jugda.registration.model.Registration;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

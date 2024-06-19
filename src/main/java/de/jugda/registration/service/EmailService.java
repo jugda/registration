@@ -7,15 +7,15 @@ import de.jugda.registration.model.Registration;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.runtime.LaunchMode;
-import io.quarkus.runtime.configuration.ProfileManager;
+import io.quarkus.runtime.configuration.ConfigUtils;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import lombok.SneakyThrows;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.BulkEmailDestination;
 import software.amazon.awssdk.services.ses.model.Content;
 import software.amazon.awssdk.services.ses.model.TemplateDoesNotExistException;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
@@ -101,7 +101,7 @@ public class EmailService {
                     .build())
                 .collect(Collectors.toList());
 
-            if (launchMode != LaunchMode.TEST && !"localstack".equals(ProfileManager.getActiveProfile())) {
+            if (launchMode != LaunchMode.TEST && !ConfigUtils.isProfileActive("localstack")) {
                 ses.sendBulkTemplatedEmail(builder -> builder
                     .template(tenantTemplateName)
                     .defaultTemplateData(defaultTemplateData)

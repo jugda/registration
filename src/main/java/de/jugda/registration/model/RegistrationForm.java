@@ -1,10 +1,10 @@
 package de.jugda.registration.model;
 
 import io.quarkus.qute.TemplateData;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.FormParam;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.ws.rs.FormParam;
 import java.util.HashMap;
 import java.util.Map;
 
