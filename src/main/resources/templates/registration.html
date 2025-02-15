@@ -6,32 +6,32 @@
             <p class="lead text-danger">{helptext.waitlist}</p>
         {#else}
             <h3>Anmeldung</h3>
-            <div class="text-success">Noch {form.freeSeats} freie Plätze ({form.actualCount} bereits angemeldet).</div>
+            <p class="text-success">Noch {form.freeSeats} freie Plätze ({form.actualCount} bereits angemeldet).</p>
         {/if}
-        <div class="form-group">
-            <label for="name">Name*</label>
+        <div class="mb-2">
+            <label for="name" class="form-label">Name*</label>
             <input type="text" name="name" id="name" class="form-control {#if form.validationErrors.containsKey('name')}is-invalid{/if}" placeholder="Name" value="{form.name}"/>
             <small class="form-text text-muted">{helptext.name}</small>
         </div>
-        <div class="form-group">
-            <label for="email">E-Mail*</label>
+        <div class="mb-2">
+            <label for="email" class="form-label">E-Mail*</label>
             <input type="email" name="email" id="email" class="form-control {#if form.validationErrors.containsKey('email')}is-invalid{/if}" placeholder="E-Mail" value="{form.email}"/>
             <small class="form-text text-muted">{helptext.email}</small>
         </div>
         {#if form.showPub}
-        <div class="form-group form-check">
+        <div class="mb-2 form-check">
             <input type="checkbox" class="form-check-input" name="pub" id="pub">
             <label class="form-check-label" for="pub">Ja, ich komme mit zum Stammtisch (Hotzenplotz o.ä.)</label>
         </div>
         {/if}
         {#if form.hybrid}
-            <div class="form-group form-check">
+            <div class="mb-2 form-check">
                 <input type="checkbox" class="form-check-input" name="remote" id="remote">
                 <label class="form-check-label" for="remote">Ich nehme nur Online/Remote teil.</label>
             </div>
         {/if}
         {#if !form.hideVideoRecording}
-        <div class="form-group form-check">
+        <div class="mb-2 form-check">
             <input type="checkbox" class="form-check-input required" name="videoRecording" id="videoRecording">
             <label class="form-check-label" for="videoRecording">
                 Mir ist bekannt, dass die Veranstaltung auf Video aufgezeichnet und veröffentlicht wird.*
@@ -40,13 +40,13 @@
         </div>
         {/if}
         <p class="text-muted small">{helptext.disclaimer}</p>
-        <div class="form-group form-check">
+        <div class="mb-2 form-check">
             <input type="checkbox" class="form-check-input required" name="privacy" id="privacy">
             <label class="form-check-label" for="privacy">
                 Ja, ich habe die o.g. Hinweise gelesen, verstanden und erkläre mich damit einverstanden.*
             </label>
         </div>
-        <div class="help-block">* = Pflichtfeld</div>
+        <div class="small">* = Pflichtfeld</div>
         <button type="submit" id="submit" class="btn btn-primary" disabled="disabled">Anmelden</button>
         <input type="hidden" name="eventId" value="{form.eventId}"/>
         <input type="hidden" name="freeSeats" value="{form.freeSeats}"/>
