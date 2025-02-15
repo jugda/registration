@@ -49,7 +49,7 @@ Root page is `/registration?eventId=...`.
 
 === Prerequisites
 
-* JDK 11+
+* JDK 21+
 * IDE
 * Maven 3.6.2+
 [[local-environment]]
